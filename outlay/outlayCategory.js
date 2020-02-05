@@ -157,7 +157,6 @@ async function outlayCategoryDel() {
 window.leafChange = leafChange;
 
 function leafChange(elem) {
-  console.log(elem);
   let li = elem.parentElement;
   liOnClick(li);
   switch (elem.innerHTML) {
@@ -194,6 +193,7 @@ async function liExpand(elem) {
 window.liOnClick = liOnClick;
 
 function liOnClick(liCategory) {
+  console.log(liCategory);
   if (liCategory === categorySelected) return;
 
   if (categorySelected)
