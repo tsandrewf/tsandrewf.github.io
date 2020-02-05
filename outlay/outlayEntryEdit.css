@@ -1,0 +1,22 @@
+#colMenu {
+  width: 10vw;
+}
+#colTitle {
+  width: 80vw;
+}
+#colAdd {
+  width: 10vw;
+}
+
+#colNum {
+  width: 10vw;
+  text-align: right;
+}
+#colCategory {
+  width: 45vw;
+  text-align: right;
+}
+#colSum {
+  width: 45vw;
+  text-align: left;
+}

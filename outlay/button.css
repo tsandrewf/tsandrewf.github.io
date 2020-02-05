@@ -1,0 +1,17 @@
+/* https://ru.stackoverflow.com/questions/640689/Нарисовать-круг-используя-только-css */
+.button {
+  width: 5vw;
+  height: 5vw;
+  background: magenta;
+  /*-moz-border-radius: 50px;*/
+  /*-webkit-border-radius: 50px;*/
+  /*border-radius: 50px;*/
+  border-radius: 50%;
+  cursor: pointer;
+  margin: auto; /* Центрирование */
+  padding: 5px 0;
+}
+
+.button:hover {
+  background: red;
+}

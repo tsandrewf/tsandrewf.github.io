@@ -1,0 +1,51 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.selectedCategory {
+  background-color: red;
+}
+
+ul {
+  padding-left: 2em;
+  margin: 0;
+}
+
+/* Beg Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
+
+/* Для Chrome */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Для IE и Edge */
+body {
+  -ms-overflow-style: none;
+}
+/* End Убираем полосу прокрутки */
+
+/* Beg http://htmlbook.ru/faq/khochu-izmenit-vid-markera-na-drugoy-simvol-kak-eto-sdel */
+li {
+  list-style-type: none; /* Убираем маркеры у списка */
+}
+/*li:before {
+  content: "&#x2295; "; /* Добавляем в качестве маркера символ */
+/*}*/
+/* End http://htmlbook.ru/faq/khochu-izmenit-vid-markera-na-drugoy-simvol-kak-eto-sdel */
+
+li span {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+#colMenu {
+  width: 10vw;
+}
+#colTitle {
+  width: 60vw;
+}
+#colButton {
+  width: 10vw;
+}

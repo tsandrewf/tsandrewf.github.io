@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="outlayCategory.css" rel="stylesheet" type="text/css" />
+    <link href="./outlayBase.css" rel="stylesheet" type="text/css" />
+    <script src="./date.js"></script>
+    <script src="outlayCategory.js" type="module"></script>
+    <title>Расходы</title>
+  </head>
+  <body>
+    <div class="fixedblock">
+      <table>
+        <tr>
+          <td id="colMenu">
+            <div class="dropdown">
+              <button class="dropbtn">&#9776;</button>
+              <div class="dropdown-content">
+                <a href="outlay.html">Расходы</a>
+              </div>
+            </div>
+          </td>
+          <td id="colTitle">Категории расходов</td>
+          <td id="colButton">
+            <div
+              class="button"
+              onclick="outlayCategoryNew()"
+              title="Добавить категорию"
+            >
+              &#10010;
+            </div>
+          </td>
+          <td id="colButton">
+            <div
+              class="button"
+              onclick="outlayCategoryEdit()"
+              title="Изменить название категории"
+            >
+              &#9999;
+            </div>
+          </td>
+          <td id="colButton">
+            <div
+              class="button"
+              onclick="outlayCategoryDel()"
+              title="Удалить категорию"
+            >
+              &#10006;
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+    <ul expanded="true" style="padding-left: 0;">
+      <li id="0">
+        <span onClick="liOnClick(this.parentElement);">&#9650; Корень</span>
+      </li>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+#colMenu {
+  width: 10vw;
+}
+#colTitle {
+  width: 80vw;
+}
+#colButton {
+  width: 10vw;
+}
+
+ul {
+  padding-left: 3vw;
+  list-style: none;
+}
+ul li {
+  padding: 6px;
+}
+ul li:before {
+  /*content: "\2714";*/
+  content: "\25B2";
+}
