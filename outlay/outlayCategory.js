@@ -157,6 +157,7 @@ async function outlayCategoryDel() {
 window.leafChange = leafChange;
 
 function leafChange(elem) {
+  console.log(elem);
   let li = elem.parentElement;
   liOnClick(li);
   switch (elem.innerHTML) {
