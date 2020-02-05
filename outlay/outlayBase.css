@@ -95,3 +95,54 @@
 .dropdown:hover .dropbtn {
   background-color: green;
 }
+
+.table-fixed-head {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  height: 100vh;
+}
+
+.table-fixed-head td {
+  padding: 5px;
+  text-align: center;
+  width: 33.333vw;
+}
+
+.table-fixed-head tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 30px);
+}
+
+table {
+  font-family: sans-serif;
+}
+
+/* Beg https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+.table-fixed-head tbody::-webkit-scrollbar {
+  display: none;
+}
+/* End https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+
+.table-fixed-head tbody tr:nth-child(even) {
+  background-color: #ccffff;
+}
+
+a {
+  text-decoration: none; /* Убираем подчеркивание у ссылок */
+}
+
+a:link {
+  color: blue;
+}
+a:visited {
+  color: blue;
+}
+a:active {
+  color: blue;
+}
+a:hover {
+  text-decoration: underline; /* Добавляем подчеркивание при наведении курсора мыши на ссылку */
+}

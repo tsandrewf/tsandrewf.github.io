@@ -193,7 +193,6 @@ async function liExpand(elem) {
 window.liOnClick = liOnClick;
 
 async function liOnClick(liCategory) {
-  console.log("liCategory", liCategory);
   if (liCategory === categorySelected) return;
 
   if (categorySelected)
@@ -202,14 +201,9 @@ async function liOnClick(liCategory) {
       .classList.remove("selectedCategory");
 
   categorySelected = liCategory;
-  console.log("categorySelected", categorySelected);
   liCategory.getElementsByTagName("SPAN")[0].classList.add("selectedCategory");
 
   await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
-  console.log(
-    "Get categorySelectedId",
-    await Setting.get(outlayCategorySelectedKeyName)
-  );
 }
 
 async function displayData() {
@@ -218,9 +212,7 @@ async function displayData() {
     itemNum = getQueryVar("itemNum");
 
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-    console.log("categorySelectedId", categorySelectedId);
     if (!categorySelectedId) categorySelectedId = 0;
-    console.log("categorySelectedId", categorySelectedId);
 
     await displayTree(document.getElementById("0"), categorySelectedId);
     categorySelected = document.getElementById(categorySelectedId);
