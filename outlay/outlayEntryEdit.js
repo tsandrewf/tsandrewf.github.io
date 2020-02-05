@@ -47,6 +47,10 @@ async function inputSum_oninput(elem) {
     }
     outlayEntry.sums[itemNum - 1] = sum;
     await OutlayEntry.set(outlayEntry);
+    //outlayEntry = await OutlayEntry.get(entryId);
+    document.getElementById("sumAll").innerHTML = (
+      await OutlayEntry.get(entryId)
+    ).sumAll.toFixed(2);
   } catch (error) {
     alert(error);
   }
@@ -136,6 +140,7 @@ async function window_onload() {
   document.getElementById("iptDate").value = outlayEntry.date
     ? outlayEntry.date._toForm()
     : outlayEntry.date;
+  document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
 
   for (let i = 0; i < outlayEntry.categories.length; i++) {
     await itemAppend(outlayEntry.categories[i], outlayEntry.sums[i]);
