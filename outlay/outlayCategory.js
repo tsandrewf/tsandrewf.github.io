@@ -214,7 +214,9 @@ async function displayData() {
     itemNum = getQueryVar("itemNum");
 
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+    console.log("categorySelectedId", categorySelectedId);
     if (!categorySelectedId) categorySelectedId = 0;
+    console.log("categorySelectedId", categorySelectedId);
 
     await displayTree(document.getElementById("0"), categorySelectedId);
   } catch (error) {
