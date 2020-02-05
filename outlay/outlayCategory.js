@@ -225,6 +225,11 @@ async function displayData() {
 
     await displayTree(document.getElementById("0"), categorySelectedId);
     categorySelected = document.getElementById(categorySelectedId);
+    if (!categorySelectedId) {
+      categorySelected
+        .getElementsByTagName("SPAN")[0]
+        .classList.add("selectedCategory");
+    }
   } catch (error) {
     alert(error);
   }
