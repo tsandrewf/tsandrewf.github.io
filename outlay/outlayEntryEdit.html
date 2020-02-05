@@ -27,7 +27,9 @@
           <th id="colTitle">
             Чек за
             <input type="date" id="iptDate" oninput="dateChanged(this.value)" />
-            <input type="button" value="Сохранить" onClick="save()" />
+            <div class="button" onclick="save()" title="Сохранить">
+              &#10004;
+            </div>
           </th>
           <th id="colAdd">
             <a href="Javascript:outlayEntryItemNew()">&#10010;</a>
