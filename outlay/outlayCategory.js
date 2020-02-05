@@ -192,8 +192,8 @@ async function liExpand(elem) {
 
 window.liOnClick = liOnClick;
 
-function liOnClick(liCategory) {
-  console.log(liCategory);
+async function liOnClick(liCategory) {
+  console.log("liCategory", liCategory);
   if (liCategory === categorySelected) return;
 
   if (categorySelected)
@@ -202,9 +202,14 @@ function liOnClick(liCategory) {
       .classList.remove("selectedCategory");
 
   categorySelected = liCategory;
+  console.log("categorySelected", categorySelected);
   liCategory.getElementsByTagName("SPAN")[0].classList.add("selectedCategory");
 
-  Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
+  await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
+  console.log(
+    "Get categorySelectedId",
+    await Setting.get(outlayCategorySelectedKeyName)
+  );
 }
 
 async function displayData() {
