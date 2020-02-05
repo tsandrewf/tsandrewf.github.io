@@ -84,7 +84,7 @@ async function itemAppend(categoryId, sum) {
 
   let inputSum = document.createElement("INPUT");
   inputSum.type = "text";
-  inputSum.size = "40";
+  inputSum.size = "10";
   inputSum.value = sum;
   inputSum.oninput = async function() {
     await inputSum_oninput(this);
