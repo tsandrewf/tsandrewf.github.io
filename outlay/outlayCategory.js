@@ -213,7 +213,6 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
-  alert("displayData()");
   try {
     entryId = getQueryVar("entryId");
     itemNum = getQueryVar("itemNum");
