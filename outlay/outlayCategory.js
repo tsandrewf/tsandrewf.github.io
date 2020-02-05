@@ -224,6 +224,7 @@ async function displayData() {
     console.log("categorySelectedId", categorySelectedId);
 
     await displayTree(document.getElementById("0"), categorySelectedId);
+    categorySelected = document.getElementById(categorySelectedId);
   } catch (error) {
     alert(error);
   }
