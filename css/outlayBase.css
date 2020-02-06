@@ -1,0 +1,152 @@
+/* Спецсимволы: https://htmlweb.ru/html/symbols.php */
+/* https://ru.stackoverflow.com/questions/725507/Зафиксировать-шапку-таблицы-от-прокрутки */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.fixedblock {
+  position: absolute;
+  position: sticky;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  background: blue;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: white;
+}
+
+.fixedblock a {
+  color: white;
+}
+
+.fixedblock tr {
+  text-align: center;
+}
+.fixedblock table {
+  color: white;
+  text-align: center;
+}
+
+/* https://ru.stackoverflow.com/questions/640689/Нарисовать-круг-используя-только-css */
+.button {
+  width: 10vw;
+  height: 10vw;
+  background: magenta;
+  /*-moz-border-radius: 50px;*/
+  /*-webkit-border-radius: 50px;*/
+  /*border-radius: 50px;*/
+  border-radius: 50%;
+  cursor: pointer;
+  margin: auto; /* Центрирование */
+  padding: 5px 0;
+}
+
+.button:hover {
+  background: red;
+}
+
+/* https://www.w3schools.com/CSS/css_dropdowns.asp */
+/* Style The Dropdown Button */
+.dropbtn {
+  background-color: blue;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: green;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+  color: blue;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: green;
+}
+
+.table-fixed-head {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  height: 100vh;
+}
+
+.table-fixed-head td {
+  padding: 5px;
+  text-align: center;
+  width: 33.333vw;
+}
+
+.table-fixed-head tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 30px);
+}
+
+table {
+  font-family: sans-serif;
+}
+
+/* Beg https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+.table-fixed-head tbody::-webkit-scrollbar {
+  display: none;
+}
+/* End https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+
+.table-fixed-head tbody tr:nth-child(even) {
+  background-color: #ccffff;
+}
+
+a {
+  text-decoration: none; /* Убираем подчеркивание у ссылок */
+}
+
+a:link {
+  color: blue;
+}
+a:visited {
+  color: blue;
+}
+a:active {
+  color: blue;
+}
+a:hover {
+  text-decoration: underline; /* Добавляем подчеркивание при наведении курсора мыши на ссылку */
+}
