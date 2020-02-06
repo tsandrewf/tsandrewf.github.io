@@ -1,0 +1,10 @@
+table tr:nth-child(even) {
+  background-color: #ccffff;
+}
+
+table {
+  text-align: center;
+  font-weight: bolder;
+  font-size: 250%;
+  color: blue;
+}

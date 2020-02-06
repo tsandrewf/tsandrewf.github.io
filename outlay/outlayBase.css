@@ -26,6 +26,10 @@
 .fixedblock tr {
   text-align: center;
 }
+.fixedblock table {
+  color: white;
+  text-align: center;
+}
 
 /* https://ru.stackoverflow.com/questions/640689/Нарисовать-круг-используя-только-css */
 .button {

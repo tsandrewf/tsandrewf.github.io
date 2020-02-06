@@ -1,11 +1,11 @@
 "use strict";
 
-import { db, openDb, outlayObjectStoreName, _deleteDb } from "./db.js";
+window.openOulay = openOulay;
 
-window.onload = openDb(displayData);
-
-function displayData() {
-  document.getElementById("dbName").innerHTML = db.name;
+function openOulay() {
+  let windowOutlay = window.open(
+    "outlay.html",
+    "Расходы",
+    "menubar=no,toolbar=no,location=no,resizable=no,scrollbars=no,status=no"
+  );
 }
-
-window.deleteDb = _deleteDb;
