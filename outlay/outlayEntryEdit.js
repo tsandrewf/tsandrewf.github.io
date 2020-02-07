@@ -109,25 +109,29 @@ async function itemAppend(categoryId, sum) {
 window.outlayEntryItemNew = outlayEntryItemNew;
 
 async function outlayEntryItemNew() {
-  let rows = outlayTBody.rows;
-  if (
-    !rows.length ||
-    !rows[rows.length - 1].cells
-      .namedItem("colSum")
-      .getElementsByTagName("INPUT")[0].value
-  ) {
-    return;
-  }
+  try {
+    let rows = outlayTBody.rows;
 
-  let outlayEntry = await OutlayEntry.get(entryId);
-  outlayEntry.categories.push(null);
-  outlayEntry.sums.push(null);
-  await OutlayEntry.set(outlayEntry);
-  await itemAppend(null, null);
-  rows[rows.length - 1].cells
-    .namedItem("colSum")
-    .getElementsByTagName("INPUT")[0]
-    .focus();
+    if (
+      !rows.length ||
+      rows[rows.length - 1].cells
+        .namedItem("colSum")
+        .getElementsByTagName("INPUT")[0].value
+    ) {
+      let outlayEntry = await OutlayEntry.get(entryId);
+      outlayEntry.categories.push(null);
+      outlayEntry.sums.push(null);
+      await OutlayEntry.set(outlayEntry);
+      await itemAppend(null, null);
+    }
+
+    rows[rows.length - 1].cells
+      .namedItem("colSum")
+      .getElementsByTagName("INPUT")[0]
+      .focus();
+  } catch (error) {
+    alert(error);
+  }
 }
 
 window.dateChanged = dateChanged;
@@ -158,6 +162,20 @@ async function window_onload() {
 
   for (let i = 0; i < outlayEntry.categories.length; i++) {
     await itemAppend(outlayEntry.categories[i], outlayEntry.sums[i]);
+  }
+
+  // Фокус на последнюю позицию, если эта позиция НЕ заполнена
+  let rows = outlayTBody.rows;
+  if (
+    rows.length &&
+    !rows[rows.length - 1].cells
+      .namedItem("colSum")
+      .getElementsByTagName("INPUT")[0].value
+  ) {
+    rows[rows.length - 1].cells
+      .namedItem("colSum")
+      .getElementsByTagName("INPUT")[0]
+      .focus();
   }
 }
 
