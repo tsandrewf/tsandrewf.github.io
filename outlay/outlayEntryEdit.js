@@ -109,11 +109,25 @@ async function itemAppend(categoryId, sum) {
 window.outlayEntryItemNew = outlayEntryItemNew;
 
 async function outlayEntryItemNew() {
+  let rows = outlayTBody.rows;
+  if (
+    !rows.length ||
+    !rows[rows.length - 1].cells
+      .namedItem("colSum")
+      .getElementsByTagName("INPUT")[0].value
+  ) {
+    return;
+  }
+
   let outlayEntry = await OutlayEntry.get(entryId);
   outlayEntry.categories.push(null);
   outlayEntry.sums.push(null);
   await OutlayEntry.set(outlayEntry);
   await itemAppend(null, null);
+  rows[rows.length - 1].cells
+    .namedItem("colSum")
+    .getElementsByTagName("INPUT")[0]
+    .focus();
 }
 
 window.dateChanged = dateChanged;
