@@ -19,3 +19,8 @@ ul li:before {
   /*content: "\2714";*/
   content: "\25B2";
 }
+
+.tree {
+  font-family: sans-serif;
+  font-weight: bold;
+}
