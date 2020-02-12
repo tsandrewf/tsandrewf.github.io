@@ -1,0 +1,43 @@
+#colMenu {
+  width: 10vw;
+}
+#colTitle {
+  width: 80vw;
+}
+
+#tdCategoryName {
+  width: 55%;
+  text-align: right;
+}
+
+.tableBase tr {
+  cursor: pointer;
+}
+
+#tdSum {
+  width: 40vw;
+  text-align: right;
+}
+
+#tdPercentCategory {
+  width: 40vw;
+  text-align: right;
+}
+
+#tdPercentAll {
+  width: 40vw;
+  text-align: right;
+}
+
+ul {
+  padding-left: 3vw;
+  list-style: none;
+}
+ul li {
+  padding: 6px;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+ul li:before {
+  content: "\25B2";
+}

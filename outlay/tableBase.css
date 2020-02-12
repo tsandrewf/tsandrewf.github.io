@@ -1,0 +1,58 @@
+.tableBase {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  /*height: 100vh;*/
+}
+
+.tableBase th {
+  padding: 5px;
+  text-align: center;
+}
+.tableBase td {
+  padding: 5px;
+  text-align: center;
+  width: 33.333vw;
+}
+
+.tableBase tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 30px);
+}
+/* Beg https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+.tableBase tbody::-webkit-scrollbar {
+  display: none;
+}
+/* End https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
+
+.tableBase tbody tr:nth-child(odd) {
+  background-color: #ccffff;
+}
+
+/* Мое творчество */
+.tableBase thead a {
+  color: #fdfdfd;
+}
+
+a {
+  text-decoration: none; /* Убираем подчеркивание у ссылок */
+}
+
+a:link {
+  color: blue;
+}
+a:visited {
+  color: blue;
+}
+a:active {
+  color: blue;
+}
+/*a:hover {
+  text-decoration: underline; /* Добавляем подчеркивание при наведении курсора мыши на ссылку */
+/*}*/
+
+.tableBase {
+  font-family: sans-serif;
+}

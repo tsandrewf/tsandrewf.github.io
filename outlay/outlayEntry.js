@@ -131,15 +131,53 @@ export class OutlayEntry {
     }
   }
 
-  static async getEntries(transaction) {
+  static async getEntries() {
     try {
+      let dateBeg = null;
+      let dateEnd = null;
+      let transaction = null;
+      for (let argument of arguments) {
+        if (argument instanceof Object) {
+          for (let property of Object.getOwnPropertyNames(argument)) {
+            switch (property) {
+              case "dateBeg":
+                dateBeg = argument.dateBeg;
+                break;
+              case "dateEnd":
+                dateEnd = argument.dateEnd;
+                break;
+            }
+          }
+        }
+        if (argument instanceof IDBTransaction) {
+          transaction = argument;
+        }
+      }
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);
 
       const oulayEntries = await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayObjectStoreName)
-          .index("date_idx") // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
-          .getAll();
+        let request;
+        if (!dateBeg && !dateEnd) {
+          request = transaction
+            .objectStore(outlayObjectStoreName)
+            .index("date_idx") // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
+            .getAll();
+        } else if (dateBeg && dateEnd) {
+          request = transaction
+            .objectStore(outlayObjectStoreName)
+            .index("date_idx") // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
+            .getAll(IDBKeyRange.bound(dateBeg, dateEnd, false, false));
+        } else if (dateBeg && !dateEnd) {
+          request = transaction
+            .objectStore(outlayObjectStoreName)
+            .index("date_idx") // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
+            .getAll(IDBKeyRange.lowerBound(dateBeg, false));
+        } else if (!dateBeg && dateEnd) {
+          request = transaction
+            .objectStore(outlayObjectStoreName)
+            .index("date_idx") // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
+            .getAll(IDBKeyRange.upperBound(dateEnd, false));
+        }
 
         request.onsuccess = function() {
           resolve(request.result);
@@ -152,6 +190,7 @@ export class OutlayEntry {
 
       return oulayEntries;
     } catch (error) {
+      console.log("error", error);
       transaction.abort();
       throw new Error(error);
     }
