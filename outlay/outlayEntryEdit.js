@@ -179,16 +179,6 @@ async function window_onload() {
   }
 }
 
-Date.prototype._toForm = function() {
-  return (
-    this.getFullYear() +
-    "-" +
-    (this.getMonth() + 1)._toForm() +
-    "-" +
-    this.getDate()._toForm()
-  );
-};
-
 Number.prototype._toForm = function() {
   return 10 > this ? "0" + this : this.toString();
 };

@@ -1,26 +1,34 @@
 "use strict";
 
 import { OutlayEntry } from "./outlayEntry.js";
-import { openDb } from "./db.js";
+import {
+  openDb,
+  outlaySummaryPeriodKeyName,
+  settingObjectStoreName
+} from "./db.js";
 import { Category } from "./category.js";
+import { Setting } from "./setting.js";
 
 let summaries;
 let summaryContent;
-let dateBeg = null;
-let dateEnd = null;
 
 window.dateChanged = dateChanged;
 
 async function dateChanged() {
-  dateBeg = new Date(document.getElementById("iptDateBeg").value);
+  let dateBeg = new Date(document.getElementById("iptDateBeg").value);
   if (!(dateBeg instanceof Date && !isNaN(dateBeg.valueOf()))) {
     dateBeg = null;
   }
 
-  dateEnd = new Date(document.getElementById("iptDateEnd").value);
+  let dateEnd = new Date(document.getElementById("iptDateEnd").value);
   if (!(dateEnd instanceof Date && !isNaN(dateEnd.valueOf()))) {
     dateEnd = null;
   }
+
+  await Setting.set(outlaySummaryPeriodKeyName, {
+    dateBeg: dateBeg,
+    dateEnd: dateEnd
+  });
 
   await summariesRefresh();
   await summaryContentRefresh(0);
@@ -31,6 +39,21 @@ window.onload = openDb(window_onload);
 async function window_onload() {
   summaryContent = document.getElementById("summaryContent");
 
+  let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+  if (!datePeriod) {
+    let date = new Date();
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    console.log("date", date);
+    datePeriod = { dateBeg: date, dateEnd: date };
+  }
+  document.getElementById("iptDateBeg").value = datePeriod.dateBeg
+    ? datePeriod.dateBeg._toForm()
+    : null;
+  document.getElementById("iptDateEnd").value = datePeriod.dateEnd
+    ? datePeriod.dateEnd._toForm()
+    : null;
+  await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
+
   await summariesRefresh();
 
   await summaryContentRefresh(0);
@@ -39,6 +62,14 @@ async function window_onload() {
 async function summariesRefresh() {
   summaries = null;
   summaries = new Map();
+
+  let dateBeg = document.getElementById("iptDateBeg").value;
+  dateBeg = dateBeg ? new Date(dateBeg) : null;
+  let dateEnd = document.getElementById("iptDateEnd").value;
+  dateEnd = dateEnd ? new Date(dateEnd) : null;
+
+  if (dateBeg && dateEnd && dateBeg > dateEnd) return;
+
   let outlayEntries = await OutlayEntry.getEntries({
     dateBeg: dateBeg,
     dateEnd: dateEnd

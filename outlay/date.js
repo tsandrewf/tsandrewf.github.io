@@ -4,6 +4,16 @@ function padStr(i) {
   return i < 10 ? "0" + i : "" + i;
 }
 
+Date.prototype._toForm = function() {
+  return (
+    this.getFullYear() +
+    "-" +
+    padStr(this.getMonth() + 1) +
+    "-" +
+    padStr(this.getDate())
+  );
+};
+
 Date.prototype._toStringBrief = function() {
   return (
     padStr(this.getDate()) +

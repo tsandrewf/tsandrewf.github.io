@@ -6,6 +6,7 @@ export let outlayObjectStoreName = "outlay";
 export let outlayCategoryObjectStoreName = "outlayCategory";
 export let outlayCategorySelectedKeyName = "outlayCategorySelected";
 export let outlayDateSelectedKeyName = "outlayDateSelected";
+export let outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
 
 export function openDb(displayData) {
   const DBOpenRequest = window.indexedDB.open("mymoney", 1);
