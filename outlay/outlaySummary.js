@@ -12,9 +12,7 @@ import { Setting } from "./setting.js";
 let summaries;
 let summaryContent;
 
-window.dateChanged = dateChanged;
-
-async function dateChanged() {
+function getPeriod() {
   let dateBeg = new Date(document.getElementById("iptDateBeg").value);
   if (!(dateBeg instanceof Date && !isNaN(dateBeg.valueOf()))) {
     dateBeg = null;
@@ -25,11 +23,16 @@ async function dateChanged() {
     dateEnd = null;
   }
 
-  await Setting.set(outlaySummaryPeriodKeyName, {
+  return {
     dateBeg: dateBeg,
     dateEnd: dateEnd
-  });
+  };
+}
 
+window.dateChanged = dateChanged;
+
+async function dateChanged() {
+  await Setting.set(outlaySummaryPeriodKeyName, getPeriod());
   await summariesRefresh();
   await summaryContentRefresh(0);
 }
@@ -184,6 +187,14 @@ async function summaryContentRefresh(categoryId) {
   table.className = "tableBase";
   let tbody = document.createElement("TBODY");
   table.appendChild(tbody);
+
+  {
+    const period = getPeriod();
+    if (period.dateBeg && period.dateEnd && period.dateBeg > period.dateEnd) {
+      trAppend("Дата начала периода БОЛЬШЕ даты окончания", 0, categoryId);
+      return;
+    }
+  }
 
   if (!summaries.size) {
     trAppend("Расходов НЕ было", 0, categoryId);
