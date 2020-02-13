@@ -51,10 +51,10 @@ async function window_onload() {
     datePeriod = { dateBeg: date, dateEnd: date };
   }
   document.getElementById("iptDateBeg").value = datePeriod.dateBeg
-    ? datePeriod.dateBeg._toForm()
+    ? datePeriod.dateBeg.toISOString().slice(0, 10)
     : null;
   document.getElementById("iptDateEnd").value = datePeriod.dateEnd
-    ? datePeriod.dateEnd._toForm()
+    ? datePeriod.dateEnd.toISOString().slice(0, 10)
     : null;
   await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
 
