@@ -63,6 +63,10 @@ async function window_onload() {
 }
 
 async function summariesRefresh() {
+  const loader = document.createElement("DIV");
+  document.body.appendChild(loader);
+  loader.id = "loader";
+
   summaries = null;
   summaries = new Map();
 
@@ -100,6 +104,8 @@ async function summariesRefresh() {
       }
     }
   }
+
+  document.body.removeChild(loader);
 }
 
 window.trOnclick = trOnclick;
