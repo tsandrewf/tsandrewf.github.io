@@ -37,7 +37,6 @@ async function dateChanged() {
 window.onload = openDb(window_onload);
 
 async function window_onload() {
-  alert("window_onload()");
   try {
     summaryContent = document.getElementById("summaryContent");
 
