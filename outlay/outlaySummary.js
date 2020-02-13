@@ -41,26 +41,30 @@ async function dateChanged() {
 window.onload = openDb(window_onload);
 
 async function window_onload() {
-  summaryContent = document.getElementById("summaryContent");
+  try {
+    summaryContent = document.getElementById("summaryContent");
 
-  let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
-  if (!datePeriod) {
-    let date = new Date();
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    console.log("date", date);
-    datePeriod = { dateBeg: date, dateEnd: date };
+    let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+    if (!datePeriod) {
+      let date = new Date();
+      date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      console.log("date", date);
+      datePeriod = { dateBeg: date, dateEnd: date };
+    }
+    document.getElementById("iptDateBeg").value = datePeriod.dateBeg
+      ? datePeriod.dateBeg.toISOString().slice(0, 10)
+      : null;
+    document.getElementById("iptDateEnd").value = datePeriod.dateEnd
+      ? datePeriod.dateEnd.toISOString().slice(0, 10)
+      : null;
+    await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
+
+    await summariesRefresh();
+
+    await summaryContentRefresh(0);
+  } catch (error) {
+    alert(error);
   }
-  document.getElementById("iptDateBeg").value = datePeriod.dateBeg
-    ? datePeriod.dateBeg.toISOString().slice(0, 10)
-    : null;
-  document.getElementById("iptDateEnd").value = datePeriod.dateEnd
-    ? datePeriod.dateEnd.toISOString().slice(0, 10)
-    : null;
-  await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
-
-  await summariesRefresh();
-
-  await summaryContentRefresh(0);
 }
 
 /*function sleep(millis) {
