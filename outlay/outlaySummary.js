@@ -1,11 +1,7 @@
 "use strict";
 
 import { OutlayEntry } from "./outlayEntry.js";
-import {
-  openDb,
-  outlaySummaryPeriodKeyName,
-  settingObjectStoreName
-} from "./db.js";
+import { openDb, outlaySummaryPeriodKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
@@ -41,6 +37,7 @@ async function dateChanged() {
 window.onload = openDb(window_onload);
 
 async function window_onload() {
+  alert("window_onload()");
   try {
     summaryContent = document.getElementById("summaryContent");
 
@@ -52,10 +49,10 @@ async function window_onload() {
       datePeriod = { dateBeg: date, dateEnd: date };
     }
     document.getElementById("iptDateBeg").value = datePeriod.dateBeg
-      ? datePeriod.dateBeg.toISOString().slice(0, 10)
+      ? datePeriod.dateBeg._toForm()
       : null;
     document.getElementById("iptDateEnd").value = datePeriod.dateEnd
-      ? datePeriod.dateEnd.toISOString().slice(0, 10)
+      ? datePeriod.dateEnd._toForm()
       : null;
     await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
 
