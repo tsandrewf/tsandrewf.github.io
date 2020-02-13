@@ -8,6 +8,7 @@ import {
 } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
+import { StandbyIndicator } from "./standbyIndicator.js";
 
 let summaries;
 let summaryContent;
@@ -62,10 +63,16 @@ async function window_onload() {
   await summaryContentRefresh(0);
 }
 
+/*function sleep(millis) {
+  var t = new Date().getTime();
+  var i = 0;
+  while (new Date().getTime() - t < millis) {
+    i++;
+  }
+}*/
+
 async function summariesRefresh() {
-  const loader = document.createElement("DIV");
-  document.body.appendChild(loader);
-  loader.id = "loader";
+  StandbyIndicator.show();
 
   summaries = null;
   summaries = new Map();
@@ -105,7 +112,8 @@ async function summariesRefresh() {
     }
   }
 
-  document.body.removeChild(loader);
+  //sleep(2000);
+  StandbyIndicator.hide();
 }
 
 window.trOnclick = trOnclick;
