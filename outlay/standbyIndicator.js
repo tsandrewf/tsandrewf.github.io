@@ -1,5 +1,5 @@
 export class StandbyIndicator {
-  static standbyIndicator = null;
+  standbyIndicator = null;
 
   static show() {
     if (this.standbyIndicator) return;
