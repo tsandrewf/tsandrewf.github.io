@@ -1,0 +1,21 @@
+.fixedfooter {
+  position: fixed; /* Фиксированное положение */
+  position: sticky;
+  left: 0;
+  bottom: 0; /* Левый нижний угол */
+  padding: 10px; /* Поля вокруг текста */
+  background: blue; /* Цвет фона */
+  color: #fff; /* Цвет текста */
+  width: 100%; /* Ширина слоя */
+
+  font-family: sans-serif;
+  color: grey;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.fixedfooter div a {
+  color: white;
+}
