@@ -1,0 +1,6 @@
+.content {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 30px);
+}
