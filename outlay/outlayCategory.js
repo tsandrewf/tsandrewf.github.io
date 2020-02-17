@@ -2,6 +2,7 @@
 
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
+import { StandbyIndicator } from "./standbyIndicator.js";
 
 import {
   db,
@@ -37,6 +38,8 @@ const compressed = String.fromCharCode(9660);
 window.outlayCategoryDel = outlayCategoryDel;
 
 async function outlayCategoryDel() {
+  if (StandbyIndicator.isShowing()) return;
+
   try {
     if (!categorySelected) {
       throw Error("НЕ выбрана категория");
@@ -157,6 +160,8 @@ async function outlayCategoryDel() {
 window.leafChange = leafChange;
 
 function leafChange(elem) {
+  if (StandbyIndicator.isShowing()) return;
+
   let li = elem.parentElement;
   liOnClick(li);
   switch (elem.innerHTML) {
@@ -193,6 +198,8 @@ async function liExpand(elem) {
 window.liOnClick = liOnClick;
 
 async function liOnClick(liCategory) {
+  if (StandbyIndicator.isShowing()) return;
+
   if (liCategory === categorySelected) return;
 
   if (categorySelected)
@@ -208,6 +215,8 @@ async function liOnClick(liCategory) {
 
 async function displayData() {
   try {
+    StandbyIndicator.show();
+
     entryId = getQueryVar("entryId");
     itemNum = getQueryVar("itemNum");
 
@@ -223,6 +232,8 @@ async function displayData() {
     }
   } catch (error) {
     alert(error);
+  } finally {
+    StandbyIndicator.hide();
   }
 }
 
@@ -289,12 +300,16 @@ async function displayTree(node, categorySelectedId) {
 window.outlayCategoryEdit = outlayCategoryEdit;
 
 function outlayCategoryEdit() {
+  if (StandbyIndicator.isShowing()) return;
+
   location.href = "outlayCategoryEdit.html?id=" + categorySelected.id;
 }
 
 window.outlayCategoryNew = outlayCategoryNew;
 
 function outlayCategoryNew() {
+  if (StandbyIndicator.isShowing()) return;
+
   document.location.assign(
     "outlayCategoryEdit.html?parentId=" + categorySelected.id
   );

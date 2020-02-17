@@ -15,4 +15,8 @@ export class StandbyIndicator {
     document.body.removeChild(standbyIndicator);
     standbyIndicator = null;
   }
+
+  static isShowing() {
+    return document.getElementById("standbyIndicator") ? true : false;
+  }
 }
