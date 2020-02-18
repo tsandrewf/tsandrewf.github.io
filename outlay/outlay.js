@@ -48,11 +48,11 @@ async function displayData(dateBeg, dateEnd) {
       dateBeg = entryYoungest ? entryYoungest.date : new Date();
       dateBeg = dateBeg._getMonthBeg();
 
-      dateBeg.setDate(dateBeg.getDate() - 1);
+      /*dateBeg.setDate(dateBeg.getDate() - 1);
       dateBeg = dateBeg._getMonthBeg();
 
       dateBeg.setDate(dateBeg.getDate() - 1);
-      dateBeg = dateBeg._getMonthBeg();
+      dateBeg = dateBeg._getMonthBeg();*/
     }
 
     if (outlayTBody.rows.length) {
@@ -76,6 +76,9 @@ async function displayData(dateBeg, dateEnd) {
   });
   for (let i = outlayEntries.length - 1; i >= 0; i--) {
     let outlayEntry = outlayEntries[i];
+    if (null === monthNumRem) {
+      monthNumRem = outlayEntry.date.getMonth();
+    }
 
     let monthNum = outlayEntry.date.getMonth();
     if (monthNumRem !== monthNum) {
@@ -125,8 +128,7 @@ async function displayData(dateBeg, dateEnd) {
 
   let entryOlder = await OutlayEntry.getEntryOlder(dateBeg);
   if (entryOlder) {
-    let dateEndNew = entryOlder.date;
-    dateEndNew.setDate(dateEndNew.getDate() - 1);
+    let dateEndNew = entryOlder.date._getMonthEnd();
     let dateBegNew = dateEndNew._getMonthBeg();
 
     // Создаем строку таблицы и добавляем ее

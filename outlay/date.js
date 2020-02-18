@@ -40,6 +40,18 @@ Date.prototype._getMonthBeg = function() {
   return new Date(new Date(new Date(this).setDate(1)).setHours(0, 0, 0, 0));
 };
 
+// https://stackoverflow.com/questions/222309/calculate-last-day-of-month-in-javascript
+Date.prototype._getMonthEnd = function() {
+  return new Date(
+    new Date(this.getFullYear(), this.getMonth() + 1, 0).setHours(
+      23,
+      59,
+      59,
+      999
+    )
+  );
+};
+
 Date.prototype._getYearBeg = function() {
   return new Date(
     new Date(new Date(new Date(this).setDate(1)).setMonth(0)).setHours(
