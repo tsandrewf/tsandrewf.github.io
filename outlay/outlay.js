@@ -48,11 +48,11 @@ async function displayData(dateBeg, dateEnd) {
       dateBeg = entryYoungest ? entryYoungest.date : new Date();
       dateBeg = dateBeg._getMonthBeg();
 
-      /*dateBeg.setDate(dateBeg.getDate() - 1);
+      dateBeg.setDate(dateBeg.getDate() - 1);
       dateBeg = dateBeg._getMonthBeg();
 
       dateBeg.setDate(dateBeg.getDate() - 1);
-      dateBeg = dateBeg._getMonthBeg();*/
+      dateBeg = dateBeg._getMonthBeg();
     }
 
     if (outlayTBody.rows.length) {
