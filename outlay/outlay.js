@@ -27,11 +27,19 @@ async function displayData(dateBeg, dateEnd) {
     .getElementById("outlayTable")
     .getElementsByTagName("TBODY")[0];
 
+  let monthNumRem = null;
+
   {
     let entryYoungest = await OutlayEntry.getEntryYoungest();
 
     if (!dateBeg) {
       dateBeg = entryYoungest ? entryYoungest.date : new Date();
+      dateBeg = dateBeg._getMonthBeg();
+
+      dateBeg.setDate(dateBeg.getDate() - 1);
+      dateBeg = dateBeg._getMonthBeg();
+
+      dateBeg.setDate(dateBeg.getDate() - 1);
       dateBeg = dateBeg._getMonthBeg();
     }
 
@@ -44,8 +52,12 @@ async function displayData(dateBeg, dateEnd) {
       td.innerHTML =
         td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
     } else if (entryYoungest) {
+      monthNumRem = entryYoungest.date.getMonth();
+
       let row = document.createElement("TR");
       outlayTBody.appendChild(row);
+      row.style.backgroundColor = "grey";
+      row.style.color = "white";
       let td = document.createElement("TD");
       row.appendChild(td);
       td.innerHTML =
@@ -66,9 +78,30 @@ async function displayData(dateBeg, dateEnd) {
   for (let i = outlayEntries.length - 1; i >= 0; i--) {
     let outlayEntry = outlayEntries[i];
 
+    let monthNum = outlayEntry.date.getMonth();
+    if (monthNumRem && monthNumRem !== monthNum) {
+      console.log("outlayEntry.date", monthNum);
+      monthNumRem = monthNum;
+
+      let row = document.createElement("TR");
+      outlayTBody.appendChild(row);
+      row.style.backgroundColor = "grey";
+      row.style.color = "white";
+      let td = document.createElement("TD");
+      row.appendChild(td);
+      td.innerHTML =
+        outlayEntry.date._getMonthString() +
+        " " +
+        outlayEntry.date.getFullYear() +
+        "г.";
+      td.innerHTML =
+        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+      td.colSpan = 4;
+    }
+
     // Создаем строку таблицы и добавляем ее
     let row = document.createElement("TR");
-    row.className = "odd";
+    //row.className = "odd";
     outlayTBody.appendChild(row);
 
     // Создаем ячейки в вышесозданной строке и добавляем тх
@@ -115,7 +148,9 @@ async function displayData(dateBeg, dateEnd) {
     // Создаем строку таблицы и добавляем ее
     let row = document.createElement("TR");
     outlayTBody.appendChild(row);
-    row.className = "odd";
+    row.style.backgroundColor = "grey";
+    row.style.color = "white";
+    //row.className = "odd";
     row.onclick = function() {
       displayData(dateBegNew, dateEndNew);
     };
