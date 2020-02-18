@@ -27,20 +27,36 @@ async function displayData(dateBeg, dateEnd) {
     .getElementById("outlayTable")
     .getElementsByTagName("TBODY")[0];
 
-  if (!dateBeg) {
+  {
     let entryYoungest = await OutlayEntry.getEntryYoungest();
 
-    dateBeg = entryYoungest ? entryYoungest.date : new Date();
-    dateBeg = dateBeg._getMonthBeg();
-  }
+    if (!dateBeg) {
+      dateBeg = entryYoungest ? entryYoungest.date : new Date();
+      dateBeg = dateBeg._getMonthBeg();
+    }
 
-  if (outlayTBody.rows.length) {
-    let row = outlayTBody.rows[outlayTBody.rows.length - 1];
-    row.onclick = null;
-    row.style.cursor = null;
-    let td = row.getElementsByTagName("TD")[0];
-    td.innerHTML = td.innerHTML.replace(/Добавить/gi, "").trim();
-    td.innerHTML = td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+    if (outlayTBody.rows.length) {
+      let row = outlayTBody.rows[outlayTBody.rows.length - 1];
+      row.onclick = null;
+      row.style.cursor = null;
+      let td = row.getElementsByTagName("TD")[0];
+      td.innerHTML = td.innerHTML.replace(/Добавить/gi, "").trim();
+      td.innerHTML =
+        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+    } else if (entryYoungest) {
+      let row = document.createElement("TR");
+      outlayTBody.appendChild(row);
+      let td = document.createElement("TD");
+      row.appendChild(td);
+      td.innerHTML =
+        entryYoungest.date._getMonthString() +
+        " " +
+        entryYoungest.date.getFullYear() +
+        "г.";
+      td.innerHTML =
+        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+      td.colSpan = 4;
+    }
   }
 
   let outlayEntries = await OutlayEntry.getEntries({
