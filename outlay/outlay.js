@@ -23,6 +23,18 @@ async function outlayEntryNew() {
 window.onload = openDb(displayData);
 
 async function displayData(dateBeg, dateEnd) {
+  function appendRowNewMonth(date) {
+    let row = document.createElement("TR");
+    outlayTBody.appendChild(row);
+    row.style.backgroundColor = "grey";
+    row.style.color = "white";
+    let td = document.createElement("TD");
+    row.appendChild(td);
+    td.innerHTML = date._getMonthString() + " " + date.getFullYear() + "г.";
+    td.innerHTML = td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+    td.colSpan = 4;
+  }
+
   const outlayTBody = document
     .getElementById("outlayTable")
     .getElementsByTagName("TBODY")[0];
@@ -52,22 +64,9 @@ async function displayData(dateBeg, dateEnd) {
       td.innerHTML =
         td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
     } else if (entryYoungest) {
-      monthNumRem = entryYoungest.date.getMonth();
+      appendRowNewMonth(entryYoungest.date);
 
-      let row = document.createElement("TR");
-      outlayTBody.appendChild(row);
-      row.style.backgroundColor = "grey";
-      row.style.color = "white";
-      let td = document.createElement("TD");
-      row.appendChild(td);
-      td.innerHTML =
-        entryYoungest.date._getMonthString() +
-        " " +
-        entryYoungest.date.getFullYear() +
-        "г.";
-      td.innerHTML =
-        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
-      td.colSpan = 4;
+      monthNumRem = entryYoungest.date.getMonth();
     }
   }
 
@@ -79,29 +78,14 @@ async function displayData(dateBeg, dateEnd) {
     let outlayEntry = outlayEntries[i];
 
     let monthNum = outlayEntry.date.getMonth();
-    if (monthNumRem && monthNumRem !== monthNum) {
-      console.log("outlayEntry.date", monthNum);
-      monthNumRem = monthNum;
+    if (monthNumRem !== monthNum) {
+      appendRowNewMonth(outlayEntry.date);
 
-      let row = document.createElement("TR");
-      outlayTBody.appendChild(row);
-      row.style.backgroundColor = "grey";
-      row.style.color = "white";
-      let td = document.createElement("TD");
-      row.appendChild(td);
-      td.innerHTML =
-        outlayEntry.date._getMonthString() +
-        " " +
-        outlayEntry.date.getFullYear() +
-        "г.";
-      td.innerHTML =
-        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
-      td.colSpan = 4;
+      monthNumRem = monthNum;
     }
 
     // Создаем строку таблицы и добавляем ее
     let row = document.createElement("TR");
-    //row.className = "odd";
     outlayTBody.appendChild(row);
 
     // Создаем ячейки в вышесозданной строке и добавляем тх
@@ -150,7 +134,6 @@ async function displayData(dateBeg, dateEnd) {
     outlayTBody.appendChild(row);
     row.style.backgroundColor = "grey";
     row.style.color = "white";
-    //row.className = "odd";
     row.onclick = function() {
       displayData(dateBegNew, dateEndNew);
     };
