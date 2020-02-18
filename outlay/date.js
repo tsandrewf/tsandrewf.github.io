@@ -50,3 +50,22 @@ Date.prototype._getYearBeg = function() {
     )
   );
 };
+
+Date.prototype._getMonthString = function() {
+  const monthNames = [
+    "январь",
+    "февраль",
+    "март",
+    "апрель",
+    "май",
+    "июнь",
+    "июль",
+    "август",
+    "сентябрь",
+    "октябрь",
+    "ноябрь",
+    "декабрь"
+  ];
+
+  return monthNames[this.getMonth()];
+};

@@ -60,6 +60,52 @@ export class OutlayEntry {
     }
   }
 
+  static async getEntryOlder(date, transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
+
+      const entry = await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(outlayObjectStoreName)
+          .index("date_idx")
+          .openCursor(IDBKeyRange.upperBound(date, true), "prev");
+        request.onsuccess = function() {
+          resolve(request.result ? request.result.value : null);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return entry;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async getEntryYoungest(transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
+
+      const entry = await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(outlayObjectStoreName)
+          .index("date_idx")
+          .openCursor(null, "prev");
+        request.onsuccess = function() {
+          resolve(request.result ? request.result.value : null);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return entry;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async set(outlayEntry, transaction) {
     try {
       outlayEntry.sumAll = 0;
@@ -71,7 +117,6 @@ export class OutlayEntry {
         outlayEntry.categoryId = outlayEntry.categories[0];
       } else {
         let ancestorsAll = null;
-        /*for (let categoryId of outlayEntry.categories)*/
         for (let i = 0; i < outlayEntry.categories.length; i++) {
           const categoryId = outlayEntry.categories[i];
           if (outlayEntry.sums[i]) {

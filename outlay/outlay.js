@@ -5,6 +5,8 @@ import { Setting } from "./setting.js";
 import { openDb, outlayDateSelectedKeyName } from "./db.js";
 import { Category } from "./category.js";
 
+//let dateBeg = null;
+
 window.outlayEntryNew = outlayEntryNew;
 
 async function outlayEntryNew() {
@@ -20,12 +22,31 @@ async function outlayEntryNew() {
 
 window.onload = openDb(displayData);
 
-async function displayData() {
+async function displayData(dateBeg, dateEnd) {
   const outlayTBody = document
     .getElementById("outlayTable")
     .getElementsByTagName("TBODY")[0];
 
-  let outlayEntries = await OutlayEntry.getEntries();
+  if (!dateBeg) {
+    let entryYoungest = await OutlayEntry.getEntryYoungest();
+
+    dateBeg = entryYoungest ? entryYoungest.date : new Date();
+    dateBeg = dateBeg._getMonthBeg();
+  }
+
+  if (outlayTBody.rows.length) {
+    let row = outlayTBody.rows[outlayTBody.rows.length - 1];
+    row.onclick = null;
+    row.style.cursor = null;
+    let td = row.getElementsByTagName("TD")[0];
+    td.innerHTML = td.innerHTML.replace(/Добавить/gi, "").trim();
+    td.innerHTML = td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+  }
+
+  let outlayEntries = await OutlayEntry.getEntries({
+    dateBeg: dateBeg,
+    dateEnd: dateEnd
+  });
   for (let i = outlayEntries.length - 1; i >= 0; i--) {
     let outlayEntry = outlayEntries[i];
 
@@ -67,6 +88,32 @@ async function displayData() {
     tdCategory.id = "colCategory";
     tdSum.id = "colSum";
     tdDel.id = "colDel";
+  }
+
+  let entryOlder = await OutlayEntry.getEntryOlder(dateBeg);
+  if (entryOlder) {
+    let dateEndNew = entryOlder.date;
+    dateEndNew.setDate(dateEndNew.getDate() - 1);
+    let dateBegNew = dateEndNew._getMonthBeg();
+
+    // Создаем строку таблицы и добавляем ее
+    let row = document.createElement("TR");
+    outlayTBody.appendChild(row);
+    row.className = "odd";
+    row.onclick = function() {
+      displayData(dateBegNew, dateEndNew);
+    };
+    row.style.cursor = "pointer";
+
+    let tdAppend = document.createElement("TD");
+    row.appendChild(tdAppend);
+    tdAppend.innerHTML =
+      "Добавить " +
+      dateBegNew._getMonthString() +
+      " " +
+      dateBegNew.getFullYear() +
+      "г.";
+    tdAppend.colSpan = 4;
   }
 }
 
