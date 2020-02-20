@@ -1,0 +1,57 @@
+/* https://habr.com/ru/post/467049/ */
+
+.navbar-top,
+.navbar-bottom {
+  position: absolute;
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  margin: 0;
+  padding: 0;
+
+  background: blue;
+  color: white;
+
+  font-family: sans-serif;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: 0.25em;
+}
+
+.navbar-top,
+.navbar-bottom a {
+  color: white;
+}
+
+.navbar-top .buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: -0.5em;
+}
+
+.navbar-top .buttons div {
+  width: calc(100% / 3-0.5em);
+  margin-left: 0.5em;
+}
+
+.navbar-top {
+  top: 0;
+  justify-content: space-between;
+}
+
+.navbar-bottom {
+  bottom: 0;
+  justify-content: space-around;
+}
+
+.navbar-bottom div {
+  color: grey;
+}
+
+.navbar-bottom div a {
+  color: white;
+}
