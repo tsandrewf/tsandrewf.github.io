@@ -180,7 +180,8 @@ function leafChange(elem) {
 async function liCompress(elem) {
   await Category.setExpanded(Number(elem.id), false);
 
-  elem.getElementsByTagName("A")[0].innerHTML = compressed;
+  //elem.getElementsByTagName("A")[0].innerHTML = compressed;
+  elem.getElementsByTagName("SPAN")[0].innerHTML = compressed;
   for (let child of elem.children) {
     if ("UL" === child.tagName.toUpperCase()) child.style.display = "none";
   }
@@ -189,7 +190,8 @@ async function liCompress(elem) {
 async function liExpand(elem) {
   await Category.setExpanded(Number(elem.id), true);
 
-  elem.getElementsByTagName("A")[0].innerHTML = expanded;
+  //elem.getElementsByTagName("A")[0].innerHTML = expanded;
+  elem.getElementsByTagName("SPAN")[0].innerHTML = expanded;
   for (let child of elem.children) {
     if ("UL" === child.tagName.toUpperCase()) child.style.display = null;
   }
@@ -204,11 +206,11 @@ async function liOnClick(liCategory) {
 
   if (categorySelected)
     categorySelected
-      .getElementsByTagName("SPAN")[0]
+      .getElementsByTagName("SPAN")[1]
       .classList.remove("selectedCategory");
 
   categorySelected = liCategory;
-  liCategory.getElementsByTagName("SPAN")[0].classList.add("selectedCategory");
+  liCategory.getElementsByTagName("SPAN")[1].classList.add("selectedCategory");
 
   await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
 }
@@ -223,15 +225,15 @@ async function displayData() {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    //let displayTreeDateBeg = new Date();
+    let displayTreeDateBeg = new Date();
     await displayTree(
       document.getElementById("0"),
       categorySelectedId,
       db.transaction(outlayCategoryObjectStoreName)
     );
-    //let displayTreeDateEnd = new Date();
-    //let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
-    //console.log("displayTreeTimeout", displayTreeTimeout);
+    let displayTreeDateEnd = new Date();
+    let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
+    console.log("displayTreeTimeout", displayTreeTimeout);
 
     categorySelected = document.getElementById(categorySelectedId);
     if (!categorySelectedId) {
@@ -246,9 +248,13 @@ async function displayData() {
   }
 }
 
-const span_onclick = function() {
+const leaf_name_onclick = function() {
   liOnClick(this.parentElement);
   return false;
+};
+
+const leaf_expand_onclick = function() {
+  leafChange(this);
 };
 
 async function displayTree(node, categorySelectedId, transaction) {
@@ -277,17 +283,16 @@ async function displayTree(node, categorySelectedId, transaction) {
         span.classList.add("selectedCategory");
         categorySelected = li;
       }
-      let a = document.createElement("A");
+      //let a = document.createElement("A");
+      let a = document.createElement("SPAN");
       li.appendChild(a);
       li.appendChild(span);
       if ("false" == a.parentElement.parentElement.getAttribute("expanded"))
         a.innerHTML = compressed;
       else a.innerHTML = expanded;
 
-      a.href = "#";
-      a.onclick = function() {
-        leafChange(this);
-      };
+      //a.href = "#";
+      a.onclick = leaf_expand_onclick;
       span.innerHTML = " " + category.name;
       if (entryId) {
         span.innerHTML += " ";
@@ -297,7 +302,7 @@ async function displayTree(node, categorySelectedId, transaction) {
         aItemCategorySave.href =
           "JavaScript:itemCategorySave(" + category.id + ")";
       }
-      span.onclick = span_onclick;
+      span.onclick = leaf_name_onclick;
 
       await displayTree(li, categorySelectedId);
     }
