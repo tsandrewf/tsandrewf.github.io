@@ -51,6 +51,7 @@ async function categoryTree(category) {
   let input = document.createElement("INPUT");
   input.id = "categoryName";
   li.appendChild(input);
+  input.focus();
 }
 
 async function displayDataCategoryEdit() {

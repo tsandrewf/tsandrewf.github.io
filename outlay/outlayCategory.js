@@ -223,7 +223,12 @@ async function displayData() {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
+    let displayTreeDateBeg = new Date();
     await displayTree(document.getElementById("0"), categorySelectedId);
+    let displayTreeDateEnd = new Date();
+    let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
+    console.log("displayTreeTimeout", displayTreeTimeout);
+
     categorySelected = document.getElementById(categorySelectedId);
     if (!categorySelectedId) {
       categorySelected
@@ -236,6 +241,11 @@ async function displayData() {
     StandbyIndicator.hide();
   }
 }
+
+const span_onclick = function() {
+  liOnClick(this.parentElement);
+  return false;
+};
 
 async function displayTree(node, categorySelectedId) {
   try {
@@ -284,10 +294,7 @@ async function displayTree(node, categorySelectedId) {
         aItemCategorySave.href =
           "JavaScript:itemCategorySave(" + category.id + ")";
       }
-      span.onclick = function() {
-        liOnClick(this.parentElement);
-        return false;
-      };
+      span.onclick = span_onclick;
 
       await displayTree(li, categorySelectedId);
     }
