@@ -223,11 +223,15 @@ async function displayData() {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    let displayTreeDateBeg = new Date();
-    await displayTree(document.getElementById("0"), categorySelectedId);
-    let displayTreeDateEnd = new Date();
-    let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
-    console.log("displayTreeTimeout", displayTreeTimeout);
+    //let displayTreeDateBeg = new Date();
+    await displayTree(
+      document.getElementById("0"),
+      categorySelectedId,
+      db.transaction(outlayCategoryObjectStoreName)
+    );
+    //let displayTreeDateEnd = new Date();
+    //let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
+    //console.log("displayTreeTimeout", displayTreeTimeout);
 
     categorySelected = document.getElementById(categorySelectedId);
     if (!categorySelectedId) {
@@ -247,15 +251,14 @@ const span_onclick = function() {
   return false;
 };
 
-async function displayTree(node, categorySelectedId) {
+async function displayTree(node, categorySelectedId, transaction) {
   try {
     let nodeId = Number(node.id);
 
     let i = 0;
     let ul;
-    let ulExpanded = true;
 
-    for (let category of await Category.getChildren(nodeId)) {
+    for (let category of await Category.getChildren(nodeId, transaction)) {
       if (0 === i) {
         ul = document.createElement("UL");
         node.appendChild(ul);
