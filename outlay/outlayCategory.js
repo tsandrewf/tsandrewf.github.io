@@ -216,54 +216,54 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
-  //try {
-  //StandbyIndicator.show();
+  try {
+    StandbyIndicator.show();
 
-  entryId = getQueryVar("entryId");
-  itemNum = getQueryVar("itemNum");
+    entryId = getQueryVar("entryId");
+    itemNum = getQueryVar("itemNum");
 
-  let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-  if (!categorySelectedId) categorySelectedId = 0;
+    let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+    if (!categorySelectedId) categorySelectedId = 0;
 
-  let displayTreeDateBeg = new Date();
-  /*await displayTree(
+    let displayTreeDateBeg = new Date();
+    /*await displayTree(
       document.getElementById("0"),
       categorySelectedId,
       db.transaction(outlayCategoryObjectStoreName)
     );*/
-  let ulRoot = document.createElement("UL");
-  ulRoot.setAttribute("expanded", "true");
-  ulRoot.style.paddingLeft = "0";
-  let liRoot = document.createElement("LI");
-  liRoot.id = "0";
-  ulRoot.appendChild(liRoot);
-  let spanExpanded = document.createElement("SPAN");
-  spanExpanded.innerHTML = expanded;
-  liRoot.appendChild(spanExpanded);
-  let spanCategoryName = document.createElement("SPAN");
-  spanCategoryName.innerHTML = "Корень";
-  spanCategoryName.onclick = leaf_name_onclick;
-  liRoot.appendChild(spanCategoryName);
-  await displayTree(
-    liRoot,
-    categorySelectedId,
-    db.transaction(outlayCategoryObjectStoreName)
-  );
-  document.getElementById("content").appendChild(ulRoot);
-  let displayTreeDateEnd = new Date();
-  let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
+    let ulRoot = document.createElement("UL");
+    ulRoot.setAttribute("expanded", "true");
+    ulRoot.style.paddingLeft = "0";
+    let liRoot = document.createElement("LI");
+    liRoot.id = "0";
+    ulRoot.appendChild(liRoot);
+    let spanExpanded = document.createElement("SPAN");
+    spanExpanded.innerHTML = expanded;
+    liRoot.appendChild(spanExpanded);
+    let spanCategoryName = document.createElement("SPAN");
+    spanCategoryName.innerHTML = "Корень";
+    spanCategoryName.onclick = leaf_name_onclick;
+    liRoot.appendChild(spanCategoryName);
+    await displayTree(
+      liRoot,
+      categorySelectedId,
+      db.transaction(outlayCategoryObjectStoreName)
+    );
+    document.getElementById("content").appendChild(ulRoot);
+    let displayTreeDateEnd = new Date();
+    let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
 
-  categorySelected = document.getElementById(categorySelectedId);
-  if (!categorySelectedId) {
-    categorySelected
-      .getElementsByTagName("SPAN")[1]
-      .classList.add("selectedCategory");
+    categorySelected = document.getElementById(categorySelectedId);
+    if (!categorySelectedId) {
+      categorySelected
+        .getElementsByTagName("SPAN")[1]
+        .classList.add("selectedCategory");
+    }
+  } catch (error) {
+    alert(error);
+  } finally {
+    StandbyIndicator.hide();
   }
-  //} catch (error) {
-  //  alert(error);
-  //} finally {
-  StandbyIndicator.hide();
-  //}
 }
 
 const leaf_name_onclick = function() {
