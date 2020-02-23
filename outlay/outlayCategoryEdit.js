@@ -10,6 +10,12 @@ let parentId;
 window.onload = openDb(displayData);
 
 function displayData() {
+  NavbarBottom.show([
+    { text: "Чеки", href: "outlay.html" },
+    { text: "Категории", href: "outlayCategory.html" },
+    { text: "Итоги", href: "outlaySummary.html" }
+  ]);
+
   id = getQueryVar("id");
   parentId = getQueryVar("parentId");
 

@@ -219,6 +219,12 @@ async function displayData() {
   try {
     StandbyIndicator.show();
 
+    NavbarBottom.show([
+      { text: "Чеки", href: "outlay.html" },
+      { text: "Категории" },
+      { text: "Итоги", href: "outlaySummary.html" }
+    ]);
+
     entryId = getQueryVar("entryId");
     itemNum = getQueryVar("itemNum");
 

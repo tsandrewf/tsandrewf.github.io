@@ -35,6 +35,12 @@ async function displayData(dateBeg, dateEnd) {
     td.colSpan = 4;
   }
 
+  NavbarBottom.show([
+    { text: "Чеки" },
+    { text: "Категории", href: "outlayCategory.html" },
+    { text: "Итоги", href: "outlaySummary.html" }
+  ]);
+
   const outlayTBody = document
     .getElementById("outlayTable")
     .getElementsByTagName("TBODY")[0];

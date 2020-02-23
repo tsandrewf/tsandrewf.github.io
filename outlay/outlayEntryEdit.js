@@ -152,6 +152,12 @@ window.onload = openDb(window_onload);
 let entryId = "";
 
 async function window_onload() {
+  NavbarBottom.show([
+    { text: "Чеки", href: "outlay.html" },
+    { text: "Категории", href: "outlayCategory.html" },
+    { text: "Итоги", href: "outlaySummary.html" }
+  ]);
+
   entryId = Number(getQueryVar("id"));
 
   let outlayEntry = await OutlayEntry.get(entryId);

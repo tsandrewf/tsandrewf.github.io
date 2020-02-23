@@ -38,6 +38,12 @@ window.onload = openDb(window_onload);
 
 async function window_onload() {
   try {
+    NavbarBottom.show([
+      { text: "Чеки", href: "outlay.html" },
+      { text: "Категории", href: "outlayCategory.html" },
+      { text: "Итоги" }
+    ]);
+
     summaryContent = document.getElementById("summaryContent");
 
     let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
