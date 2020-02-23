@@ -225,12 +225,6 @@ async function displayData() {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    let displayTreeDateBeg = new Date();
-    /*await displayTree(
-      document.getElementById("0"),
-      categorySelectedId,
-      db.transaction(outlayCategoryObjectStoreName)
-    );*/
     let ulRoot = document.createElement("UL");
     ulRoot.setAttribute("expanded", "true");
     ulRoot.style.paddingLeft = "0";
@@ -249,9 +243,10 @@ async function displayData() {
       categorySelectedId,
       db.transaction(outlayCategoryObjectStoreName)
     );
-    document.getElementById("content").appendChild(ulRoot);
-    let displayTreeDateEnd = new Date();
-    let displayTreeTimeout = displayTreeDateEnd - displayTreeDateBeg;
+    document
+      .getElementsByClassName("content")
+      .item(0)
+      .appendChild(ulRoot);
 
     categorySelected = document.getElementById(categorySelectedId);
     if (!categorySelectedId) {
