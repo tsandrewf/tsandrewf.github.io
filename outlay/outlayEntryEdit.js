@@ -162,7 +162,7 @@ async function window_onload() {
       ]
     },
     titleHTML:
-      'Чек за<input type="date" id="iptDate" oninput="dateChanged(this.value)" />',
+      'Чек за <input type="date" id="iptDate" oninput="dateChanged(this.value)" />',
     buttons: [
       {
         onclick: save,
