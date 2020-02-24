@@ -1,7 +1,6 @@
 class NavbarBottom {
   static show(options) {
     let navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
-    //console.log("content", content);
     for (let option of options) {
       let div = document.createElement("DIV");
       navbarBottom.appendChild(div);

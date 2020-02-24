@@ -14,34 +14,13 @@
     <link href="./button.css" rel="stylesheet" type="text/css" />
     <link href="outlayEntryEdit.css" rel="stylesheet" type="text/css" />
     <script src="./date.js"></script>
+    <script src="./navbarTop.js"></script>
     <script src="./navbarBottom.js"></script>
     <script src="./outlayEntryEdit.js" type="module"></script>
     <title>Новый расход</title>
   </head>
   <body>
-    <div class="navbar-top">
-      <div class="dropdown">
-        <button class="dropbtn">&#9776;</button>
-        <div class="dropdown-content">
-          <a href="outlayCategory.html">Категории расходов</a>
-          <a href="#">Link 2</a>
-          <a href="#">Link 3</a>
-        </div>
-      </div>
-      <div>
-        Чек за
-        <input type="date" id="iptDate" oninput="dateChanged(this.value)" />
-      </div>
-      <div class="buttons">
-        <div class="button" onclick="save()" title="Сохранить">
-          <div>&#10004;</div>
-        </div>
-        <div class="button" onclick="outlayEntryItemNew()">
-          <div>&#10010;</div>
-        </div>
-      </div>
-      <div class="new-string">Итого: <span id="sumAll">sumAll</span></div>
-    </div>
+    <div class="navbar-top"></div>
     <div>
       <table id="itemTable" class="tableBase">
         <tbody></tbody>

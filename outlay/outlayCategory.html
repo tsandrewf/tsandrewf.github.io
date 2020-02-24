@@ -15,44 +15,13 @@
     <link href="./button.css" rel="stylesheet" type="text/css" />
     <link href="./outlayCategory.css" rel="stylesheet" type="text/css" />
     <script src="./date.js"></script>
+    <script src="./navbarTop.js"></script>
     <script src="./navbarBottom.js"></script>
     <script src="./outlayCategory.js" type="module"></script>
     <title>Расходы</title>
   </head>
   <body>
-    <div class="navbar-top">
-      <div class="dropdown">
-        <button class="dropbtn">&#9776;</button>
-        <div class="dropdown-content">
-          <a href="outlay.html">Расходы</a>
-          <a href="outlaySummary.html">Итоги в разрезе категорий</a>
-        </div>
-      </div>
-      <div>Категории расходов</div>
-      <div class="buttons">
-        <div
-          class="button"
-          onclick="outlayCategoryNew()"
-          title="Добавить категорию"
-        >
-          <div>&#10010;</div>
-        </div>
-        <div
-          class="button"
-          onclick="outlayCategoryEdit()"
-          title="Изменить название категории"
-        >
-          <div>&#9999;</div>
-        </div>
-        <div
-          class="button"
-          onclick="outlayCategoryDel()"
-          title="Удалить категорию"
-        >
-          <div>&#10006;</div>
-        </div>
-      </div>
-    </div>
+    <div class="navbar-top"></div>
     <div class="content"></div>
     <div class="navbar-bottom"></div>
   </body>

@@ -10,27 +10,58 @@ let parentId;
 window.onload = openDb(displayData);
 
 function displayData() {
-  NavbarBottom.show([
-    { text: "Чеки", href: "outlay.html" },
-    { text: "Категории", href: "outlayCategory.html" },
-    { text: "Итоги", href: "outlaySummary.html" }
-  ]);
+  try {
+    id = getQueryVar("id");
+    parentId = getQueryVar("parentId");
 
-  id = getQueryVar("id");
-  parentId = getQueryVar("parentId");
+    let displayDataCategory = null;
+    if (!id && !parentId) {
+      throw new Error('НЕ задан ни один из параметров "id" и "parentId"');
+    } else if (id && parentId) {
+      throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
+    } else if (id) {
+      window.save = saveEdit;
+      displayDataCategory = displayDataCategoryEdit;
+    } else if (parentId) {
+      window.save = saveNew;
+      displayDataCategory = displayDataCategoryNew;
+    }
 
-  if (!id && !parentId) {
-    alert('НЕ задан ни один из параметров "id" и "parentId"');
-  } else if (id && parentId) {
-    alert('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
-  } else if (id) {
-    displayDataCategoryEdit();
-  } else if (parentId) {
-    displayDataCategoryNew();
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
+          { innerHTML: "Чеки", href: "outlay.html" },
+          { innerHTML: "Категории расходов", href: "outlayCategory.html" },
+          { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
+        ]
+      },
+      titleHTML: "Категория затрат",
+      buttons: [
+        {
+          onclick: window.save,
+          title: "Сохранить категорию",
+          innerHTML: "&#10004;"
+        }
+      ]
+    });
+
+    NavbarBottom.show([
+      { text: "Чеки", href: "outlay.html" },
+      { text: "Категории", href: "outlayCategory.html" },
+      { text: "Итоги", href: "outlaySummary.html" }
+    ]);
+
+    id = getQueryVar("id");
+    parentId = getQueryVar("parentId");
+
+    displayDataCategory();
+
+    id = Number(id);
+    parentId = Number(parentId);
+  } catch (error) {
+    alert(error);
   }
-
-  id = Number(id);
-  parentId = Number(parentId);
 }
 
 async function categoryTree(category) {
@@ -62,7 +93,8 @@ async function categoryTree(category) {
 
 async function displayDataCategoryEdit() {
   window.save = saveEdit;
-  document.getElementById("colTitle").innerHTML = "Изменение категории затрат";
+  document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
+    "Изменение категории затрат";
 
   id = Number(id);
   if (0 === id) {
@@ -78,11 +110,12 @@ async function displayDataCategoryEdit() {
 async function displayDataCategoryNew() {
   parentId = Number(parentId);
   window.save = saveNew;
-  document.getElementById("colTitle").innerHTML = "Новая категория затрат";
+  document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
+    "Новая категория затрат";
   categoryTree(await Category.get(parentId));
 }
 
-async function saveNew() {
+const saveNew = async function() {
   try {
     let categoryName = document.getElementById("categoryName").value.trim();
     if (!categoryName) {
@@ -104,9 +137,9 @@ async function saveNew() {
   } catch (error) {
     alert(error);
   }
-}
+};
 
-async function saveEdit() {
+const saveEdit = async function() {
   let categoryName = document.getElementById("categoryName").value.trim();
   if (!categoryName) {
     alert("НЕ задано название категории");
@@ -122,4 +155,4 @@ async function saveEdit() {
   category.name = categoryName;
   await Category.set(category);
   history.go(-1);
-}
+};

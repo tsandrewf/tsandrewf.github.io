@@ -152,12 +152,48 @@ window.onload = openDb(window_onload);
 let entryId = "";
 
 async function window_onload() {
+  NavbarTop.show({
+    menu: {
+      buttonHTML: "&#9776;",
+      content: [
+        { innerHTML: "Чеки", href: "outlay.html" },
+        { innerHTML: "Категории расходов", href: "outlayCategory.html" },
+        { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
+      ]
+    },
+    titleHTML:
+      'Чек за<input type="date" id="iptDate" oninput="dateChanged(this.value)" />',
+    buttons: [
+      {
+        onclick: save,
+        title: "Сохранить",
+        innerHTML: "&#10004;"
+      },
+      {
+        onclick: outlayEntryItemNew,
+        title: "Новая позиция",
+        innerHTML: "&#10010;"
+      }
+    ]
+  });
+
+  NavbarBottom.show([
+    { text: "Чеки", href: "outlay.html" },
+    { text: "Категории", href: "outlayCategory.html" },
+    { text: "Итоги" }
+  ]);
+
   NavbarBottom.show([
     { text: "Чеки", href: "outlay.html" },
     { text: "Категории", href: "outlayCategory.html" },
     { text: "Итоги", href: "outlaySummary.html" }
   ]);
 
+  console.log(document.getElementsByClassName("navbar-top")[0]);
+  let divNewString = document.createElement("DIV");
+  document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
+  divNewString.className = "new-string";
+  divNewString.innerHTML = 'Итого: <span id="sumAll">sumAll</span>';
   entryId = Number(getQueryVar("id"));
 
   let outlayEntry = await OutlayEntry.get(entryId);

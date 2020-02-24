@@ -38,6 +38,19 @@ window.onload = openDb(window_onload);
 
 async function window_onload() {
   try {
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
+          { innerHTML: "Чеки", href: "outlay.html" },
+          { innerHTML: "Категории расходов", href: "outlayCategory.html" }
+        ]
+      },
+      titleHTML:
+        'Итого с <input type="date" id="iptDateBeg" oninput="dateChanged()" /> по <input type="date" id="iptDateEnd" oninput="dateChanged()" />',
+      buttons: []
+    });
+
     NavbarBottom.show([
       { text: "Чеки", href: "outlay.html" },
       { text: "Категории", href: "outlayCategory.html" },
@@ -53,6 +66,7 @@ async function window_onload() {
       console.log("date", date);
       datePeriod = { dateBeg: date, dateEnd: date };
     }
+
     document.getElementById("iptDateBeg").value = datePeriod.dateBeg
       ? datePeriod.dateBeg._toForm()
       : null;

@@ -7,9 +7,7 @@ import { Category } from "./category.js";
 
 //let dateBeg = null;
 
-window.outlayEntryNew = outlayEntryNew;
-
-async function outlayEntryNew() {
+const outlayEntryNew = async function() {
   let date = await Setting.get(outlayDateSelectedKeyName);
   let outlayEntryId = await OutlayEntry.set({
     date: date,
@@ -18,7 +16,9 @@ async function outlayEntryNew() {
   });
 
   location.href = "outlayEntryEdit.html?id=" + outlayEntryId;
-}
+};
+
+window.outlayEntryNew = outlayEntryNew;
 
 window.onload = openDb(displayData);
 
@@ -34,6 +34,24 @@ async function displayData(dateBeg, dateEnd) {
     td.innerHTML = td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
     td.colSpan = 4;
   }
+
+  NavbarTop.show({
+    menu: {
+      buttonHTML: "&#9776;",
+      content: [
+        { innerHTML: "Категории расходов", href: "outlayCategory.html" },
+        { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
+      ]
+    },
+    titleHTML: "Чеки",
+    buttons: [
+      {
+        onclick: outlayEntryNew,
+        title: "Добавить чек",
+        innerHTML: "&#10010;"
+      }
+    ]
+  });
 
   NavbarBottom.show([
     { text: "Чеки" },

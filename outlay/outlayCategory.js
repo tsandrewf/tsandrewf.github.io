@@ -219,6 +219,34 @@ async function displayData() {
   try {
     StandbyIndicator.show();
 
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
+          { innerHTML: "Чеки", href: "outlay.html" },
+          { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
+        ]
+      },
+      titleHTML: "Категории расходов",
+      buttons: [
+        {
+          onclick: outlayCategoryNew,
+          title: "Добавить категорию",
+          innerHTML: "&#10010;"
+        },
+        {
+          onclick: outlayCategoryEdit,
+          title: "Изменить название категории",
+          innerHTML: "&#9999;"
+        },
+        {
+          onclick: outlayCategoryDel,
+          title: "Удалить категорию",
+          innerHTML: "&#10006;"
+        }
+      ]
+    });
+
     NavbarBottom.show([
       { text: "Чеки", href: "outlay.html" },
       { text: "Категории" },
