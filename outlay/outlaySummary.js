@@ -47,7 +47,7 @@ async function window_onload() {
         ]
       },
       titleHTML:
-        'Итого<BR>с <input type="date" id="iptDateBeg" oninput="dateChanged()" /> по <input type="date" id="iptDateEnd" oninput="dateChanged()" />',
+        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итого </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="dateChanged()" /></div></div>',
       buttons: []
     });
 
