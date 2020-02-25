@@ -1,16 +1,16 @@
-ul {
+.upperCategory ul {
   padding-left: 3vw;
   list-style: none;
 }
-ul li {
+.upperCategory ul li {
   padding: 6px;
 }
-ul li:before {
+.upperCategory li:before {
   /*content: "\2714";*/
   content: "\25B2";
 }
 
-.tree {
+.upperCategory {
   font-family: sans-serif;
   font-weight: bold;
 }
