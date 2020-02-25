@@ -3,6 +3,7 @@
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
+import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 
 import {
   db,
@@ -216,6 +217,7 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
+  window.history.pushState({ data: "data" }, "title");
   try {
     StandbyIndicator.show();
 
@@ -366,7 +368,8 @@ window.outlayCategoryEdit = outlayCategoryEdit;
 function outlayCategoryEdit() {
   if (StandbyIndicator.isShowing()) return;
 
-  location.href = "outlayCategoryEdit.html?id=" + categorySelected.id;
+  //location.href = "outlayCategoryEdit.html?id=" + categorySelected.id;
+  OutlayCategoryEdit.displayData({ id: categorySelected.id });
 }
 
 window.outlayCategoryNew = outlayCategoryNew;
@@ -374,7 +377,8 @@ window.outlayCategoryNew = outlayCategoryNew;
 function outlayCategoryNew() {
   if (StandbyIndicator.isShowing()) return;
 
-  document.location.assign(
+  /*document.location.assign(
     "outlayCategoryEdit.html?parentId=" + categorySelected.id
-  );
+  );*/
+  OutlayCategoryEdit.displayData({ parentId: categorySelected.id });
 }
