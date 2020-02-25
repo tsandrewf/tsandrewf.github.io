@@ -219,6 +219,8 @@ async function displayData() {
   try {
     StandbyIndicator.show();
 
+    document.title = "Категории расходов";
+
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",

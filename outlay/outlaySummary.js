@@ -38,6 +38,8 @@ window.onload = openDb(window_onload);
 
 async function window_onload() {
   try {
+    document.title = "Итоги";
+
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",
@@ -47,7 +49,7 @@ async function window_onload() {
         ]
       },
       titleHTML:
-        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итого </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="dateChanged()" /></div></div>',
+        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="dateChanged()" /></div></div>',
       buttons: []
     });
 

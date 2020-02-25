@@ -20,9 +20,11 @@ function displayData() {
     } else if (id && parentId) {
       throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
     } else if (id) {
+      document.title = "Изменение категории расходов";
       window.save = saveEdit;
       displayDataCategory = displayDataCategoryEdit;
     } else if (parentId) {
+      document.title = "Новая категория расходов";
       window.save = saveNew;
       displayDataCategory = displayDataCategoryNew;
     }
@@ -45,12 +47,26 @@ function displayData() {
         }
       ]
     });
+    document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
+      document.title;
 
     NavbarBottom.show([
       { text: "Чеки", href: "outlay.html" },
       { text: "Категории", href: "outlayCategory.html" },
       { text: "Итоги", href: "outlaySummary.html" }
     ]);
+
+    {
+      const divContent = document.getElementsByClassName("content")[0];
+      const ul = document.createElement("UL");
+      divContent.appendChild(ul);
+      ul.style = "padding-left: 0;";
+      ul.className = "tree";
+      const li = document.createElement("LI");
+      li.id = "0";
+      li.innerHTML = "Корень";
+      ul.appendChild(li);
+    }
 
     id = getQueryVar("id");
     parentId = getQueryVar("parentId");
@@ -65,6 +81,7 @@ function displayData() {
 }
 
 async function categoryTree(category) {
+  console.log("category", category);
   let upperCategoryArray = [];
   while (category) {
     upperCategoryArray.push(category);
@@ -93,25 +110,23 @@ async function categoryTree(category) {
 
 async function displayDataCategoryEdit() {
   window.save = saveEdit;
-  document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
-    "Изменение категории затрат";
 
   id = Number(id);
   if (0 === id) {
-    alert("НЕЛЬЗЯ изменять название корневой категории затрат");
+    alert("НЕЛЬЗЯ изменять название корневой категории расходов");
     return;
   }
 
+  /*const category = await Category.get(id);
+  await categoryTree(category);*/
   const category = await Category.get(id);
-  await categoryTree(category);
+  await categoryTree(await Category.get(category.parentId));
   document.getElementById("categoryName").value = category.name;
 }
 
 async function displayDataCategoryNew() {
   parentId = Number(parentId);
   window.save = saveNew;
-  document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
-    "Новая категория затрат";
   categoryTree(await Category.get(parentId));
 }
 

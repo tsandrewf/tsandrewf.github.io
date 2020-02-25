@@ -35,6 +35,8 @@ async function displayData(dateBeg, dateEnd) {
     td.colSpan = 4;
   }
 
+  document.title = "Чеки";
+
   NavbarTop.show({
     menu: {
       buttonHTML: "&#9776;",
@@ -59,9 +61,15 @@ async function displayData(dateBeg, dateEnd) {
     { text: "Итоги", href: "outlaySummary.html" }
   ]);
 
-  const outlayTBody = document
-    .getElementById("outlayTable")
-    .getElementsByTagName("TBODY")[0];
+  const outlayTBody = document.createElement("TBODY");
+  {
+    const divContent = document.getElementsByClassName("content")[0];
+    const tableOutlay = document.createElement("TABLE");
+    divContent.appendChild(tableOutlay);
+    tableOutlay.id = "outlayTable";
+    tableOutlay.className = "tableBase";
+    tableOutlay.appendChild(outlayTBody);
+  }
 
   let monthNumRem = null;
 
