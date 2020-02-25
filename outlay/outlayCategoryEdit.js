@@ -1,173 +1,179 @@
 "use strict";
 
-import { openDb } from "./db.js";
-import { getQueryVar } from "./url.js";
 import { Category } from "./category.js";
 
 let id;
 let parentId;
 
-window.onload = openDb(displayData);
+window.onpopstate = function(event) {
+  document.location.reload(true);
+};
 
-function displayData() {
-  try {
-    id = getQueryVar("id");
-    parentId = getQueryVar("parentId");
+export class OutlayCategoryEdit {
+  static displayData(options) {
+    try {
+      id = options.id;
+      parentId = options.parentId;
 
-    let displayDataCategory = null;
-    if (!id && !parentId) {
-      throw new Error('НЕ задан ни один из параметров "id" и "parentId"');
-    } else if (id && parentId) {
-      throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
-    } else if (id) {
-      document.title = "Изменение категории расходов";
-      window.save = saveEdit;
-      displayDataCategory = displayDataCategoryEdit;
-    } else if (parentId) {
-      document.title = "Новая категория расходов";
-      window.save = saveNew;
-      displayDataCategory = displayDataCategoryNew;
-    }
+      let displayDataCategory = null;
+      if (!options.id && !options.parentId) {
+        throw new Error('НЕ задан ни один из параметров "id" и "parentId"');
+      } else if (options.id && options.parentId) {
+        throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
+      } else if (options.id) {
+        document.title = "Изменение категории расходов";
+        window.save = OutlayCategoryEdit.saveEdit;
+        displayDataCategory = OutlayCategoryEdit.displayDataCategoryEdit;
+      } else if (options.parentId) {
+        document.title = "Новая категория расходов";
+        window.save = OutlayCategoryEdit.saveNew;
+        displayDataCategory = OutlayCategoryEdit.displayDataCategoryNew;
+      }
 
-    NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          { innerHTML: "Чеки", href: "outlay.html" },
-          { innerHTML: "Категории расходов", href: "outlayCategory.html" },
-          { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
+      NavbarTop.show({
+        menu: {
+          buttonHTML: "&#9776;",
+          content: [
+            { innerHTML: "Чеки", href: "outlay.html" },
+            { innerHTML: "Категории расходов", href: "outlayCategory.html" },
+            {
+              innerHTML: "Итоги в разрезе категорий",
+              href: "outlaySummary.html"
+            }
+          ]
+        },
+        titleHTML: "Категория затрат",
+        buttons: [
+          {
+            onclick: window.save,
+            title: "Сохранить категорию",
+            innerHTML: "&#10004;"
+          }
         ]
-      },
-      titleHTML: "Категория затрат",
-      buttons: [
-        {
-          onclick: window.save,
-          title: "Сохранить категорию",
-          innerHTML: "&#10004;"
+      });
+      document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
+        document.title;
+
+      NavbarBottom.show([
+        { text: "Чеки", href: "outlay.html" },
+        { text: "Категории", href: "outlayCategory.html" },
+        { text: "Итоги", href: "outlaySummary.html" }
+      ]);
+
+      {
+        const divContent = document.getElementsByClassName("content")[0];
+
+        while (divContent.firstChild) {
+          divContent.removeChild(divContent.firstChild);
         }
-      ]
-    });
-    document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
-      document.title;
 
-    NavbarBottom.show([
-      { text: "Чеки", href: "outlay.html" },
-      { text: "Категории", href: "outlayCategory.html" },
-      { text: "Итоги", href: "outlaySummary.html" }
-    ]);
+        const ul = document.createElement("UL");
+        divContent.appendChild(ul);
+        ul.style = "padding-left: 0;";
+        ul.className = "upperCategory";
+        const li = document.createElement("LI");
+        li.id = "0";
+        li.innerHTML = "Корень";
+        ul.appendChild(li);
+      }
 
-    {
-      const divContent = document.getElementsByClassName("content")[0];
-      const ul = document.createElement("UL");
-      divContent.appendChild(ul);
-      ul.style = "padding-left: 0;";
-      ul.className = "tree";
-      const li = document.createElement("LI");
-      li.id = "0";
-      li.innerHTML = "Корень";
-      ul.appendChild(li);
+      displayDataCategory();
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  static async categoryTree(category) {
+    let upperCategoryArray = [];
+    while (category) {
+      upperCategoryArray.push(category);
+      category = await Category.get(category.parentId);
     }
 
-    id = getQueryVar("id");
-    parentId = getQueryVar("parentId");
+    let parentUl = document.getElementsByTagName("UL")[0];
+    for (let category of upperCategoryArray.reverse()) {
+      let ul = document.createElement("UL");
+      parentUl.appendChild(ul);
+      ul.className = "upperCategory";
+      let li = document.createElement("LI");
+      ul.appendChild(li);
+      li.innerHTML = category.name;
+      parentUl = ul;
+    }
 
-    displayDataCategory();
-
-    id = Number(id);
-    parentId = Number(parentId);
-  } catch (error) {
-    alert(error);
-  }
-}
-
-async function categoryTree(category) {
-  console.log("category", category);
-  let upperCategoryArray = [];
-  while (category) {
-    upperCategoryArray.push(category);
-    category = await Category.get(category.parentId);
-  }
-
-  let parentUl = document.getElementsByTagName("UL")[0];
-  for (let category of upperCategoryArray.reverse()) {
     let ul = document.createElement("UL");
     parentUl.appendChild(ul);
+    ul.className = "upperCategory";
     let li = document.createElement("LI");
     ul.appendChild(li);
-    li.innerHTML = category.name;
-    parentUl = ul;
+    let input = document.createElement("INPUT");
+    input.id = "categoryName";
+    li.appendChild(input);
+    input.focus();
   }
 
-  let ul = document.createElement("UL");
-  parentUl.appendChild(ul);
-  let li = document.createElement("LI");
-  ul.appendChild(li);
-  let input = document.createElement("INPUT");
-  input.id = "categoryName";
-  li.appendChild(input);
-  input.focus();
-}
+  static async displayDataCategoryEdit() {
+    window.save = OutlayCategoryEdit.saveEdit;
 
-async function displayDataCategoryEdit() {
-  window.save = saveEdit;
+    id = Number(id);
+    if (0 === id) {
+      alert("НЕЛЬЗЯ изменять название корневой категории расходов");
+      return;
+    }
 
-  id = Number(id);
-  if (0 === id) {
-    alert("НЕЛЬЗЯ изменять название корневой категории расходов");
-    return;
+    const category = await Category.get(id);
+    await OutlayCategoryEdit.categoryTree(
+      await Category.get(category.parentId)
+    );
+    document.getElementById("categoryName").value = category.name;
   }
 
-  /*const category = await Category.get(id);
-  await categoryTree(category);*/
-  const category = await Category.get(id);
-  await categoryTree(await Category.get(category.parentId));
-  document.getElementById("categoryName").value = category.name;
-}
+  static async displayDataCategoryNew() {
+    parentId = Number(parentId);
+    window.save = OutlayCategoryEdit.saveNew;
+    OutlayCategoryEdit.categoryTree(await Category.get(parentId));
+  }
 
-async function displayDataCategoryNew() {
-  parentId = Number(parentId);
-  window.save = saveNew;
-  categoryTree(await Category.get(parentId));
-}
+  static saveNew = async function() {
+    try {
+      let categoryName = document.getElementById("categoryName").value.trim();
+      if (!categoryName) {
+        alert("НЕ задано название категории");
+        return;
+      }
 
-const saveNew = async function() {
-  try {
+      await Category.set({
+        name: categoryName,
+        parentId: parentId,
+        expanded: false
+      });
+
+      if (0 !== parentId) {
+        await Category.setExpanded(parentId, true);
+      }
+
+      document.location.reload(true);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  static saveEdit = async function() {
     let categoryName = document.getElementById("categoryName").value.trim();
     if (!categoryName) {
       alert("НЕ задано название категории");
       return;
     }
 
-    await Category.set({
-      name: categoryName,
-      parentId: parentId,
-      expanded: false
-    });
-
-    if (0 !== parentId) {
-      await Category.setExpanded(parentId, true);
+    let category = await Category.get(id);
+    if (categoryName === category.name) {
+      alert("Название категории затрат НЕ изменено");
+      return;
     }
 
-    history.go(-1);
-  } catch (error) {
-    alert(error);
-  }
-};
+    category.name = categoryName;
+    await Category.set(category);
 
-const saveEdit = async function() {
-  let categoryName = document.getElementById("categoryName").value.trim();
-  if (!categoryName) {
-    alert("НЕ задано название категории");
-    return;
-  }
-
-  let category = await Category.get(id);
-  if (categoryName === category.name) {
-    alert("Название категории затрат НЕ изменено");
-    return;
-  }
-
-  category.name = categoryName;
-  await Category.set(category);
-  history.go(-1);
-};
+    document.location.reload(true);
+  };
+}
