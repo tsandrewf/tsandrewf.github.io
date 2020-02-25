@@ -217,7 +217,9 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
-  window.history.pushState({ data: "data" }, "title");
+  //window.history.pushState({ data: "data" }, "title");
+  console.log("window.history.length", window.history.length);
+  console.log("window.history.state", window.history.state);
   try {
     StandbyIndicator.show();
 
@@ -368,7 +370,8 @@ window.outlayCategoryEdit = outlayCategoryEdit;
 function outlayCategoryEdit() {
   if (StandbyIndicator.isShowing()) return;
 
-  //location.href = "outlayCategoryEdit.html?id=" + categorySelected.id;
+  window.history.pushState({ data: "data" }, "title");
+
   OutlayCategoryEdit.displayData({ id: categorySelected.id });
 }
 
@@ -377,8 +380,7 @@ window.outlayCategoryNew = outlayCategoryNew;
 function outlayCategoryNew() {
   if (StandbyIndicator.isShowing()) return;
 
-  /*document.location.assign(
-    "outlayCategoryEdit.html?parentId=" + categorySelected.id
-  );*/
+  window.history.pushState({ data: "data" }, "title");
+
   OutlayCategoryEdit.displayData({ parentId: categorySelected.id });
 }
