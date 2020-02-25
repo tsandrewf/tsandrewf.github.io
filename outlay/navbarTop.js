@@ -1,9 +1,14 @@
 class NavbarTop {
   static show(options) {
-    let navbarBottom = document.getElementsByClassName("navbar-top").item(0);
+    let navbarTop = document.getElementsByClassName("navbar-top").item(0);
+
+    while (navbarTop.firstChild) {
+      navbarTop.removeChild(navbarTop.firstChild);
+    }
+
     if (options.menu) {
       let divMenu = document.createElement("DIV");
-      navbarBottom.appendChild(divMenu);
+      navbarTop.appendChild(divMenu);
       divMenu.className = "dropdown";
 
       let buttonMenu = document.createElement("BUTTON");
@@ -22,11 +27,11 @@ class NavbarTop {
       }
 
       let divTitle = document.createElement("DIV");
-      navbarBottom.appendChild(divTitle);
+      navbarTop.appendChild(divTitle);
       divTitle.innerHTML = options.titleHTML;
 
       let divButtons = document.createElement("DIV");
-      navbarBottom.appendChild(divButtons);
+      navbarTop.appendChild(divButtons);
       divButtons.className = "buttons";
       for (let button of options.buttons) {
         let divButton = document.createElement("DIV");
