@@ -134,7 +134,7 @@ export class OutlayCategoryEdit {
     OutlayCategoryEdit.categoryTree(await Category.get(parentId));
   }
 
-  static saveNew = async function() {
+  static async saveNew() {
     try {
       let categoryName = document.getElementById("categoryName").value.trim();
       if (!categoryName) {
@@ -156,9 +156,9 @@ export class OutlayCategoryEdit {
     } catch (error) {
       alert(error);
     }
-  };
+  }
 
-  static saveEdit = async function() {
+  static async saveEdit() {
     let categoryName = document.getElementById("categoryName").value.trim();
     if (!categoryName) {
       alert("НЕ задано название категории");
@@ -175,5 +175,5 @@ export class OutlayCategoryEdit {
     await Category.set(category);
 
     document.location.reload(true);
-  };
+  }
 }
