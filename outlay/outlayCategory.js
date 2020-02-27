@@ -310,6 +310,11 @@ async function displayData() {
       .appendChild(ulRoot);
 
     categorySelectedMark(categorySelectedId);
+
+    if (window.history.state) {
+      window.scrollTo(0, window.history.state.window_scrollY);
+      window.history.replaceState(null, window.title);
+    }
   } catch (error) {
     alert(error);
   } finally {
@@ -382,6 +387,7 @@ window.outlayCategoryEdit = outlayCategoryEdit;
 function outlayCategoryEdit() {
   if (StandbyIndicator.isShowing()) return;
 
+  window.history.replaceState({ window_scrollY: window.scrollY }, window.title);
   window.history.pushState({ data: "data" }, "title");
 
   OutlayCategoryEdit.displayData({ id: categorySelected.id });
@@ -392,6 +398,7 @@ window.outlayCategoryNew = outlayCategoryNew;
 function outlayCategoryNew() {
   if (StandbyIndicator.isShowing()) return;
 
+  window.history.replaceState({ window_scrollY: window.scrollY }, window.title);
   window.history.pushState({ data: "data" }, "title");
 
   OutlayCategoryEdit.displayData({ parentId: categorySelected.id });
