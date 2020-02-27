@@ -20,10 +20,20 @@ let entryId;
 let itemNum;
 
 function categorySelectedMark(categorySel) {
-  categorySelected =
-    typeof categorySel == "number"
-      ? document.getElementById(categorySel)
-      : categorySel;
+  if (categorySelected) {
+    categorySelected
+      .getElementsByTagName("SPAN")[1]
+      .classList.remove("selectedCategory");
+  }
+
+  if ("number" == typeof categorySel) {
+    categorySelected = document.getElementById(categorySel);
+  } else if ("object" == typeof categorySel) {
+    if ("LI" === categorySel.tagName.toUpperCase()) {
+      categorySelected = categorySel;
+    }
+  }
+
   categorySelected
     .getElementsByTagName("SPAN")[1]
     .classList.add("selectedCategory");
@@ -36,7 +46,7 @@ async function itemCategorySave(categoryId) {
   outlayEntry.categories[itemNum - 1] = categoryId;
   await OutlayEntry.set(outlayEntry);
 
-  history.go(-1);
+  history.back();
 }
 
 window.onload = openDb(displayData);
@@ -222,13 +232,6 @@ async function liOnClick(liCategory) {
 
   if (liCategory === categorySelected) return;
 
-  if (categorySelected)
-    categorySelected
-      .getElementsByTagName("SPAN")[1]
-      .classList.remove("selectedCategory");
-
-  //categorySelected = liCategory;
-  //liCategory.getElementsByTagName("SPAN")[1].classList.add("selectedCategory");
   categorySelectedMark(liCategory);
 
   await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
@@ -306,13 +309,7 @@ async function displayData() {
       .item(0)
       .appendChild(ulRoot);
 
-    categorySelected = document.getElementById(categorySelectedId);
-    if (!categorySelectedId) {
-      categorySelected
-        .getElementsByTagName("SPAN")[1]
-        .classList.add("selectedCategory");
-    }
-    //categorySelectedMark(liCategory);
+    categorySelectedMark(categorySelectedId);
   } catch (error) {
     alert(error);
   } finally {
@@ -350,31 +347,27 @@ async function displayTree(node, categorySelectedId, transaction) {
       let li = document.createElement("LI");
       ul.appendChild(li);
       li.id = category.id;
-      let span = document.createElement("SPAN");
-      if (categorySelectedId && li.id == categorySelectedId.toString()) {
-        span.classList.add("selectedCategory");
-        categorySelected = li;
-      }
-      //let a = document.createElement("A");
-      let a = document.createElement("SPAN");
-      li.appendChild(a);
-      li.appendChild(span);
-      if ("false" == a.parentElement.parentElement.getAttribute("expanded"))
-        a.innerHTML = compressed;
-      else a.innerHTML = expanded;
+      let spanName = document.createElement("SPAN");
+      let spanExpand = document.createElement("SPAN");
+      li.appendChild(spanExpand);
+      li.appendChild(spanName);
+      spanExpand.innerHTML =
+        "false" ==
+        spanExpand.parentElement.parentElement.getAttribute("expanded")
+          ? expanded
+          : compressed;
 
-      //a.href = "#";
-      a.onclick = leaf_expand_onclick;
-      span.innerHTML = " " + category.name;
+      spanExpand.onclick = leaf_expand_onclick;
+      spanName.innerHTML = " " + category.name;
       if (entryId) {
-        span.innerHTML += " ";
+        spanName.innerHTML += " ";
         let aItemCategorySave = document.createElement("A");
         li.appendChild(aItemCategorySave);
         aItemCategorySave.innerHTML = "&#10004;";
         aItemCategorySave.href =
           "JavaScript:itemCategorySave(" + category.id + ")";
       }
-      span.onclick = leaf_name_onclick;
+      spanName.onclick = leaf_name_onclick;
 
       await displayTree(li, categorySelectedId);
     }
