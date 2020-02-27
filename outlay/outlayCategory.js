@@ -19,6 +19,16 @@ import { OutlayEntry } from "./outlayEntry.js";
 let entryId;
 let itemNum;
 
+function categorySelectedMark(categorySel) {
+  categorySelected =
+    typeof categorySel == "number"
+      ? document.getElementById(categorySel)
+      : categorySel;
+  categorySelected
+    .getElementsByTagName("SPAN")[1]
+    .classList.add("selectedCategory");
+}
+
 window.itemCategorySave = itemCategorySave;
 
 async function itemCategorySave(categoryId) {
@@ -69,8 +79,8 @@ async function outlayCategoryDel() {
 
     let categorySel = await Category.get(categorySelectedId, transaction);
 
+    let categorySelNewId;
     {
-      let categorySelNewId;
       let categoryNextSibling = await Category.getNextSibling(
         categorySel,
         transaction
@@ -139,6 +149,13 @@ async function outlayCategoryDel() {
           .delete(categoryDescendant.id);
       }
     }
+    {
+      document
+        .getElementById(categorySel.parentId)
+        .removeChild(document.getElementById(categorySel.id).parentElement);
+
+      categorySelectedMark(categorySelNewId);
+    }
 
     transaction.onerror = function(event) {
       console.log("onerror");
@@ -154,7 +171,7 @@ async function outlayCategoryDel() {
   } catch (error) {
     alert(error);
   } finally {
-    document.location.reload(true);
+    //document.location.reload(true);
   }
 }
 
@@ -210,8 +227,9 @@ async function liOnClick(liCategory) {
       .getElementsByTagName("SPAN")[1]
       .classList.remove("selectedCategory");
 
-  categorySelected = liCategory;
-  liCategory.getElementsByTagName("SPAN")[1].classList.add("selectedCategory");
+  //categorySelected = liCategory;
+  //liCategory.getElementsByTagName("SPAN")[1].classList.add("selectedCategory");
+  categorySelectedMark(liCategory);
 
   await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
 }
@@ -294,6 +312,7 @@ async function displayData() {
         .getElementsByTagName("SPAN")[1]
         .classList.add("selectedCategory");
     }
+    //categorySelectedMark(liCategory);
   } catch (error) {
     alert(error);
   } finally {
