@@ -152,7 +152,7 @@ export class OutlayCategoryEdit {
         await Category.setExpanded(parentId, true);
       }
 
-      document.location.reload(true);
+      window.history.back();
     } catch (error) {
       alert(error);
     }
@@ -174,6 +174,6 @@ export class OutlayCategoryEdit {
     category.name = categoryName;
     await Category.set(category);
 
-    document.location.reload(true);
+    window.history.back();
   }
 }

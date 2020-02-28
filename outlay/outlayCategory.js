@@ -19,6 +19,34 @@ import { OutlayEntry } from "./outlayEntry.js";
 let entryId;
 let itemNum;
 
+function getNodeCategoryNew(category) {
+  let ul = document.createElement("UL");
+  if ("false" === category.expanded) {
+    ul.style.display = "none";
+  }
+  ul.setAttribute("expanded", category.expanded);
+
+  let li = document.createElement("LI");
+  ul.appendChild(li);
+  li.id = category.id;
+  let spanName = document.createElement("SPAN");
+  let spanExpand = document.createElement("SPAN");
+  li.appendChild(spanExpand);
+  li.appendChild(spanName);
+  spanExpand.innerHTML = "false" == category.expanded ? expanded : compressed;
+
+  spanName.innerHTML = " " + category.name;
+  if (entryId) {
+    spanName.innerHTML += " ";
+    let aItemCategorySave = document.createElement("A");
+    li.appendChild(aItemCategorySave);
+    aItemCategorySave.innerHTML = "&#10004;";
+    aItemCategorySave.href = "JavaScript:itemCategorySave(" + category.id + ")";
+  }
+
+  return ul;
+}
+
 function categorySelectedMark(categorySel) {
   if (categorySelected) {
     categorySelected
@@ -238,9 +266,6 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
-  //window.history.pushState({ data: "data" }, "title");
-  console.log("window.history.length", window.history.length);
-  console.log("window.history.state", window.history.state);
   try {
     StandbyIndicator.show();
 
@@ -286,34 +311,96 @@ async function displayData() {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    let ulRoot = document.createElement("UL");
-    ulRoot.setAttribute("expanded", "true");
-    ulRoot.style.paddingLeft = "0";
-    let liRoot = document.createElement("LI");
-    liRoot.id = "0";
-    ulRoot.appendChild(liRoot);
-    let spanExpanded = document.createElement("SPAN");
-    spanExpanded.innerHTML = expanded;
-    liRoot.appendChild(spanExpanded);
-    let spanCategoryName = document.createElement("SPAN");
-    spanCategoryName.innerHTML = "Корень";
-    spanCategoryName.onclick = leaf_name_onclick;
-    liRoot.appendChild(spanCategoryName);
-    await displayTree(
-      liRoot,
-      categorySelectedId,
-      db.transaction(outlayCategoryObjectStoreName)
-    );
-    document
-      .getElementsByClassName("content")
-      .item(0)
-      .appendChild(ulRoot);
+    if (window.history.state && window.history.state.content) {
+      document.getElementsByClassName("content")[0].innerHTML =
+        window.history.state && window.history.state.content;
+
+      const categorySel = await Category.get(categorySelectedId);
+      const liCategory = document.getElementById(categorySelectedId);
+      const categoryName = liCategory.childNodes[1].innerHTML.trim();
+      if (categorySel.name !== categoryName) {
+        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
+        const ulCategory = liCategory.parentElement;
+        const parentNode = ulCategory.parentElement;
+        parentNode.removeChild(ulCategory);
+        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
+          node => "UL" === node.tagName
+        );
+        {
+          let categoryRestored = false;
+          for (let node of ulCategoryChilds) {
+            if (
+              " " + categorySel.name <
+              node.firstChild.childNodes[1].innerHTML
+            ) {
+              parentNode.insertBefore(ulCategory, node);
+              categoryRestored = true;
+              break;
+            }
+          }
+          if (!categoryRestored) {
+            parentNode.appendChild(ulCategory);
+          }
+        }
+      } else {
+        const categoryChildren = await Category.getChildren(categorySelectedId);
+        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
+          node => "UL" === node.tagName
+        );
+        if (categoryChildren.length !== ulCategoryChilds.length) {
+          for (let i = 0; i < categoryChildren.length; i++) {
+            const category = categoryChildren[i];
+            if (!ulCategoryChilds[i]) {
+              liCategory.appendChild(getNodeCategoryNew(category));
+              liExpand(liCategory);
+            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
+              liCategory.insertBefore(
+                getNodeCategoryNew(category),
+                ulCategoryChilds[i]
+              );
+              liExpand(liCategory);
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      let ulRoot = document.createElement("UL");
+      ulRoot.setAttribute("expanded", "true");
+      ulRoot.style.paddingLeft = "0";
+      let liRoot = document.createElement("LI");
+      liRoot.id = "0";
+      ulRoot.appendChild(liRoot);
+      let spanExpanded = document.createElement("SPAN");
+      spanExpanded.innerHTML = expanded;
+      liRoot.appendChild(spanExpanded);
+      let spanCategoryName = document.createElement("SPAN");
+      spanCategoryName.innerHTML = "Корень";
+      spanCategoryName.onclick = leaf_name_onclick;
+      liRoot.appendChild(spanCategoryName);
+      await displayTree(liRoot, db.transaction(outlayCategoryObjectStoreName));
+      document
+        .getElementsByClassName("content")
+        .item(0)
+        .appendChild(ulRoot);
+
+      /*let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+    if (!categorySelectedId) categorySelectedId = 0;
+    categorySelectedMark(categorySelectedId);*/
+    }
 
     categorySelectedMark(categorySelectedId);
 
     if (window.history.state) {
       window.scrollTo(0, window.history.state.window_scrollY);
       window.history.replaceState(null, window.title);
+    }
+
+    for (let li of document.body
+      .getElementsByClassName("content")[0]
+      .getElementsByTagName("LI")) {
+      li.childNodes[0].onclick = leaf_expand_onclick;
+      li.childNodes[1].onclick = leaf_name_onclick;
     }
   } catch (error) {
     alert(error);
@@ -331,7 +418,7 @@ const leaf_expand_onclick = function() {
   leafChange(this);
 };
 
-async function displayTree(node, categorySelectedId, transaction) {
+async function displayTree(node, transaction) {
   try {
     let nodeId = Number(node.id);
 
@@ -359,10 +446,9 @@ async function displayTree(node, categorySelectedId, transaction) {
       spanExpand.innerHTML =
         "false" ==
         spanExpand.parentElement.parentElement.getAttribute("expanded")
-          ? expanded
-          : compressed;
+          ? compressed
+          : expanded;
 
-      spanExpand.onclick = leaf_expand_onclick;
       spanName.innerHTML = " " + category.name;
       if (entryId) {
         spanName.innerHTML += " ";
@@ -372,9 +458,8 @@ async function displayTree(node, categorySelectedId, transaction) {
         aItemCategorySave.href =
           "JavaScript:itemCategorySave(" + category.id + ")";
       }
-      spanName.onclick = leaf_name_onclick;
 
-      await displayTree(li, categorySelectedId);
+      await displayTree(li, transaction);
     }
   } catch (err) {
     console.log(err);
@@ -387,7 +472,13 @@ window.outlayCategoryEdit = outlayCategoryEdit;
 function outlayCategoryEdit() {
   if (StandbyIndicator.isShowing()) return;
 
-  window.history.replaceState({ window_scrollY: window.scrollY }, window.title);
+  window.history.replaceState(
+    {
+      window_scrollY: window.scrollY,
+      content: document.body.getElementsByClassName("content")[0].innerHTML
+    },
+    window.title
+  );
   window.history.pushState({ data: "data" }, "title");
 
   OutlayCategoryEdit.displayData({ id: categorySelected.id });
@@ -398,7 +489,13 @@ window.outlayCategoryNew = outlayCategoryNew;
 function outlayCategoryNew() {
   if (StandbyIndicator.isShowing()) return;
 
-  window.history.replaceState({ window_scrollY: window.scrollY }, window.title);
+  window.history.replaceState(
+    {
+      window_scrollY: window.scrollY,
+      content: document.body.getElementsByClassName("content")[0].innerHTML
+    },
+    window.title
+  );
   window.history.pushState({ data: "data" }, "title");
 
   OutlayCategoryEdit.displayData({ parentId: categorySelected.id });
