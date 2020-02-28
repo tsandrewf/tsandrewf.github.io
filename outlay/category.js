@@ -24,6 +24,8 @@ export class Category {
   }
 
   static async setExpanded(categoryId, expanded, transaction) {
+    if (!categoryId) return;
+
     if (!transaction)
       transaction = db.transaction(outlayCategoryObjectStoreName, "readwrite");
 

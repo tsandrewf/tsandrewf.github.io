@@ -208,8 +208,6 @@ async function outlayCategoryDel() {
     };
   } catch (error) {
     alert(error);
-  } finally {
-    //document.location.reload(true);
   }
 }
 
@@ -266,147 +264,147 @@ async function liOnClick(liCategory) {
 }
 
 async function displayData() {
-  try {
-    StandbyIndicator.show();
+  //try {
+  StandbyIndicator.show();
 
-    document.title = "Категории расходов";
+  document.title = "Категории расходов";
 
-    NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          { innerHTML: "Чеки", href: "outlay.html" },
-          { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
-        ]
-      },
-      titleHTML: "Категории расходов",
-      buttons: [
-        {
-          onclick: outlayCategoryNew,
-          title: "Добавить категорию",
-          innerHTML: "&#10010;"
-        },
-        {
-          onclick: outlayCategoryEdit,
-          title: "Изменить название категории",
-          innerHTML: "&#9999;"
-        },
-        {
-          onclick: outlayCategoryDel,
-          title: "Удалить категорию",
-          innerHTML: "&#10006;"
-        }
+  NavbarTop.show({
+    menu: {
+      buttonHTML: "&#9776;",
+      content: [
+        { innerHTML: "Чеки", href: "outlay.html" },
+        { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
       ]
-    });
+    },
+    titleHTML: "Категории расходов",
+    buttons: [
+      {
+        onclick: outlayCategoryNew,
+        title: "Добавить категорию",
+        innerHTML: "&#10010;"
+      },
+      {
+        onclick: outlayCategoryEdit,
+        title: "Изменить название категории",
+        innerHTML: "&#9999;"
+      },
+      {
+        onclick: outlayCategoryDel,
+        title: "Удалить категорию",
+        innerHTML: "&#10006;"
+      }
+    ]
+  });
 
-    NavbarBottom.show([
-      { text: "Чеки", href: "outlay.html" },
-      { text: "Категории" },
-      { text: "Итоги", href: "outlaySummary.html" }
-    ]);
+  NavbarBottom.show([
+    { text: "Чеки", href: "outlay.html" },
+    { text: "Категории" },
+    { text: "Итоги", href: "outlaySummary.html" }
+  ]);
 
-    entryId = getQueryVar("entryId");
-    itemNum = getQueryVar("itemNum");
+  entryId = getQueryVar("entryId");
+  itemNum = getQueryVar("itemNum");
 
-    let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-    if (!categorySelectedId) categorySelectedId = 0;
+  let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+  if (!categorySelectedId) categorySelectedId = 0;
 
-    if (window.history.state && window.history.state.content) {
-      document.getElementsByClassName("content")[0].innerHTML =
-        window.history.state && window.history.state.content;
+  if (window.history.state && window.history.state.content) {
+    document.getElementsByClassName("content")[0].innerHTML =
+      window.history.state && window.history.state.content;
 
-      const categorySel = await Category.get(categorySelectedId);
-      const liCategory = document.getElementById(categorySelectedId);
-      const categoryName = liCategory.childNodes[1].innerHTML.trim();
-      if (categorySel.name !== categoryName) {
-        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
-        const ulCategory = liCategory.parentElement;
-        const parentNode = ulCategory.parentElement;
-        parentNode.removeChild(ulCategory);
-        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-          node => "UL" === node.tagName
-        );
-        {
-          let categoryRestored = false;
-          for (let node of ulCategoryChilds) {
-            if (
-              " " + categorySel.name <
-              node.firstChild.childNodes[1].innerHTML
-            ) {
-              parentNode.insertBefore(ulCategory, node);
-              categoryRestored = true;
-              break;
-            }
-          }
-          if (!categoryRestored) {
-            parentNode.appendChild(ulCategory);
+    const categorySel = await Category.get(categorySelectedId);
+    const liCategory = document.getElementById(categorySelectedId);
+    const categoryName = liCategory.childNodes[1].innerHTML.trim();
+    if (categorySel && categorySel.name !== categoryName) {
+      liCategory.childNodes[1].innerHTML = " " + categorySel.name;
+      const ulCategory = liCategory.parentElement;
+      const parentNode = ulCategory.parentElement;
+      parentNode.removeChild(ulCategory);
+      let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
+        node => "UL" === node.tagName
+      );
+      {
+        let categoryRestored = false;
+        for (let node of ulCategoryChilds) {
+          if (
+            " " + categorySel.name <
+            node.firstChild.childNodes[1].innerHTML
+          ) {
+            parentNode.insertBefore(ulCategory, node);
+            categoryRestored = true;
+            break;
           }
         }
-      } else {
-        const categoryChildren = await Category.getChildren(categorySelectedId);
-        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-          node => "UL" === node.tagName
-        );
-        if (categoryChildren.length !== ulCategoryChilds.length) {
-          for (let i = 0; i < categoryChildren.length; i++) {
-            const category = categoryChildren[i];
-            if (!ulCategoryChilds[i]) {
-              liCategory.appendChild(getNodeCategoryNew(category));
-              liExpand(liCategory);
-            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
-              liCategory.insertBefore(
-                getNodeCategoryNew(category),
-                ulCategoryChilds[i]
-              );
-              liExpand(liCategory);
-              break;
-            }
-          }
+        if (!categoryRestored) {
+          parentNode.appendChild(ulCategory);
         }
       }
     } else {
-      let ulRoot = document.createElement("UL");
-      ulRoot.setAttribute("expanded", "true");
-      ulRoot.style.paddingLeft = "0";
-      let liRoot = document.createElement("LI");
-      liRoot.id = "0";
-      ulRoot.appendChild(liRoot);
-      let spanExpanded = document.createElement("SPAN");
-      spanExpanded.innerHTML = expanded;
-      liRoot.appendChild(spanExpanded);
-      let spanCategoryName = document.createElement("SPAN");
-      spanCategoryName.innerHTML = "Корень";
-      spanCategoryName.onclick = leaf_name_onclick;
-      liRoot.appendChild(spanCategoryName);
-      await displayTree(liRoot, db.transaction(outlayCategoryObjectStoreName));
-      document
-        .getElementsByClassName("content")
-        .item(0)
-        .appendChild(ulRoot);
+      const categoryChildren = await Category.getChildren(categorySelectedId);
+      let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
+        node => "UL" === node.tagName
+      );
+      if (categoryChildren.length !== ulCategoryChilds.length) {
+        for (let i = 0; i < categoryChildren.length; i++) {
+          const category = categoryChildren[i];
+          if (!ulCategoryChilds[i]) {
+            liCategory.appendChild(getNodeCategoryNew(category));
+            liExpand(liCategory);
+          } else if (ulCategoryChilds[i].firstChild.id != category.id) {
+            liCategory.insertBefore(
+              getNodeCategoryNew(category),
+              ulCategoryChilds[i]
+            );
+            liExpand(liCategory);
+            break;
+          }
+        }
+      }
+    }
+  } else {
+    let ulRoot = document.createElement("UL");
+    ulRoot.setAttribute("expanded", "true");
+    ulRoot.style.paddingLeft = "0";
+    let liRoot = document.createElement("LI");
+    liRoot.id = "0";
+    ulRoot.appendChild(liRoot);
+    let spanExpanded = document.createElement("SPAN");
+    spanExpanded.innerHTML = expanded;
+    liRoot.appendChild(spanExpanded);
+    let spanCategoryName = document.createElement("SPAN");
+    spanCategoryName.innerHTML = "Корень";
+    spanCategoryName.onclick = leaf_name_onclick;
+    liRoot.appendChild(spanCategoryName);
+    await displayTree(liRoot, db.transaction(outlayCategoryObjectStoreName));
+    document
+      .getElementsByClassName("content")
+      .item(0)
+      .appendChild(ulRoot);
 
-      /*let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+    /*let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
     categorySelectedMark(categorySelectedId);*/
-    }
-
-    categorySelectedMark(categorySelectedId);
-
-    if (window.history.state) {
-      window.scrollTo(0, window.history.state.window_scrollY);
-      window.history.replaceState(null, window.title);
-    }
-
-    for (let li of document.body
-      .getElementsByClassName("content")[0]
-      .getElementsByTagName("LI")) {
-      li.childNodes[0].onclick = leaf_expand_onclick;
-      li.childNodes[1].onclick = leaf_name_onclick;
-    }
-  } catch (error) {
-    alert(error);
-  } finally {
-    StandbyIndicator.hide();
   }
+
+  categorySelectedMark(categorySelectedId);
+
+  if (window.history.state) {
+    window.scrollTo(0, window.history.state.window_scrollY);
+    window.history.replaceState(null, window.title);
+  }
+
+  for (let li of document.body
+    .getElementsByClassName("content")[0]
+    .getElementsByTagName("LI")) {
+    li.childNodes[0].onclick = leaf_expand_onclick;
+    li.childNodes[1].onclick = leaf_name_onclick;
+  }
+  //} catch (error) {
+  //  alert(error);
+  //} finally {
+  StandbyIndicator.hide();
+  //}
 }
 
 const leaf_name_onclick = function() {
