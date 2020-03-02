@@ -38,6 +38,6 @@ ul li {
   cursor: pointer;
   font-family: sans-serif;
 }
-ul li:before {
+/*ul li:before {
   content: "\25B2";
-}
+}*/

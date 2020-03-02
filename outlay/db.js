@@ -1,12 +1,14 @@
 // https://askvoprosy.com/voprosy/searching-for-compound-indexes-in-indexeddb
 
 export let db;
-export let settingObjectStoreName = "setting";
-export let outlayObjectStoreName = "outlay";
-export let outlayCategoryObjectStoreName = "outlayCategory";
-export let outlayCategorySelectedKeyName = "outlayCategorySelected";
-export let outlayDateSelectedKeyName = "outlayDateSelected";
-export let outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
+export const settingObjectStoreName = "setting";
+export const outlayObjectStoreName = "outlay";
+export const outlayCategoryObjectStoreName = "outlayCategory";
+export const outlayCategorySelectedKeyName = "outlayCategorySelected";
+export const outlayDateSelectedKeyName = "outlayDateSelected";
+export const outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
+export const windowOnloadKeyName = "windowOnload";
+export const retValKeyName = "retVal";
 
 export function openDb(displayData) {
   const DBOpenRequest = window.indexedDB.open("mymoney", 1);

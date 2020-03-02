@@ -73,7 +73,7 @@ export class OutlayCategoryEdit {
         ul.className = "upperCategory";
         const li = document.createElement("LI");
         li.id = "0";
-        li.innerHTML = "Корень";
+        li.innerHTML = "&#9650; Корень";
         ul.appendChild(li);
       }
 
@@ -97,7 +97,7 @@ export class OutlayCategoryEdit {
       ul.className = "upperCategory";
       let li = document.createElement("LI");
       ul.appendChild(li);
-      li.innerHTML = category.name;
+      li.innerHTML = "&#9650; " + category.name;
       parentUl = ul;
     }
 

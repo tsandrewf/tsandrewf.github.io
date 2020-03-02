@@ -1,115 +1,99 @@
 "use strict";
 
-import { openDb, outlayDateSelectedKeyName } from "./db.js";
+import { outlayDateSelectedKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
-import { getQueryVar } from "./url.js";
 import { Setting } from "./setting.js";
+import { OutlayCategory } from "./outlayCategory.js";
+import { retValKeyName } from "./db.js";
 
-const outlayTBody = document
-  .getElementById("itemTable")
-  .getElementsByTagName("TBODY")[0];
+let outlayTBody;
+let entryId;
 
-/*window.addEventListener("unload", async function() {
-  console.log("unload");
-  await save();
-});*/
-let inputSum_onkeydown = function() {
-  // https://stackoverflow.com/questions/2897155/get-cursor-position-in-characters-within-a-text-input-field
-  event.returnValue =
-    (96 <= event.keyCode && 105 >= event.keyCode) || // Num Lock Number
-    (37 <= event.keyCode && 40 >= event.keyCode) || // Arrow
-    8 == event.keyCode || // Backspace
-    9 == event.keyCode || // Tab
-    46 == event.keyCode || // Del
-    ("." === event.key && !this.value.includes(".")) || // Точка (190 == event.keyCode || 191 == event.keyCode)
-    (48 <= event.keyCode && // Number
-      57 >= event.keyCode &&
-      (this.value.search("\\.") < 0 || // Отсутствует точка
-      this.value.search("\\.") + 3 > this.value.length || // После точки меньше 2-х цифр
-      this.selectionStart < this.selectionEnd || // Выбрано не меее одной цифры
-        this.value.search("\\.") + 1 > this.selectionStart)); // Курсор левеее точки
-};
-
-async function inputSum_oninput(elem) {
-  try {
-    const itemNum = Number(
-      elem.parentElement.parentElement.cells.namedItem("colNum").innerText
-    );
-    let outlayEntry = await OutlayEntry.get(entryId);
-    let sum = elem.value.trim();
-    if (!sum) {
-      sum = null;
-    } else if (Number.isNaN(sum)) {
-      return;
-    } else {
-      sum = parseFloat(elem.value);
-    }
-    outlayEntry.sums[itemNum - 1] = sum;
-    await OutlayEntry.set(outlayEntry);
-    //outlayEntry = await OutlayEntry.get(entryId);
-    document.getElementById("sumAll").innerHTML = (
-      await OutlayEntry.get(entryId)
-    ).sumAll.toFixed(2);
-  } catch (error) {
-    alert(error);
+export class OutlayEntryEdit {
+  static inputSum_onkeydown() {
+    // https://stackoverflow.com/questions/2897155/get-cursor-position-in-characters-within-a-text-input-field
+    event.returnValue =
+      (96 <= event.keyCode && 105 >= event.keyCode) || // Num Lock Number
+      (37 <= event.keyCode && 40 >= event.keyCode) || // Arrow
+      8 == event.keyCode || // Backspace
+      9 == event.keyCode || // Tab
+      46 == event.keyCode || // Del
+      ("." === event.key && !this.value.includes(".")) || // Точка (190 == event.keyCode || 191 == event.keyCode)
+      (48 <= event.keyCode && // Number
+        57 >= event.keyCode &&
+        (this.value.search("\\.") < 0 || // Отсутствует точка
+        this.value.search("\\.") + 3 > this.value.length || // После точки меньше 2-х цифр
+        this.selectionStart < this.selectionEnd || // Выбрано не менее одной цифры
+          this.value.search("\\.") + 1 > this.selectionStart)); // Курсор левее точки
   }
-}
 
-async function itemAppend(categoryId, sum) {
-  // Создаем строку таблицы и добавляем ее
-  let row = document.createElement("TR");
-  row.className = "odd";
-  outlayTBody.appendChild(row);
+  static sumAllRefresh() {
+    let sumAll = 0;
+    for (let row of outlayTBody.rows) {
+      let sum = row
+        .querySelector("#colSum")
+        .querySelector("INPUT")
+        .value.trim();
+      if (sum && !Number.isNaN(sum)) {
+        sumAll += parseFloat(sum);
+      }
+    }
+    document.getElementById("sumAll").innerHTML = sumAll.toFixed(2);
+  }
 
-  // Создаем ячейки в вышесозданной строке и добавляем их
-  let tdNum = document.createElement("TD");
-  let tdCategory = document.createElement("TD");
-  let tdSum = document.createElement("TD");
+  static async inputSum_oninput(elem) {
+    OutlayEntryEdit.sumAllRefresh();
+  }
 
-  row.appendChild(tdNum);
-  row.appendChild(tdCategory);
-  row.appendChild(tdSum);
+  static async itemAppend(categoryId, sum) {
+    // Создаем строку таблицы и добавляем ее
+    let row = document.createElement("TR");
+    row.className = "odd";
+    outlayTBody.appendChild(row);
 
-  // Наполняем ячейки
-  tdNum.innerHTML = outlayTBody.getElementsByTagName("TR").length;
+    // Создаем ячейки в вышесозданной строке и добавляем их
+    let tdNum = document.createElement("TD");
+    let tdCategory = document.createElement("TD");
+    let tdSum = document.createElement("TD");
 
-  let aCategory = document.createElement("A");
-  aCategory.href =
-    "outlayCategory.html" +
-    "?entryId=" +
-    entryId +
-    "&itemNum=" +
-    outlayTBody.getElementsByTagName("TR").length +
-    "&categoryId=" +
-    (categoryId ? categoryId : "");
+    row.appendChild(tdNum);
+    row.appendChild(tdCategory);
+    row.appendChild(tdSum);
 
-  tdCategory.appendChild(aCategory);
+    // Наполняем ячейки
+    tdNum.innerHTML = outlayTBody.getElementsByTagName("TR").length;
 
-  let inputSum = document.createElement("INPUT");
-  inputSum.type = "text";
-  inputSum.size = "10";
-  inputSum.value = sum;
-  inputSum.oninput = async function() {
-    await inputSum_oninput(this);
-  };
-  inputSum.onkeydown = inputSum_onkeydown;
-  tdSum.appendChild(inputSum);
+    let aCategory = document.createElement("A");
+    aCategory.href =
+      "Javascript:OutlayEntryEdit_categoryEdit(" + tdNum.innerHTML + ")";
 
-  tdNum.id = "colNum";
-  tdCategory.id = "colCategory";
-  tdCategory.setAttribute("categoryId", categoryId);
-  tdSum.id = "colSum";
+    tdCategory.appendChild(aCategory);
 
-  aCategory.innerHTML = categoryId
-    ? (await Category.get(Number(categoryId))).name
-    : "НЕ задана";
-}
+    let inputSum = document.createElement("INPUT");
+    inputSum.type = "text";
+    inputSum.size = "10";
+    inputSum.value = sum;
+    inputSum.oninput = async function() {
+      await OutlayEntryEdit.inputSum_oninput(this);
+    };
+    inputSum.onkeydown = OutlayEntryEdit.inputSum_onkeydown;
+    tdSum.appendChild(inputSum);
 
-window.outlayEntryItemNew = outlayEntryItemNew;
+    tdNum.id = "colNum";
+    tdCategory.id = "colCategory";
+    tdCategory.setAttribute("categoryId", categoryId);
+    tdSum.id = "colSum";
 
-async function outlayEntryItemNew() {
-  try {
+    aCategory.innerHTML = categoryId
+      ? (await Category.get(Number(categoryId))).name
+      : "НЕ задана";
+  }
+
+  //window.outlayEntryItemNew = outlayEntryItemNew;
+
+  static async outlayEntryItemNew() {
+    //try {
     let rows = outlayTBody.rows;
 
     if (
@@ -118,126 +102,207 @@ async function outlayEntryItemNew() {
         .namedItem("colSum")
         .getElementsByTagName("INPUT")[0].value
     ) {
-      let outlayEntry = await OutlayEntry.get(entryId);
-      outlayEntry.categories.push(null);
-      outlayEntry.sums.push(null);
-      await OutlayEntry.set(outlayEntry);
-      await itemAppend(null, null);
+      await OutlayEntryEdit.itemAppend(null, null);
     }
 
     rows[rows.length - 1].cells
       .namedItem("colSum")
       .getElementsByTagName("INPUT")[0]
       .focus();
-  } catch (error) {
-    alert(error);
+    //} catch (error) {
+    //  alert(error);
+    //}
   }
-}
 
-window.dateChanged = dateChanged;
+  static async dateChanged(date) {}
 
-async function dateChanged(date) {
-  try {
-    let outlayEntry = await OutlayEntry.get(entryId);
-    outlayEntry.date = new Date(date);
-    await OutlayEntry.set(outlayEntry);
-    await Setting.set(outlayDateSelectedKeyName, outlayEntry.date);
-  } catch (error) {
-    alert(error);
-  }
-}
-
-window.onload = openDb(window_onload);
-
-let entryId = "";
-
-async function window_onload() {
-  NavbarTop.show({
-    menu: {
-      buttonHTML: "&#9776;",
-      content: [
-        { innerHTML: "Чеки", href: "outlay.html" },
-        { innerHTML: "Категории расходов", href: "outlayCategory.html" },
-        { innerHTML: "Итоги в разрезе категорий", href: "outlaySummary.html" }
-      ]
-    },
-    titleHTML:
-      'Чек за <input type="date" id="iptDate" oninput="dateChanged(this.value)" />',
-    buttons: [
+  static categoryEdit(rowNum) {
+    const content = document.body.getElementsByClassName("content")[0];
+    window.history.replaceState(
       {
-        onclick: save,
-        title: "Сохранить",
-        innerHTML: "&#10004;"
+        url: "OutlayEntryEdit",
+        window_scrollY: window.scrollY,
+        content: content.innerHTML,
+        date: document.getElementById("iptDate").value,
+        rowNum: rowNum,
+        sums: Array.prototype.slice
+          .call(content.getElementsByTagName("INPUT"))
+          .flatMap(x => [x.value])
       },
-      {
-        onclick: outlayEntryItemNew,
-        title: "Новая позиция",
-        innerHTML: "&#10010;"
+      window.title
+    );
+    window.history.pushState({ data: "data" }, "title");
+
+    OutlayCategory.displayData(true);
+  }
+
+  static async displayData(id) {
+    entryId = id;
+
+    window.OutlayEntryEdit_dateChanged = OutlayEntryEdit.dateChanged;
+    window.OutlayEntryEdit_categoryEdit = OutlayEntryEdit.categoryEdit;
+
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
+          { innerHTML: "Чеки", href: 'Javascript:displayData("Outlay")' },
+          {
+            innerHTML: "Категории расходов",
+            href: 'Javascript:displayData("OutlayCategory")'
+          },
+          {
+            innerHTML: "Итоги в разрезе категорий",
+            href: 'Javascript:displayData("OutlaySummary")'
+          }
+        ]
+      },
+      titleHTML:
+        'Чек за <input type="date" id="iptDate" oninput="OutlayEntryEdit_dateChanged(this.value)" />',
+      buttons: [
+        {
+          onclick: OutlayEntryEdit.save,
+          title: "Сохранить",
+          innerHTML: "&#10004;"
+        },
+        {
+          onclick: OutlayEntryEdit.outlayEntryItemNew,
+          title: "Новая позиция",
+          innerHTML: "&#10010;"
+        }
+      ]
+    });
+
+    NavbarBottom.show([
+      { text: "Чеки", href: 'Javascript:displayData("Outlay")' },
+      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+    ]);
+
+    let divNewString = document.createElement("DIV");
+    document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
+    divNewString.className = "new-string";
+    divNewString.innerHTML = 'Итого: <span id="sumAll">sumAll</span>';
+
+    const content = document.getElementsByClassName("content")[0];
+
+    if (window.history.state) {
+      content.innerHTML = window.history.state.content;
+      document.getElementById("iptDate").value = window.history.state.date;
+      const inputArray = content.getElementsByTagName("INPUT");
+      for (let i = 0; i < inputArray.length; i++) {
+        inputArray[i].value = window.history.state.sums[i];
       }
-    ]
-  });
 
-  NavbarBottom.show([
-    { text: "Чеки", href: "outlay.html" },
-    { text: "Категории", href: "outlayCategory.html" },
-    { text: "Итоги" }
-  ]);
+      outlayTBody = document.getElementsByTagName("TBODY")[0];
+      OutlayEntryEdit.sumAllRefresh();
+      entryId = Number(
+        content.getElementsByTagName("TABLE")[0].getAttribute("entryId")
+      );
+      if (window.history.state.rowNum) {
+        const categoryId = await Setting.get(retValKeyName);
+        if (categoryId) {
+          const tdCategory = content.getElementsByTagName("TBODY")[0].rows[
+            window.history.state.rowNum - 1
+          ].cells["colCategory"];
+          tdCategory.setAttribute("categoryid", categoryId);
+          //const category = await Category.get(categoryId);
+          const aCategory = tdCategory.getElementsByTagName("A")[0];
+          //tdCategory.appendChild(aCategory);
+          aCategory.innerHTML = (await Category.get(categoryId)).name;
+          //console.log("aCategory.innerHTML", aCategory.innerHTML);
+          /*aCategory.href =
+            "Javascript:OutlayEntryEdit_categoryEdit(" +
+            window.history.state.rowNum +
+            ")";*/
+        }
+      }
 
-  NavbarBottom.show([
-    { text: "Чеки", href: "outlay.html" },
-    { text: "Категории", href: "outlayCategory.html" },
-    { text: "Итоги", href: "outlaySummary.html" }
-  ]);
+      return;
+    }
 
-  console.log(document.getElementsByClassName("navbar-top")[0]);
-  let divNewString = document.createElement("DIV");
-  document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
-  divNewString.className = "new-string";
-  divNewString.innerHTML = 'Итого: <span id="sumAll">sumAll</span>';
-  entryId = Number(getQueryVar("id"));
+    {
+      const divContent = document.getElementsByClassName("content")[0];
 
-  let outlayEntry = await OutlayEntry.get(entryId);
-  document.getElementById("iptDate").value = outlayEntry.date
-    ? outlayEntry.date._toForm()
-    : outlayEntry.date;
-  document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
+      while (divContent.firstChild) {
+        divContent.removeChild(divContent.firstChild);
+      }
+    }
 
-  for (let i = 0; i < outlayEntry.categories.length; i++) {
-    await itemAppend(outlayEntry.categories[i], outlayEntry.sums[i]);
+    const table = document.createElement("TABLE");
+    content.appendChild(table);
+    table.className = "tableBase";
+    table.setAttribute("entryId", entryId);
+    outlayTBody = document.createElement("TBODY");
+    table.appendChild(outlayTBody);
+
+    /*if (entryId) {
+      let outlayEntry = await OutlayEntry.get(entryId);
+      document.getElementById("iptDate").value = outlayEntry.date._toForm();
+      document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(
+        2
+      );
+
+      for (let i = 0; i < outlayEntry.categories.length; i++) {
+        await itemAppend(outlayEntry.categories[i], outlayEntry.sums[i]);
+      }
+    }*/
+    let outlayEntry = entryId
+      ? await OutlayEntry.get(entryId)
+      : {
+          date: await Setting.get(outlayDateSelectedKeyName),
+          sumAll: 0,
+          categories: [null],
+          sums: [null]
+        };
+    document.getElementById("iptDate").value = outlayEntry.date._toForm();
+    document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
+    for (let i = 0; i < outlayEntry.categories.length; i++) {
+      await OutlayEntryEdit.itemAppend(
+        outlayEntry.categories[i],
+        outlayEntry.sums[i]
+      );
+    }
+
+    // Фокус на последнюю позицию, если эта позиция НЕ заполнена
+    let rows = outlayTBody.rows;
+    if (
+      rows.length &&
+      !rows[rows.length - 1].cells
+        .namedItem("colSum")
+        .getElementsByTagName("INPUT")[0].value
+    ) {
+      rows[rows.length - 1].cells
+        .namedItem("colSum")
+        .getElementsByTagName("INPUT")[0]
+        .focus();
+    }
   }
 
-  // Фокус на последнюю позицию, если эта позиция НЕ заполнена
-  let rows = outlayTBody.rows;
-  if (
-    rows.length &&
-    !rows[rows.length - 1].cells
-      .namedItem("colSum")
-      .getElementsByTagName("INPUT")[0].value
-  ) {
-    rows[rows.length - 1].cells
-      .namedItem("colSum")
-      .getElementsByTagName("INPUT")[0]
-      .focus();
-  }
-}
-
-Number.prototype._toForm = function() {
+  /*Number.prototype._toForm = function() {
   return 10 > this ? "0" + this : this.toString();
-};
+};*/
 
-window.save = save;
+  //window.save = save;
 
-async function save() {
-  try {
-    let date = new Date(document.getElementById("iptDate").value);
+  static async save() {
+    //try {
+    const date = new Date(document.getElementById("iptDate").value);
+    if (!date) {
+      throw Error("НЕ задана дата чека");
+    }
+
     let outlayEntry = {
-      id: entryId,
       date: date,
       sumAll: 0,
       categoryId: null,
       categories: [],
       sums: []
     };
+    if (entryId) {
+      outlayEntry.id = entryId;
+    }
+
     for (let item of outlayTBody.getElementsByTagName("TR")) {
       let categoryId = Number(
         item.querySelector("#colCategory").getAttribute("categoryId")
@@ -246,7 +311,6 @@ async function save() {
         item.querySelector("#colSum").querySelector("INPUT").value
       );
 
-      let ancestorsAll = null;
       if (sum) {
         outlayEntry.sumAll += sum;
         outlayEntry.categories.push(categoryId);
@@ -256,9 +320,10 @@ async function save() {
 
     await OutlayEntry.set(outlayEntry);
 
-    history.go(-1);
-  } catch (error) {
-    console.log(error);
-    alert(error);
+    history.back();
+    //} catch (error) {
+    //  console.log(error);
+    //  alert(error);
+    //}
   }
 }

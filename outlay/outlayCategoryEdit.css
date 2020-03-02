@@ -2,13 +2,15 @@
   padding-left: 3vw;
   list-style: none;
 }
+
 .upperCategory ul li {
   padding: 6px;
 }
-.upperCategory li:before {
-  /*content: "\2714";*/
+
+/*content: "\2714";*/
+/*.upperCategory li:before {
   content: "\25B2";
-}
+}*/
 
 .upperCategory {
   font-family: sans-serif;
