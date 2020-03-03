@@ -1,12 +1,7 @@
 "use strict";
 
-import { OutlayEntry } from "./outlayEntry.js";
 import { Setting } from "./setting.js";
-import {
-  openDb,
-  outlayDateSelectedKeyName,
-  windowOnloadKeyName
-} from "./db.js";
+import { openDb, windowOnloadKeyName } from "./db.js";
 import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
@@ -17,6 +12,13 @@ window.onload = openDb(window_onload);
 window.displayData = window_onload;
 
 async function window_onload(funcName) {
+  /* Only register a service worker if it's supported */
+  console.log("navigator", navigator);
+  if ("serviceWorker" in navigator) {
+    console.log("serviceWorker");
+    navigator.serviceWorker.register("./service-worker.js");
+  }
+
   if (window.history.state) {
     switch (window.history.state.url) {
       case "OutlayCategory":
