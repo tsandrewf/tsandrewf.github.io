@@ -1,14 +1,17 @@
-#colDate {
+#tableOutlayEntries #colDate {
   width: 10vw;
 }
-#colCategory {
+
+#tableOutlayEntries #colCategory {
   width: 40vw;
   text-align: left;
 }
-#colSum {
+
+#tableOutlayEntries #colSum {
   width: 40vw;
   text-align: right;
 }
-#colDel {
+
+#tableOutlayEntries #colDel {
   width: 10vw;
 }

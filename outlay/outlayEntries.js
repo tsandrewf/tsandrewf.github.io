@@ -24,7 +24,7 @@ export class OutlayEntries {
   static async displayData(dateBeg, dateEnd) {
     function appendRowNewMonth(date) {
       let row = document.createElement("TR");
-      outlayTBody.appendChild(row);
+      tbodyOutlayEntries.appendChild(row);
       row.style.backgroundColor = "grey";
       row.style.color = "white";
       let td = document.createElement("TD");
@@ -78,14 +78,14 @@ export class OutlayEntries {
       }
     }
 
-    const outlayTBody = document.createElement("TBODY");
+    const tbodyOutlayEntries = document.createElement("TBODY");
     {
       const divContent = document.getElementsByClassName("content")[0];
-      const tableOutlay = document.createElement("TABLE");
-      divContent.appendChild(tableOutlay);
-      tableOutlay.id = "outlayTable";
-      tableOutlay.className = "tableBase";
-      tableOutlay.appendChild(outlayTBody);
+      const tableOutlayEntries = document.createElement("TABLE");
+      divContent.appendChild(tableOutlayEntries);
+      tableOutlayEntries.id = "tableOutlayEntries";
+      tableOutlayEntries.className = "tableBase";
+      tableOutlayEntries.appendChild(tbodyOutlayEntries);
     }
 
     let monthNumRem = null;
@@ -104,8 +104,8 @@ export class OutlayEntries {
         dateBeg = dateBeg._getMonthBeg();
       }
 
-      if (outlayTBody.rows.length) {
-        let row = outlayTBody.rows[outlayTBody.rows.length - 1];
+      if (tbodyOutlayEntries.rows.length) {
+        let row = tbodyOutlayEntries.rows[tbodyOutlayEntries.rows.length - 1];
         row.onclick = null;
         row.style.cursor = null;
         let td = row.getElementsByTagName("TD")[0];
@@ -138,7 +138,7 @@ export class OutlayEntries {
 
       // Создаем строку таблицы и добавляем ее
       let row = document.createElement("TR");
-      outlayTBody.appendChild(row);
+      tbodyOutlayEntries.appendChild(row);
 
       // Создаем ячейки в вышесозданной строке и добавляем тх
       let tdDate = document.createElement("TD");
@@ -182,7 +182,7 @@ export class OutlayEntries {
 
       // Создаем строку таблицы и добавляем ее
       let row = document.createElement("TR");
-      outlayTBody.appendChild(row);
+      tbodyOutlayEntries.appendChild(row);
       row.style.backgroundColor = "grey";
       row.style.color = "white";
       row.onclick = function() {
