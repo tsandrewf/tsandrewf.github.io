@@ -113,7 +113,12 @@ export class OutlayEntryEdit {
     //}
   }
 
-  static async dateChanged(date) {}
+  static async dateChanged(date) {
+    if (date) {
+      date = new Date(date);
+    }
+    await Setting.set(outlayDateSelectedKeyName, date);
+  }
 
   static categoryEdit(rowNum) {
     const content = document.body.getElementsByClassName("content")[0];
@@ -254,7 +259,9 @@ export class OutlayEntryEdit {
           categories: [null],
           sums: [null]
         };
-    document.getElementById("iptDate").value = outlayEntry.date._toForm();
+    document.getElementById("iptDate").value = outlayEntry.date
+      ? outlayEntry.date._toForm()
+      : null;
     document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
     for (let i = 0; i < outlayEntry.categories.length; i++) {
       await OutlayEntryEdit.itemAppend(
