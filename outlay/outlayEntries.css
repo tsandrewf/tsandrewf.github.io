@@ -1,0 +1,17 @@
+.tableOutlayEntries tbody tr td:nth-child(1) {
+  width: 10vw;
+}
+
+.tableOutlayEntries tbody tr td:nth-child(2) {
+  width: 40vw;
+  text-align: left;
+}
+
+.tableOutlayEntries tbody tr td:nth-child(3) {
+  width: 40vw;
+  text-align: right;
+}
+
+.tableOutlayEntries tbody tr td:nth-child(4) {
+  width: 10vw;
+}

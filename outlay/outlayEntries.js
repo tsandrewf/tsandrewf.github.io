@@ -83,8 +83,7 @@ export class OutlayEntries {
       const divContent = document.getElementsByClassName("content")[0];
       const tableOutlayEntries = document.createElement("TABLE");
       divContent.appendChild(tableOutlayEntries);
-      tableOutlayEntries.id = "tableOutlayEntries";
-      tableOutlayEntries.className = "tableBase";
+      tableOutlayEntries.className = "tableBase tableOutlayEntries";
       tableOutlayEntries.appendChild(tbodyOutlayEntries);
     }
 
@@ -168,11 +167,6 @@ export class OutlayEntries {
         '<a href="Javascript:OutlayEntries_outlayEntryDelete(' +
         outlayEntry.id +
         ')">&#10006</a>';
-
-      tdDate.id = "colDate";
-      tdCategory.id = "colCategory";
-      tdSum.id = "colSum";
-      tdDel.id = "colDel";
     }
 
     let entryOlder = await OutlayEntry.getEntryOlder(dateBeg);
