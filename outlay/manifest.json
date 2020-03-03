@@ -1,0 +1,45 @@
+{
+  "name": "Затраты",
+  "short_name": "Затраты",
+  "start_url": "outlay.html",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Учет личных финансовых затрат",
+  "icons": [
+    {
+      "src": "icons/outlay32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/outlay512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
