@@ -49,7 +49,6 @@ export class OutlayEntryEdit {
   static async itemAppend(categoryId, sum) {
     // Создаем строку таблицы и добавляем ее
     let row = document.createElement("TR");
-    row.className = "odd";
     outlayTBody.appendChild(row);
 
     // Создаем ячейки в вышесозданной строке и добавляем их
@@ -231,7 +230,7 @@ export class OutlayEntryEdit {
 
     const table = document.createElement("TABLE");
     content.appendChild(table);
-    table.className = "tableBase";
+    table.className = "tableBase tableOutlayEntryEdit";
     table.setAttribute("entryId", entryId);
     outlayTBody = document.createElement("TBODY");
     table.appendChild(outlayTBody);

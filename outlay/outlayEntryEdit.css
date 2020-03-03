@@ -1,12 +1,14 @@
-#colNum {
+.tableOutlayEntryEdit tbody tr td:nth-child(1) {
   width: 10vw;
   text-align: right;
 }
-#colCategory {
+
+.tableOutlayEntryEdit tbody tr td:nth-child(2) {
   width: 45vw;
   text-align: right;
 }
-#colSum {
+
+.tableOutlayEntryEdit tbody tr td:nth-child(3) {
   width: 45vw;
   text-align: left;
 }
