@@ -1,5 +1,7 @@
 "use strict";
 
+import { NavbarTop } from "./navbarTop.js";
+import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";

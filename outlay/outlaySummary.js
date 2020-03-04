@@ -1,5 +1,7 @@
 "use strict";
 
+import { NavbarTop } from "./navbarTop.js";
+import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { outlaySummaryPeriodKeyName } from "./db.js";
 import { Category } from "./category.js";

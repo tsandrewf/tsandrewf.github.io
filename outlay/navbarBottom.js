@@ -1,4 +1,6 @@
-class NavbarBottom {
+"use strict";
+
+export class NavbarBottom {
   static show(options) {
     let navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
 

@@ -1,4 +1,6 @@
-class NavbarTop {
+"use strict";
+
+export class NavbarTop {
   static show(options) {
     let navbarTop = document.getElementsByClassName("navbar-top").item(0);
 

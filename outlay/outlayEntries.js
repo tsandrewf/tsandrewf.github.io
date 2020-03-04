@@ -1,15 +1,9 @@
 "use strict";
 
+import { NavbarTop } from "./navbarTop.js";
+import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
-import { Setting } from "./setting.js";
-import {
-  openDb,
-  outlayDateSelectedKeyName,
-  windowOnloadKeyName
-} from "./db.js";
 import { Category } from "./category.js";
-import { OutlayCategory } from "./outlayCategory.js";
-import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 
 export class OutlayEntries {
