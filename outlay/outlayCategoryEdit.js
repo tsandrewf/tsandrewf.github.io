@@ -108,6 +108,7 @@ export class OutlayCategoryEdit {
     ul.className = "upperCategory";
     let li = document.createElement("LI");
     ul.appendChild(li);
+    li.innerHTML = "&#9650; ";
     let input = document.createElement("INPUT");
     input.id = "categoryName";
     li.appendChild(input);
