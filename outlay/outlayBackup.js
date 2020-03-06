@@ -60,10 +60,17 @@ export class OutlayBackup {
       divContent.appendChild(div);
       div.innerHTML = "Архивирование и восстановление";
     }
+
     checkSupport("window.File");
     checkSupport("window.FileReader");
     checkSupport("window.FileList");
     checkSupport("window.Blob");
     checkSupport("window.requestFileSystem");
+    checkSupport("window.FileSystem");
+
+    //<input type="file" id="input"></input>;
+    const inputFile = document.createElement("INPUT");
+    divContent.appendChild(inputFile);
+    inputFile.type = "file";
   }
 }
