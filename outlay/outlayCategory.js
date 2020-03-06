@@ -7,6 +7,7 @@ import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 import { retValKeyName } from "./db.js";
+import { OutlayBackup } from "./outlayBackup.js";
 
 import {
   db,
@@ -17,6 +18,12 @@ import {
   outlayCategorySelectedKeyName
 } from "./db.js";
 import { OutlayEntry } from "./outlayEntry.js";
+
+window.OutlayBackup_displayData = function() {
+  window.history.pushState(null, "title");
+
+  OutlayBackup.displayData();
+};
 
 let entryId;
 let itemNum;
@@ -307,6 +314,10 @@ export class OutlayCategory {
           {
             innerHTML: "Итоги в разрезе категорий",
             href: 'Javascript:displayData("OutlaySummary")'
+          },
+          {
+            innerHTML: "Архивирование и восстановление",
+            href: "Javascript:OutlayBackup_displayData();"
           }
         ]
       },

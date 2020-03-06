@@ -7,11 +7,16 @@ import { outlaySummaryPeriodKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
+import { OutlayBackup } from "./outlayBackup.js";
+
+window.OutlayBackup_displayData = function() {
+  window.history.pushState(null, "title");
+
+  OutlayBackup.displayData();
+};
 
 let summaries;
 let summaryContent;
-
-//window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
 
 export class OutlaySummary {
   static getPeriod() {
@@ -54,6 +59,10 @@ export class OutlaySummary {
           {
             innerHTML: "Категории расходов",
             href: 'Javascript:displayData("OutlayCategory")'
+          },
+          {
+            innerHTML: "Архивирование и восстановление",
+            href: "Javascript:OutlayBackup_displayData();"
           }
         ]
       },

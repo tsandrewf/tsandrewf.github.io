@@ -6,6 +6,7 @@ import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
+import { OutlayBackup } from "./outlayBackup.js";
 
 window.onload = openDb(window_onload);
 
@@ -13,9 +14,7 @@ window.displayData = window_onload;
 
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
-  console.log("navigator", navigator);
   if ("serviceWorker" in navigator) {
-    console.log("serviceWorker");
     navigator.serviceWorker.register("./service-worker.js");
   }
 
@@ -28,7 +27,11 @@ async function window_onload(funcName) {
       case "OutlayEntryEdit":
         OutlayEntryEdit.displayData();
         break;
+      case "OutlayBackup":
+        OutlayBackup.displayData();
+        break;
     }
+
     return;
   }
 

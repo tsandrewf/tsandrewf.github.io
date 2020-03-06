@@ -5,6 +5,13 @@ import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
+import { OutlayBackup } from "./outlayBackup.js";
+
+window.OutlayBackup_displayData = function() {
+  window.history.pushState(null, "title");
+
+  OutlayBackup.displayData();
+};
 
 export class OutlayEntries {
   static async outlayEntryEdit(entryId) {
@@ -45,6 +52,10 @@ export class OutlayEntries {
           {
             innerHTML: "Итоги в разрезе категорий",
             href: 'Javascript:displayData("OutlaySummary")'
+          },
+          {
+            innerHTML: "Архивирование и восстановление",
+            href: "Javascript:OutlayBackup_displayData();"
           }
         ]
       },
