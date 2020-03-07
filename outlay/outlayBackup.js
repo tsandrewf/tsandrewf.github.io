@@ -8,7 +8,13 @@ let divContent;
 function checkSupport(feature) {
   const div = document.createElement("DIV");
   divContent.appendChild(div);
-  div.innerHTML = feature + " is " + (eval(feature) ? "" : " NOT") + " OK!";
+  div.innerHTML =
+    feature +
+    " is " +
+    (eval(feature)
+      ? ""
+      : ' <span style="font-weight:bold;color:red;">NOT</span>') +
+    " OK!";
 }
 
 export class OutlayBackup {
@@ -66,6 +72,7 @@ export class OutlayBackup {
     checkSupport("window.FileList");
     checkSupport("window.Blob");
     checkSupport("window.requestFileSystem");
+    checkSupport("window.webkitRequestFileSystem");
     checkSupport("window.FileSystem");
 
     //<input type="file" id="input"></input>;
