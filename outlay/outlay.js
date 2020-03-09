@@ -15,7 +15,9 @@ window.displayData = window_onload;
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js");
+    const serviceWorker = "./service-worker.js";
+    console.log('Registering of Setvice Worker "' + serviceWorker + '"');
+    navigator.serviceWorker.register(serviceWorker);
   }
 
   if (window.history.state) {

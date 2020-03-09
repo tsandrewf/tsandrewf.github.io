@@ -74,6 +74,19 @@ export class OutlayBackup {
     checkSupport("window.requestFileSystem");
     checkSupport("window.webkitRequestFileSystem");
     checkSupport("window.FileSystem");
+    checkSupport("window.caches");
+    if (window.caches) {
+      console.log("window.caches", window.caches);
+      const cacheV1 = "v1";
+      caches
+        .has(cacheV1)
+        .then(function(hasCache) {
+          console.log('window.caches has cache "' + cacheV1 + '"', hasCache);
+        })
+        .catch(function() {
+          console.log('window.caches has NO cache "' + cacheV1 + '"');
+        });
+    }
 
     //<input type="file" id="input"></input>;
     const inputFile = document.createElement("INPUT");
