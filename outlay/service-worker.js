@@ -59,10 +59,10 @@ self.addEventListener("activate", event => {
   return self.clients.claim();
 });
 
-self.addEventListener("fetch", function(event) {
+/*self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(fetch(event.request));
-});
+});*/
 /*self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(
@@ -79,3 +79,22 @@ self.addEventListener("fetch", function(event) {
       })
   );
 });*/
+self.addEventListener("fetch", function(event) {
+  console.log("👷", "fetch", event.request.url);
+  var response;
+  event.respondWith(
+    fetch(event.request)
+      .then(function(r) {
+        response = r;
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(event.request, response);
+        });
+        return response.clone();
+      })
+      .catch(function() {
+        caches.match(event.request).then(function(response) {
+          return response;
+        });
+      })
+  );
+});
