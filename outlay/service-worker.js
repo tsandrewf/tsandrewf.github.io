@@ -35,11 +35,11 @@ const cacheUrls = [
   "./icons/outlay256.png"
 ];
 
-/*self.addEventListener("install", event => {
+self.addEventListener("install", event => {
   console.log("👷", "install", event);
   self.skipWaiting();
-});*/
-self.addEventListener("install", function(event) {
+});
+/*self.addEventListener("install", function(event) {
   console.log("👷", "install", event);
   // задержим обработку события
   // если произойдёт ошибка, serviceWorker не установится
@@ -52,7 +52,7 @@ self.addEventListener("install", function(event) {
       return cache.addAll(cacheUrls);
     })
   );
-});
+});*/
 
 self.addEventListener("activate", event => {
   console.log("👷", "activate", event);
@@ -62,8 +62,8 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", function(event) {
   //console.log("👷", "fetch", event);
   console.log("👷", "fetch", event.request.url);
-  //event.respondWith(fetch(event.request));
-  event.respondWith(
+  event.respondWith(fetch(event.request));
+  /*event.respondWith(
     fetch(event.request).then(function(response) {
       if (!response || response.status !== 200) {
         console.log("Получаем из сети", event.request);
@@ -82,5 +82,5 @@ self.addEventListener("fetch", function(event) {
         return cachedResponse;
       });
     })
-  );
+  );*/
 });
