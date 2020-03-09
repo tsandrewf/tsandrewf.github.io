@@ -17,6 +17,7 @@ const cacheUrls = [
   "./tableBase.css",
   "./category.js",
   // JS
+  "./category.js",
   "./date.js",
   "./db.js",
   "./navbarBottom.js",
