@@ -59,11 +59,11 @@ self.addEventListener("activate", event => {
   return self.clients.claim();
 });
 
-/*self.addEventListener("fetch", function(event) {
+self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(fetch(event.request));
-});*/
-self.addEventListener("fetch", function(event) {
+});
+/*self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(
     fetch(event.request)
@@ -78,4 +78,4 @@ self.addEventListener("fetch", function(event) {
         });
       })
   );
-});
+});*/
