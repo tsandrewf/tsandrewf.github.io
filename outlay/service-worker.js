@@ -66,10 +66,16 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(
-    fetch(event.request).then(function(response) {
-      caches.open(CACHE_NAME).then(function(cache) {
-        cache.put(event.request, response);
-      });
-    })
+    fetch(event.request)
+      .then(function(response) {
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(event.request, response);
+        });
+      })
+      .catch(function() {
+        caches.match(event.request).then(function(responce) {
+          return responce;
+        });
+      })
   );
 });
