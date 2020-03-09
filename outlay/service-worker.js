@@ -35,11 +35,11 @@ const cacheUrls = [
   "./icons/outlay256.png"
 ];
 
-self.addEventListener("install", event => {
+/*self.addEventListener("install", event => {
   console.log("👷", "install", event);
   self.skipWaiting();
-});
-/*self.addEventListener("install", function(event) {
+});*/
+self.addEventListener("install", function(event) {
   console.log("👷", "install", event);
   // задержим обработку события
   // если произойдёт ошибка, serviceWorker не установится
@@ -52,35 +52,24 @@ self.addEventListener("install", event => {
       return cache.addAll(cacheUrls);
     })
   );
-});*/
+});
 
 self.addEventListener("activate", event => {
   console.log("👷", "activate", event);
   return self.clients.claim();
 });
 
-self.addEventListener("fetch", function(event) {
-  //console.log("👷", "fetch", event);
+/*self.addEventListener("fetch", function(event) {
   console.log("👷", "fetch", event.request.url);
   event.respondWith(fetch(event.request));
-  /*event.respondWith(
+});*/
+self.addEventListener("fetch", function(event) {
+  console.log("👷", "fetch", event.request.url);
+  event.respondWith(
     fetch(event.request).then(function(response) {
-      if (!response || response.status !== 200) {
-        console.log("Получаем из сети", event.request);
-
-        if (response.status !== 304) {
-          // обновляем кэш
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(event.request, response.clone());
-          });
-        }
-        return cachedResponse;
-      }
-      console.log("Извлекаем из кэша", event.request);
-      // ищем запрошенный ресурс среди закэшированных
-      caches.match(event.request).then(function(cachedResponse) {
-        return cachedResponse;
+      caches.open(CACHE_NAME).then(function(cache) {
+        cache.put(event.request, response);
       });
     })
-  );*/
+  );
 });
