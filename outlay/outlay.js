@@ -14,10 +14,28 @@ window.displayData = window_onload;
 
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
-  if ("serviceWorker" in navigator) {
+  /*if ("serviceWorker" in navigator) {
     const serviceWorker = "./service-worker.js";
     console.log('Registering of Setvice Worker "' + serviceWorker + '"');
     navigator.serviceWorker.register(serviceWorker);
+  }
+  console.log("caches", caches.keys);*/
+
+  // https://shterkel.com/pwa.html
+  if (navigator.serviceWorker.controller) {
+    console.log(
+      "[PWA Builder] active service worker found, no need to register"
+    );
+  } else {
+    navigator.serviceWorker
+      .register("./service-worker.js", {
+        scope: "./"
+      })
+      .then(function(reg) {
+        console.log(
+          "Service worker has been registered for scope:" + reg.scope
+        );
+      });
   }
 
   if (window.history.state) {
