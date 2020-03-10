@@ -78,7 +78,9 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", function(event) {
   event.respondWith(
     fetch(event.request).catch(function() {
+      console.log("fetch catch", event.request);
       caches.match(event.request).then(function(response) {
+        console.log("caches match", response);
         return response;
       });
     })
