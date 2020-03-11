@@ -262,9 +262,8 @@ export class OutlayCategory {
     await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
   }
 
-  static async displayData(entryId) {
-    console.log("OulayCategory");
-    console.log("entryId", entryId);
+  static async displayData(id) {
+    entryId = id;
     try {
       if (!entryId) {
         const funcName = "OutlayCategory";

@@ -276,44 +276,43 @@ export class OutlayEntryEdit {
   //window.save = save;
 
   static async save() {
-    //try {
-    const date = new Date(document.getElementById("iptDate").value);
-    if (!date) {
-      throw Error("НЕ задана дата чека");
-    }
-
-    let outlayEntry = {
-      date: date,
-      sumAll: 0,
-      categoryId: null,
-      categories: [],
-      sums: []
-    };
-    if (entryId) {
-      outlayEntry.id = entryId;
-    }
-
-    for (let item of outlayTBody.getElementsByTagName("TR")) {
-      let categoryId = Number(
-        item.querySelector("#colCategory").getAttribute("categoryId")
-      );
-      let sum = Number(
-        item.querySelector("#colSum").querySelector("INPUT").value
-      );
-
-      if (sum) {
-        outlayEntry.sumAll += sum;
-        outlayEntry.categories.push(categoryId);
-        outlayEntry.sums.push(sum);
+    try {
+      const date = new Date(document.getElementById("iptDate").value);
+      if (!date) {
+        throw Error("НЕ задана дата чека");
       }
+
+      let outlayEntry = {
+        date: date,
+        sumAll: 0,
+        categoryId: null,
+        categories: [],
+        sums: []
+      };
+      if (entryId) {
+        outlayEntry.id = entryId;
+      }
+
+      for (let item of outlayTBody.getElementsByTagName("TR")) {
+        let categoryId = Number(
+          item.querySelector("#colCategory").getAttribute("categoryId")
+        );
+        let sum = Number(
+          item.querySelector("#colSum").querySelector("INPUT").value
+        );
+
+        if (sum) {
+          outlayEntry.sumAll += sum;
+          outlayEntry.categories.push(categoryId);
+          outlayEntry.sums.push(sum);
+        }
+      }
+
+      await OutlayEntry.set(outlayEntry);
+
+      history.back();
+    } catch (error) {
+      alert(error);
     }
-
-    await OutlayEntry.set(outlayEntry);
-
-    history.back();
-    //} catch (error) {
-    //  console.log(error);
-    //  alert(error);
-    //}
   }
 }

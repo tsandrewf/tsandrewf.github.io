@@ -19,16 +19,19 @@ window.onpopstate = async function(event) {
   const url = new URL(location.href);
 
   let funcName = getQueryVar("func");
-  console.log("funcName", funcName);
   if (!funcName) {
     funcName = await Setting.get(windowOnloadKeyName);
   } else {
     switch (funcName) {
       case null:
       case "Outlay": // OutlayEntries
-      case "OutlayCategory":
       case "OutlaySummary":
         await Setting.set(windowOnloadKeyName, funcName);
+        break;
+      case "OutlayCategory":
+        if (!getQueryVar("entryId")) {
+          await Setting.set(windowOnloadKeyName, funcName);
+        }
         break;
     }
   }
@@ -44,9 +47,7 @@ window.onpopstate = async function(event) {
       OutlaySummary.displayData();
       break;
     case "OutlayEntryEdit":
-      let entryId = Number(getQueryVar("entryId"));
-      console.log("entryId", entryId);
-      OutlayEntryEdit.displayData(entryId);
+      OutlayEntryEdit.displayData(Number(getQueryVar("entryId")));
       break;
     default:
       OutlayEntries.displayData();
