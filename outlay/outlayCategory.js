@@ -263,6 +263,7 @@ export class OutlayCategory {
   }
 
   static async displayData(entryId) {
+    console.log("OulayCategory");
     try {
       if (!entryId) {
         const funcName = "OutlayCategory";
@@ -505,7 +506,8 @@ export class OutlayCategory {
         window_scrollY: window.scrollY,
         content: document.body.getElementsByClassName("content")[0].innerHTML
       },
-      window.title
+      window.title,
+      "#func=OutlayCategory&entryId=" + entryId
     );
     window.history.pushState({ data: "data" }, "title");
 
@@ -521,7 +523,8 @@ export class OutlayCategory {
         window_scrollY: window.scrollY,
         content: document.body.getElementsByClassName("content")[0].innerHTML
       },
-      window.title
+      window.title,
+      "#func=OutlayCategory&entryId=" + entryId
     );
     window.history.pushState({ data: "data" }, "title");
 

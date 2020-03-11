@@ -7,10 +7,6 @@ import { Category } from "./category.js";
 let id;
 let parentId;
 
-/*window.onpopstate = function(event) {
-  document.location.reload(true);
-};*/
-
 export class OutlayCategoryEdit {
   static displayData(options) {
     try {
@@ -24,11 +20,11 @@ export class OutlayCategoryEdit {
         throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
       } else if (options.id) {
         document.title = "Изменение категории расходов";
-        window.save = OutlayCategoryEdit.saveEdit;
+        window.OutlayCategorySave = OutlayCategoryEdit.saveEdit;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryEdit;
       } else if (options.parentId) {
         document.title = "Новая категория расходов";
-        window.save = OutlayCategoryEdit.saveNew;
+        window.OutlayCategorySave = OutlayCategoryEdit.saveNew;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryNew;
       }
 
@@ -36,18 +32,24 @@ export class OutlayCategoryEdit {
         menu: {
           buttonHTML: "&#9776;",
           content: [
-            { innerHTML: "Чеки", href: "outlay.html" },
-            { innerHTML: "Категории расходов", href: "outlayCategory.html" },
+            {
+              innerHTML: "Чеки",
+              href: "Javascript:OutlayEntries_displayData()"
+            },
+            {
+              innerHTML: "Категории расходов",
+              href: "Javascript:OutlayCategory_displayData()"
+            },
             {
               innerHTML: "Итоги в разрезе категорий",
-              href: "outlaySummary.html"
+              href: "Javascript:OutlaySummary_displayData()"
             }
           ]
         },
         titleHTML: "Категория затрат",
         buttons: [
           {
-            onclick: window.save,
+            onclick: window.OutlayCategorySave,
             title: "Сохранить категорию",
             innerHTML: "&#10004;"
           }
@@ -57,9 +59,9 @@ export class OutlayCategoryEdit {
         document.title;
 
       NavbarBottom.show([
-        { text: "Чеки", href: "outlay.html" },
-        { text: "Категории", href: "outlayCategory.html" },
-        { text: "Итоги", href: "outlaySummary.html" }
+        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+        { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+        { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
       ]);
 
       {
@@ -116,7 +118,7 @@ export class OutlayCategoryEdit {
   }
 
   static async displayDataCategoryEdit() {
-    window.save = OutlayCategoryEdit.saveEdit;
+    window.OutlayCategorySave = OutlayCategoryEdit.saveEdit;
 
     id = Number(id);
     if (0 === id) {
@@ -133,7 +135,7 @@ export class OutlayCategoryEdit {
 
   static async displayDataCategoryNew() {
     parentId = Number(parentId);
-    window.save = OutlayCategoryEdit.saveNew;
+    window.OutlayCategorySave = OutlayCategoryEdit.saveNew;
     OutlayCategoryEdit.categoryTree(await Category.get(parentId));
   }
 

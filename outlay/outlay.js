@@ -19,6 +19,7 @@ window.onpopstate = async function(event) {
   const url = new URL(location.href);
 
   let funcName = getQueryVar("func");
+  console.log("funcName", funcName);
   if (!funcName) {
     funcName = await Setting.get(windowOnloadKeyName);
   } else {
@@ -37,7 +38,7 @@ window.onpopstate = async function(event) {
       OutlayEntries.displayData();
       break;
     case "OutlayCategory":
-      OutlayCategory.displayData();
+      OutlayCategory.displayData(getQueryVar("entryId"));
       break;
     case "OutlaySummary":
       OutlaySummary.displayData();
