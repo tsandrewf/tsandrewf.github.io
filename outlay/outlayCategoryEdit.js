@@ -7,9 +7,9 @@ import { Category } from "./category.js";
 let id;
 let parentId;
 
-window.onpopstate = function(event) {
+/*window.onpopstate = function(event) {
   document.location.reload(true);
-};
+};*/
 
 export class OutlayCategoryEdit {
   static displayData(options) {

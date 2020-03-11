@@ -7,10 +7,51 @@ import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 import { OutlayBackup } from "./outlayBackup.js";
+import { getQueryVar } from "./url.js";
 
 window.onload = openDb(window_onload);
 
-window.displayData = window_onload;
+window.OutlayEntries_displayData = OutlayEntries.displayData;
+window.OutlayCategory_displayData = OutlayCategory.displayData;
+window.OutlaySummary_displayData = OutlaySummary.displayData;
+
+window.onpopstate = async function(event) {
+  const url = new URL(location.href);
+
+  let funcName = getQueryVar("func");
+  if (!funcName) {
+    funcName = await Setting.get(windowOnloadKeyName);
+  } else {
+    switch (funcName) {
+      case null:
+      case "Outlay": // OutlayEntries
+      case "OutlayCategory":
+      case "OutlaySummary":
+        await Setting.set(windowOnloadKeyName, funcName);
+        break;
+    }
+  }
+
+  switch (funcName) {
+    case "Outlay": // OutlayEntries
+      OutlayEntries.displayData();
+      break;
+    case "OutlayCategory":
+      OutlayCategory.displayData();
+      break;
+    case "OutlaySummary":
+      OutlaySummary.displayData();
+      break;
+    case "OutlayEntryEdit":
+      let entryId = Number(getQueryVar("entryId"));
+      console.log("entryId", entryId);
+      OutlayEntryEdit.displayData(entryId);
+      break;
+    default:
+      OutlayEntries.displayData();
+      break;
+  }
+};
 
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
@@ -38,30 +79,7 @@ async function window_onload(funcName) {
       });
   }
 
-  if (window.history.state) {
-    switch (window.history.state.url) {
-      case "OutlayCategory":
-        window.history.replaceState(null, window.title);
-        OutlayCategory.displayData(true);
-        break;
-      case "OutlayEntryEdit":
-        OutlayEntryEdit.displayData();
-        break;
-      case "OutlayBackup":
-        OutlayBackup.displayData();
-        break;
-    }
-
-    return;
-  }
-
-  if (funcName) {
-    await Setting.set(windowOnloadKeyName, funcName);
-  } else {
-    funcName = await Setting.get(windowOnloadKeyName);
-  }
-
-  switch (funcName) {
+  switch (await Setting.get(windowOnloadKeyName)) {
     case "OutlayCategory":
       OutlayCategory.displayData();
       break;

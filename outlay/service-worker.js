@@ -32,6 +32,7 @@ const cacheUrls = [
   "./outlaySummary.js",
   "./setting.js",
   "./standbyIndicator.js",
+  "./url.js",
   // PNG
   "./icons/outlay256.png"
 ];

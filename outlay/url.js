@@ -2,10 +2,12 @@
 export function getQueryVar(varName) {
   // Grab and unescape the query string - appending an '&' keeps the RegExp simple
   // for the sake of this example.
-  let queryStr = unescape(window.location.search) + "&";
+  //let queryStr = unescape(window.location.search) + "&";
+  let queryStr = unescape(window.location.hash) + "&";
 
   // Dynamic replacement RegExp
-  let regex = new RegExp(".*?[&\\?]" + varName + "=(.*?)&.*");
+  //let regex = new RegExp(".*?[&\\?]" + varName + "=(.*?)&.*");
+  let regex = new RegExp(".*?[#&\\?]" + varName + "=(.*?)&.*");
 
   // Apply RegExp to the query string
   let val = queryStr.replace(regex, "$1");

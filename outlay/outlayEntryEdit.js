@@ -91,28 +91,26 @@ export class OutlayEntryEdit {
       : "НЕ задана";
   }
 
-  //window.outlayEntryItemNew = outlayEntryItemNew;
-
   static async outlayEntryItemNew() {
-    //try {
-    let rows = outlayTBody.rows;
+    try {
+      let rows = outlayTBody.rows;
 
-    if (
-      !rows.length ||
+      if (
+        !rows.length ||
+        rows[rows.length - 1].cells
+          .namedItem("colSum")
+          .getElementsByTagName("INPUT")[0].value
+      ) {
+        await OutlayEntryEdit.itemAppend(null, null);
+      }
+
       rows[rows.length - 1].cells
         .namedItem("colSum")
-        .getElementsByTagName("INPUT")[0].value
-    ) {
-      await OutlayEntryEdit.itemAppend(null, null);
+        .getElementsByTagName("INPUT")[0]
+        .focus();
+    } catch (error) {
+      alert(error);
     }
-
-    rows[rows.length - 1].cells
-      .namedItem("colSum")
-      .getElementsByTagName("INPUT")[0]
-      .focus();
-    //} catch (error) {
-    //  alert(error);
-    //}
   }
 
   static async dateChanged(date) {
@@ -152,14 +150,14 @@ export class OutlayEntryEdit {
       menu: {
         buttonHTML: "&#9776;",
         content: [
-          { innerHTML: "Чеки", href: 'Javascript:displayData("Outlay")' },
+          { innerHTML: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
           {
             innerHTML: "Категории расходов",
-            href: 'Javascript:displayData("OutlayCategory")'
+            href: "Javascript:OutlayCategory_displayData()"
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: 'Javascript:displayData("OutlaySummary")'
+            href: "Javascript:OutlaySummary_displayData()"
           }
         ]
       },
@@ -180,9 +178,9 @@ export class OutlayEntryEdit {
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("Outlay")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+      { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
     ]);
 
     let divNewString = document.createElement("DIV");
@@ -212,15 +210,8 @@ export class OutlayEntryEdit {
             window.history.state.rowNum - 1
           ].cells["colCategory"];
           tdCategory.setAttribute("categoryid", categoryId);
-          //const category = await Category.get(categoryId);
           const aCategory = tdCategory.getElementsByTagName("A")[0];
-          //tdCategory.appendChild(aCategory);
           aCategory.innerHTML = (await Category.get(categoryId)).name;
-          //console.log("aCategory.innerHTML", aCategory.innerHTML);
-          /*aCategory.href =
-            "Javascript:OutlayEntryEdit_categoryEdit(" +
-            window.history.state.rowNum +
-            ")";*/
         }
       }
 
@@ -242,17 +233,6 @@ export class OutlayEntryEdit {
     outlayTBody = document.createElement("TBODY");
     table.appendChild(outlayTBody);
 
-    /*if (entryId) {
-      let outlayEntry = await OutlayEntry.get(entryId);
-      document.getElementById("iptDate").value = outlayEntry.date._toForm();
-      document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(
-        2
-      );
-
-      for (let i = 0; i < outlayEntry.categories.length; i++) {
-        await itemAppend(outlayEntry.categories[i], outlayEntry.sums[i]);
-      }
-    }*/
     let outlayEntry = entryId
       ? await OutlayEntry.get(entryId)
       : {
@@ -261,10 +241,12 @@ export class OutlayEntryEdit {
           categories: [null],
           sums: [null]
         };
+
     document.getElementById("iptDate").value = outlayEntry.date
       ? outlayEntry.date._toForm()
       : null;
     document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
+
     for (let i = 0; i < outlayEntry.categories.length; i++) {
       await OutlayEntryEdit.itemAppend(
         outlayEntry.categories[i],

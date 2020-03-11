@@ -3,7 +3,7 @@
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
-import { outlaySummaryPeriodKeyName } from "./db.js";
+import { outlaySummaryPeriodKeyName, windowOnloadKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
@@ -36,89 +36,85 @@ export class OutlaySummary {
     };
   }
 
-  //window.dateChanged = dateChanged;
-
   static async dateChanged() {
     await Setting.set(outlaySummaryPeriodKeyName, OutlaySummary.getPeriod());
     await OutlaySummary.summariesRefresh();
     await OutlaySummary.summaryContentRefresh(0);
   }
 
-  //window.onload = openDb(window_onload);
-
   static async displayData() {
-    //try {
-    window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
-    document.title = "Итоги";
-
-    NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          { innerHTML: "Чеки", href: 'Javascript:displayData("Outlay")' },
-          {
-            innerHTML: "Категории расходов",
-            href: 'Javascript:displayData("OutlayCategory")'
-          },
-          {
-            innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayBackup_displayData();"
-          }
-        ]
-      },
-      titleHTML:
-        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
-      buttons: []
-    });
-
-    NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("Outlay")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги" }
-    ]);
-
-    {
-      const divContent = document.getElementsByClassName("content")[0];
-
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
+    try {
+      {
+        const funcName = "OutlaySummary";
+        if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+          await Setting.set(windowOnloadKeyName, funcName);
+        }
       }
+
+      window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
+      document.title = "Итоги";
+
+      NavbarTop.show({
+        menu: {
+          buttonHTML: "&#9776;",
+          content: [
+            {
+              innerHTML: "Чеки",
+              href: "Javascript:OutlayEntries_displayData()"
+            },
+            {
+              innerHTML: "Категории расходов",
+              href: "Javascript:OutlayCategory_displayData()"
+            },
+            {
+              innerHTML: "Архивирование и восстановление",
+              href: "Javascript:OutlayBackup_displayData();"
+            }
+          ]
+        },
+        titleHTML:
+          '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
+        buttons: []
+      });
+
+      NavbarBottom.show([
+        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+        { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+        { text: "Итоги" }
+      ]);
+
+      {
+        const divContent = document.getElementsByClassName("content")[0];
+
+        while (divContent.firstChild) {
+          divContent.removeChild(divContent.firstChild);
+        }
+      }
+
+      summaryContent = document.getElementsByClassName("content")[0];
+
+      let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+      if (!datePeriod) {
+        let date = new Date();
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        datePeriod = { dateBeg: date, dateEnd: date };
+      }
+
+      document.getElementById("iptDateBeg").value = datePeriod.dateBeg
+        ? datePeriod.dateBeg._toForm()
+        : null;
+      document.getElementById("iptDateEnd").value = datePeriod.dateEnd
+        ? datePeriod.dateEnd._toForm()
+        : null;
+      await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
+
+      await OutlaySummary.summariesRefresh();
+
+      await OutlaySummary.summaryContentRefresh(0);
+    } catch (error) {
+      alert(error);
     }
-
-    //summaryContent = document.getElementById("summaryContent");
-    summaryContent = document.getElementsByClassName("content")[0];
-
-    let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
-    if (!datePeriod) {
-      let date = new Date();
-      date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      console.log("date", date);
-      datePeriod = { dateBeg: date, dateEnd: date };
-    }
-
-    document.getElementById("iptDateBeg").value = datePeriod.dateBeg
-      ? datePeriod.dateBeg._toForm()
-      : null;
-    document.getElementById("iptDateEnd").value = datePeriod.dateEnd
-      ? datePeriod.dateEnd._toForm()
-      : null;
-    await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
-
-    await OutlaySummary.summariesRefresh();
-
-    await OutlaySummary.summaryContentRefresh(0);
-    //} catch (error) {
-    //  alert(error);
-    //}
   }
-
-  /*function sleep(millis) {
-  var t = new Date().getTime();
-  var i = 0;
-  while (new Date().getTime() - t < millis) {
-    i++;
-  }
-}*/
 
   static async summariesRefresh() {
     StandbyIndicator.show();
@@ -161,11 +157,8 @@ export class OutlaySummary {
       }
     }
 
-    //sleep(2000);
     StandbyIndicator.hide();
   }
-
-  //window.trOnclick = trOnclick;
 
   static trOnclick(elem) {
     OutlaySummary.summaryContentRefresh(
@@ -190,6 +183,7 @@ export class OutlaySummary {
     li.onclick = function() {
       OutlaySummary.trOnclick(this);
     };
+
     for (let category of upperCategoryArray.reverse()) {
       let ul = document.createElement("UL");
       parentUl.appendChild(ul);

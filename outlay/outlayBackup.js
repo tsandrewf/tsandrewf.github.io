@@ -25,15 +25,15 @@ export class OutlayBackup {
         content: [
           {
             innerHTML: "Чеки",
-            href: 'Javascript:displayData("OutlayEntries")'
+            href: "Javascript:OutlayEntries_displayData()"
           },
           {
             innerHTML: "Категории расходов",
-            href: 'Javascript:displayData("OutlayCategory")'
+            href: "Javascript:OutlayCategory_displayData()"
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: 'Javascript:displayData("OutlaySummary")'
+            href: "Javascript:OutlaySummary_displayData()"
           }
         ]
       },
@@ -48,9 +48,9 @@ export class OutlayBackup {
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+      { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
     ]);
 
     document.title = "Архивирование и восстановление";

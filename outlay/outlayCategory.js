@@ -11,13 +11,12 @@ import { OutlayBackup } from "./outlayBackup.js";
 
 import {
   db,
-  openDb,
+  windowOnloadKeyName,
   outlayCategoryObjectStoreName,
   settingObjectStoreName,
   outlayObjectStoreName,
   outlayCategorySelectedKeyName
 } from "./db.js";
-import { OutlayEntry } from "./outlayEntry.js";
 
 window.OutlayBackup_displayData = function() {
   window.history.pushState(null, "title");
@@ -26,7 +25,6 @@ window.OutlayBackup_displayData = function() {
 };
 
 let entryId;
-let itemNum;
 
 const expanded = String.fromCharCode(9650);
 const compressed = String.fromCharCode(9660);
@@ -70,9 +68,9 @@ export class OutlayCategory {
         .classList.remove("selectedCategory");
     }
 
-    if ("number" == typeof categorySel) {
+    if ("number" == (typeof categorySel).toLowerCase()) {
       categorySelected = document.getElementById(categorySel);
-    } else if ("object" == typeof categorySel) {
+    } else if ("object" == typeof categorySel.toLowerCase()) {
       if ("LI" === categorySel.tagName.toUpperCase()) {
         categorySelected = categorySel;
       }
@@ -83,25 +81,11 @@ export class OutlayCategory {
       .classList.add("selectedCategory");
   }
 
-  //window.itemCategorySave = itemCategorySave;
-
   static async itemCategorySave(categoryId) {
-    /*let outlayEntry = await OutlayEntry.get(Number(entryId));
-    outlayEntry.categories[itemNum - 1] = categoryId;
-    await OutlayEntry.set(outlayEntry);*/
     await Setting.set(retValKeyName, categoryId);
 
     history.back();
   }
-
-  //window.onload = openDb(displayData);
-
-  //let categorySelected;
-
-  //const expanded = String.fromCharCode(9650);
-  //const compressed = String.fromCharCode(9660);
-
-  //window.outlayCategoryDel = outlayCategoryDel;
 
   static async outlayCategoryDel() {
     if (StandbyIndicator.isShowing()) return;
@@ -232,8 +216,6 @@ export class OutlayCategory {
     }
   }
 
-  //window.leafChange = leafChange;
-
   static leafChange(elem) {
     if (StandbyIndicator.isShowing()) return;
 
@@ -270,8 +252,6 @@ export class OutlayCategory {
     }
   }
 
-  //window.liOnClick = liOnClick;
-
   static async liOnClick(liCategory) {
     if (StandbyIndicator.isShowing()) return;
 
@@ -283,196 +263,189 @@ export class OutlayCategory {
   }
 
   static async displayData(entryId) {
-    //alert("OutlayCategory");
-    //return;
-    //let styles = document.getElementsByTagName("STYLE");
-    //console.log("styles", styles);
+    try {
+      if (!entryId) {
+        const funcName = "OutlayCategory";
+        if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+          await Setting.set(windowOnloadKeyName, funcName);
+        }
+      }
 
-    //try {
-    StandbyIndicator.show();
+      StandbyIndicator.show();
 
-    await Setting.set(retValKeyName, null);
+      await Setting.set(retValKeyName, null);
 
-    window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
+      window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
 
-    //entryId = getQueryVar("entryId");
-    //itemNum = getQueryVar("itemNum");
+      if (!entryId) {
+        let hideSave = document.createElement("style");
+        document.head.append(hideSave);
+        hideSave.innerHTML = "li a {display:none;}";
+      }
 
-    if (!entryId) {
-      let hideSave = document.createElement("style");
-      document.head.append(hideSave);
-      hideSave.innerHTML = "li a {display:none;}";
-    }
+      document.title = "Категории расходов";
 
-    document.title = "Категории расходов";
-
-    NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          { innerHTML: "Чеки", href: 'Javascript:displayData("Outlay")' },
+      NavbarTop.show({
+        menu: {
+          buttonHTML: "&#9776;",
+          content: [
+            {
+              innerHTML: "Категории расходов",
+              href: "Javascript:OutlayCategory_displayData()"
+            },
+            {
+              innerHTML: "Итоги в разрезе категорий",
+              href: "Javascript:OutlaySummary_displayData()"
+            },
+            {
+              innerHTML: "Архивирование и восстановление",
+              href: "Javascript:OutlayBackup_displayData();"
+            }
+          ]
+        },
+        titleHTML: "Категории расходов",
+        buttons: [
           {
-            innerHTML: "Итоги в разрезе категорий",
-            href: 'Javascript:displayData("OutlaySummary")'
+            onclick: OutlayCategory.outlayCategoryNew,
+            title: "Добавить категорию",
+            innerHTML: "&#10010;"
           },
           {
-            innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayBackup_displayData();"
+            onclick: OutlayCategory.outlayCategoryEdit,
+            title: "Изменить название категории",
+            innerHTML: "&#9999;"
+          },
+          {
+            onclick: OutlayCategory.outlayCategoryDel,
+            title: "Удалить категорию",
+            innerHTML: "&#10006;"
           }
         ]
-      },
-      titleHTML: "Категории расходов",
-      buttons: [
-        {
-          onclick: OutlayCategory.outlayCategoryNew,
-          title: "Добавить категорию",
-          innerHTML: "&#10010;"
-        },
-        {
-          onclick: OutlayCategory.outlayCategoryEdit,
-          title: "Изменить название категории",
-          innerHTML: "&#9999;"
-        },
-        {
-          onclick: OutlayCategory.outlayCategoryDel,
-          title: "Удалить категорию",
-          innerHTML: "&#10006;"
+      });
+
+      NavbarBottom.show([
+        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+        { text: "Категории" },
+        { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+      ]);
+
+      {
+        const divContent = document.getElementsByClassName("content")[0];
+
+        while (divContent.firstChild) {
+          divContent.removeChild(divContent.firstChild);
         }
-      ]
-    });
-
-    NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("Outlay")' },
-      { text: "Категории" },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
-    ]);
-
-    {
-      const divContent = document.getElementsByClassName("content")[0];
-
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
       }
-    }
 
-    let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-    if (!categorySelectedId) categorySelectedId = 0;
+      let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+      if (!categorySelectedId) categorySelectedId = 0;
 
-    if (window.history.state && window.history.state.content) {
-      document.getElementsByClassName("content")[0].innerHTML =
-        window.history.state && window.history.state.content;
+      if (window.history.state && window.history.state.content) {
+        document.getElementsByClassName("content")[0].innerHTML =
+          window.history.state && window.history.state.content;
 
-      const categorySel = await Category.get(categorySelectedId);
-      const liCategory = document.getElementById(categorySelectedId);
-      const categoryName = liCategory.childNodes[1].innerHTML.trim();
-      if (categorySel && categorySel.name !== categoryName) {
-        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
-        const ulCategory = liCategory.parentElement;
-        const parentNode = ulCategory.parentElement;
-        parentNode.removeChild(ulCategory);
-        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-          node => "UL" === node.tagName
-        );
-        {
-          let categoryRestored = false;
-          for (let node of ulCategoryChilds) {
-            if (
-              " " + categorySel.name <
-              node.firstChild.childNodes[1].innerHTML
-            ) {
-              parentNode.insertBefore(ulCategory, node);
-              categoryRestored = true;
-              break;
+        const categorySel = await Category.get(categorySelectedId);
+        const liCategory = document.getElementById(categorySelectedId);
+        const categoryName = liCategory.childNodes[1].innerHTML.trim();
+        if (categorySel && categorySel.name !== categoryName) {
+          liCategory.childNodes[1].innerHTML = " " + categorySel.name;
+          const ulCategory = liCategory.parentElement;
+          const parentNode = ulCategory.parentElement;
+          parentNode.removeChild(ulCategory);
+          let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
+            node => "UL" === node.tagName
+          );
+          {
+            let categoryRestored = false;
+            for (let node of ulCategoryChilds) {
+              if (
+                " " + categorySel.name <
+                node.firstChild.childNodes[1].innerHTML
+              ) {
+                parentNode.insertBefore(ulCategory, node);
+                categoryRestored = true;
+                break;
+              }
+            }
+            if (!categoryRestored) {
+              parentNode.appendChild(ulCategory);
             }
           }
-          if (!categoryRestored) {
-            parentNode.appendChild(ulCategory);
+        } else {
+          const categoryChildren = await Category.getChildren(
+            categorySelectedId
+          );
+          let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
+            node => "UL" === node.tagName
+          );
+          if (categoryChildren.length !== ulCategoryChilds.length) {
+            for (let i = 0; i < categoryChildren.length; i++) {
+              const category = categoryChildren[i];
+              if (!ulCategoryChilds[i]) {
+                liCategory.appendChild(
+                  OutlayCategory.getNodeCategoryNew(category)
+                );
+                liExpand(liCategory);
+              } else if (ulCategoryChilds[i].firstChild.id != category.id) {
+                liCategory.insertBefore(
+                  OutlayCategory.getNodeCategoryNew(category),
+                  ulCategoryChilds[i]
+                );
+                OutlayCategory.liExpand(liCategory);
+                break;
+              }
+            }
           }
         }
       } else {
-        const categoryChildren = await Category.getChildren(categorySelectedId);
-        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-          node => "UL" === node.tagName
+        let ulRoot = document.createElement("UL");
+        ulRoot.setAttribute("expanded", "true");
+        ulRoot.style.paddingLeft = "0";
+        let liRoot = document.createElement("LI");
+        liRoot.id = "0";
+        ulRoot.appendChild(liRoot);
+        let spanExpanded = document.createElement("SPAN");
+        spanExpanded.innerHTML = expanded;
+        liRoot.appendChild(spanExpanded);
+        let spanCategoryName = document.createElement("SPAN");
+        spanCategoryName.innerHTML = "Корень";
+        spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
+        liRoot.appendChild(spanCategoryName);
+        await OutlayCategory.displayTree(
+          liRoot,
+          db.transaction(outlayCategoryObjectStoreName)
         );
-        if (categoryChildren.length !== ulCategoryChilds.length) {
-          for (let i = 0; i < categoryChildren.length; i++) {
-            const category = categoryChildren[i];
-            if (!ulCategoryChilds[i]) {
-              liCategory.appendChild(
-                OutlayCategory.getNodeCategoryNew(category)
-              );
-              liExpand(liCategory);
-            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
-              liCategory.insertBefore(
-                OutlayCategory.getNodeCategoryNew(category),
-                ulCategoryChilds[i]
-              );
-              OutlayCategory.liExpand(liCategory);
-              break;
-            }
-          }
-        }
+        document
+          .getElementsByClassName("content")
+          .item(0)
+          .appendChild(ulRoot);
       }
-    } else {
-      let ulRoot = document.createElement("UL");
-      ulRoot.setAttribute("expanded", "true");
-      ulRoot.style.paddingLeft = "0";
-      let liRoot = document.createElement("LI");
-      liRoot.id = "0";
-      ulRoot.appendChild(liRoot);
-      let spanExpanded = document.createElement("SPAN");
-      spanExpanded.innerHTML = expanded;
-      liRoot.appendChild(spanExpanded);
-      let spanCategoryName = document.createElement("SPAN");
-      spanCategoryName.innerHTML = "Корень";
-      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
-      liRoot.appendChild(spanCategoryName);
-      await OutlayCategory.displayTree(
-        liRoot,
-        db.transaction(outlayCategoryObjectStoreName)
-      );
-      document
-        .getElementsByClassName("content")
-        .item(0)
-        .appendChild(ulRoot);
 
-      /*let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-    if (!categorySelectedId) categorySelectedId = 0;
-    categorySelectedMark(categorySelectedId);*/
+      OutlayCategory.categorySelectedMark(categorySelectedId);
+
+      if (window.history.state) {
+        window.scrollTo(0, window.history.state.window_scrollY);
+        window.history.replaceState(null, window.title);
+      }
+
+      for (let li of document.body
+        .getElementsByClassName("content")[0]
+        .getElementsByTagName("LI")) {
+        li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
+        li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      StandbyIndicator.hide();
     }
-
-    OutlayCategory.categorySelectedMark(categorySelectedId);
-
-    if (window.history.state) {
-      window.scrollTo(0, window.history.state.window_scrollY);
-      window.history.replaceState(null, window.title);
-    }
-
-    for (let li of document.body
-      .getElementsByClassName("content")[0]
-      .getElementsByTagName("LI")) {
-      li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
-      li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
-    }
-    //} catch (error) {
-    //  alert(error);
-    //} finally {
-    StandbyIndicator.hide();
-    //}
   }
 
-  /*const leaf_name_onclick = function() {
-  liOnClick(this.parentElement);
-  return false;
-};*/
   static leaf_name_onclick() {
     OutlayCategory.liOnClick(this.parentElement);
     return false;
   }
 
-  /*const leaf_expand_onclick = function() {
-  leafChange(this);
-};*/
   static leaf_expand_onclick() {
     OutlayCategory.leafChange(this);
   }
@@ -509,19 +482,16 @@ export class OutlayCategory {
             : expanded;
 
         spanName.innerHTML = " " + category.name;
-        //if (entryId) {
         spanName.innerHTML += " ";
         let aItemCategorySave = document.createElement("A");
         li.appendChild(aItemCategorySave);
         aItemCategorySave.innerHTML = "&#10004;";
         aItemCategorySave.href =
           "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
-        //}
 
         await OutlayCategory.displayTree(li, transaction);
       }
     } catch (err) {
-      console.log(err);
       alert("Ошибка: " + err);
     }
   }
@@ -541,8 +511,6 @@ export class OutlayCategory {
 
     OutlayCategoryEdit.displayData({ id: categorySelected.id });
   }
-
-  //window.outlayCategoryNew = outlayCategoryNew;
 
   static outlayCategoryNew() {
     if (StandbyIndicator.isShowing()) return;

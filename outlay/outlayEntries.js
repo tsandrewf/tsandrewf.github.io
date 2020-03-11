@@ -4,8 +4,9 @@ import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
-import { OutlayEntryEdit } from "./outlayEntryEdit.js";
+import { Setting } from "./setting.js";
 import { OutlayBackup } from "./outlayBackup.js";
+import { windowOnloadKeyName } from "./db.js";
 
 window.OutlayBackup_displayData = function() {
   window.history.pushState(null, "title");
@@ -14,12 +15,10 @@ window.OutlayBackup_displayData = function() {
 };
 
 export class OutlayEntries {
-  static async outlayEntryEdit(entryId) {
-    window.history.pushState(null, "title");
-
-    OutlayEntryEdit.displayData(
-      "number" === (typeof entryId).toLowerCase() ? entryId : null
-    );
+  static outlayEntryEdit(entryId) {
+    location.href =
+      "#func=OutlayEntryEdit&entryId=" +
+      ("number" === (typeof entryId).toLowerCase() ? entryId : "");
   }
 
   static async displayData(dateBeg, dateEnd) {
@@ -36,6 +35,13 @@ export class OutlayEntries {
       td.colSpan = 4;
     }
 
+    {
+      const funcName = "Outlay";
+      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+        await Setting.set(windowOnloadKeyName, funcName);
+      }
+    }
+
     document.title = "Чеки";
 
     window.OutlayEntries_outlayEntryDelete = OutlayEntries.outlayEntryDelete;
@@ -47,11 +53,11 @@ export class OutlayEntries {
         content: [
           {
             innerHTML: "Категории расходов",
-            href: 'Javascript:displayData("OutlayCategory")'
+            href: "Javascript:OutlayCategory_displayData()"
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: 'Javascript:displayData("OutlaySummary")'
+            href: "Javascript:OutlaySummary_displayData()"
           },
           {
             innerHTML: "Архивирование и восстановление",
@@ -71,8 +77,8 @@ export class OutlayEntries {
 
     NavbarBottom.show([
       { text: "Чеки" },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
     ]);
 
     {
@@ -163,6 +169,9 @@ export class OutlayEntries {
       let category = await Category.get(outlayEntry.categoryId);
       tdCategory.innerHTML = category ? category.name : null;
       tdSum.innerHTML =
+        /*'<a href="#func=OutlayEntryEdit&entryId=' +
+        outlayEntry.id +
+        '">' +*/
         '<a href="Javascript:OutlayEntries_outlayEntryEdit(' +
         outlayEntry.id +
         ')">' +
@@ -201,8 +210,6 @@ export class OutlayEntries {
     }
   }
 
-  //window.outlayEntryDelete = outlayEntryDelete;
-
   static async outlayEntryDelete(key) {
     if (!window.confirm("Вы действительно хотите удалить чек?")) {
       return;
@@ -210,7 +217,7 @@ export class OutlayEntries {
 
     try {
       await OutlayEntry.delete(key);
-      document.location.reload(true);
+      OutlayEntries.displayData();
     } catch (error) {
       alert(error);
     }
