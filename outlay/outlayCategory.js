@@ -70,7 +70,7 @@ export class OutlayCategory {
 
     if ("number" == (typeof categorySel).toLowerCase()) {
       categorySelected = document.getElementById(categorySel);
-    } else if ("object" == typeof categorySel.toLowerCase()) {
+    } else if ("object" == (typeof categorySel).toLowerCase()) {
       if ("LI" === categorySel.tagName.toUpperCase()) {
         categorySelected = categorySel;
       }
@@ -264,6 +264,7 @@ export class OutlayCategory {
 
   static async displayData(entryId) {
     console.log("OulayCategory");
+    console.log("entryId", entryId);
     try {
       if (!entryId) {
         const funcName = "OutlayCategory";
