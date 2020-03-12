@@ -57,15 +57,15 @@ window.onpopstate = async function(event) {
 
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
-  /*if ("serviceWorker" in navigator) {
+  // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
+  if ("serviceWorker" in navigator) {
     const serviceWorker = "./service-worker.js";
     console.log('Registering of Setvice Worker "' + serviceWorker + '"');
     navigator.serviceWorker.register(serviceWorker);
   }
-  console.log("caches", caches.keys);*/
 
   // https://shterkel.com/pwa.html
-  if (navigator.serviceWorker.controller) {
+  /*if (navigator.serviceWorker.controller) {
     console.log(
       "[PWA Builder] active service worker found, no need to register"
     );
@@ -79,7 +79,7 @@ async function window_onload(funcName) {
           "Service worker has been registered for scope:" + reg.scope
         );
       });
-  }
+  }*/
 
   switch (await Setting.get(windowOnloadKeyName)) {
     case "OutlayCategory":

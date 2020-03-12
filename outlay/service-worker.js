@@ -1,4 +1,4 @@
-const CACHE_NAME = "outlay_v_1";
+const CACHE_NAME = "outlay_v_2";
 const cacheUrls = [
   // HTML
   "./outlay.html",
@@ -76,7 +76,7 @@ self.addEventListener("activate", event => {
     //return response;
   });
 });*/
-self.addEventListener("fetch", function(event) {
+/*self.addEventListener("fetch", function(event) {
   event.respondWith(
     fetch(event.request).catch(function() {
       console.log("fetch catch", event.request);
@@ -85,6 +85,25 @@ self.addEventListener("fetch", function(event) {
         console.log("response.body", response.body);
         return response;
       });
+    })
+  );
+});*/
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(r => {
+      console.log("[Service Worker] Fetching resource: " + e.request.url);
+      return (
+        r ||
+        fetch(e.request).then(response => {
+          return caches.open(CACHE_NAME).then(cache => {
+            console.log(
+              "[Service Worker] Caching new resource: " + e.request.url
+            );
+            cache.put(e.request, response.clone());
+            return response;
+          });
+        })
+      );
     })
   );
 });
