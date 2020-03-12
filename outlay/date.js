@@ -4,6 +4,17 @@ function padStr(i) {
   return i < 10 ? "0" + i : "" + i;
 }
 
+Date.prototype._toCurrent = function() {
+  return (
+    this.getFullYear() +
+    padStr(this.getMonth() + 1) +
+    padStr(this.getDate()) +
+    padStr(this.getHours()) +
+    padStr(this.getMinutes()) +
+    padStr(this.getSeconds())
+  );
+};
+
 Date.prototype._toForm = function() {
   return (
     this.getFullYear() +

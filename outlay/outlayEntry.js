@@ -36,6 +36,26 @@ export class OutlayEntry {
     }
   }
 
+  static async getAll(transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
+
+      const category = await new Promise(function(resolve, reject) {
+        let request = transaction.objectStore(outlayObjectStoreName).getAll();
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return category;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async get(entryId, transaction) {
     try {
       if (!entryId) return null;

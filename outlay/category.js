@@ -102,6 +102,29 @@ export class Category {
     }
   }
 
+  static async getAll(transaction) {
+    try {
+      if (!transaction)
+        transaction = db.transaction(outlayCategoryObjectStoreName);
+
+      const category = await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(outlayCategoryObjectStoreName)
+          .getAll();
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return category;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async get(categoryId, transaction) {
     try {
       if (!categoryId) return null;
@@ -188,36 +211,6 @@ export class Category {
     }
   }
 
-  /*static getIsUsedReason(categoryId, transaction) {
-    return new Promise(function(resolve, reject) {
-      let request = transaction
-        .objectStore(outlayObjectStoreName)
-        .index("categoryId_idx")
-        .get(categoryId);
-
-      request.onsuccess = function() {
-        if (request.result) {
-          let outlayEntry = new OutlayEntry(request.result);
-          resolve(
-            " ссылается как минимум одна позиция в чеке на сумму " +
-              outlayEntry.sum +
-              " руб. за " +
-              outlayEntry.date._toStringBrief() +
-              "г."
-          );
-        } else reject();
-      };
-      request.onerror = function() {
-        reject(request.error);
-      };
-    })
-      .then(function(reason) {
-        return reason;
-      })
-      .catch(function(reason) {
-        return reason;
-      });
-  }*/
   static async getIsUsedReason(categoryId, transaction) {
     try {
       const reason = await new Promise(function(resolve, reject) {
