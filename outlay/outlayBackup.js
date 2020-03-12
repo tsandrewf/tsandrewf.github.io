@@ -40,13 +40,13 @@ export class OutlayBackup {
           }
         ]
       },
-      titleHTML: "Категория затрат",
+      titleHTML: "Утилиты",
       buttons: [
-        {
+        /*{
           onclick: window.save,
           title: "Сохранить категорию",
           innerHTML: "&#10004;"
-        }
+        }*/
       ]
     });
 
@@ -65,19 +65,19 @@ export class OutlayBackup {
         divContent.removeChild(divContent.firstChild);
       }
 
-      const div = document.createElement("DIV");
+      /*const div = document.createElement("DIV");
       divContent.appendChild(div);
-      div.innerHTML = "Архивирование и восстановление";
+      div.innerHTML = "Архивирование и восстановление";*/
     }
 
-    checkSupport("window.File");
+    /*checkSupport("window.File");
     checkSupport("window.FileReader");
     checkSupport("window.FileList");
     checkSupport("window.Blob");
     checkSupport("window.requestFileSystem");
     checkSupport("window.webkitRequestFileSystem");
     checkSupport("window.FileSystem");
-    checkSupport("window.caches");
+    checkSupport("window.caches");*/
     /*if (window.caches) {
       console.log("window.caches", window.caches);
       const cacheV1 = "v1";
@@ -92,7 +92,7 @@ export class OutlayBackup {
     }*/
 
     //<input type="file" id="input"></input>;
-    const inputFile = document.createElement("INPUT");
+    /*const inputFile = document.createElement("INPUT");
     divContent.appendChild(inputFile);
     inputFile.type = "file";
 
@@ -102,10 +102,43 @@ export class OutlayBackup {
     divOutput.appendChild(outputFile);
     outputFile.type = "button";
     outputFile.value = "Export";
-    outputFile.onclick = OutlayBackup.export;
+    outputFile.onclick = OutlayBackup.export;*/
+
+    const tbody = document.createElement("TBODY");
+    {
+      const table = document.createElement("TABLE");
+      divContent.appendChild(table);
+      table.className = "tableBase tableOutlayBackup";
+      table.appendChild(tbody);
+    }
+
+    {
+      let row = document.createElement("TR");
+      tbody.appendChild(row);
+      row.onclick = OutlayBackup.export;
+      let td = document.createElement("TD");
+      row.appendChild(td);
+      td.innerHTML = "Архивирование базы данных";
+    }
+
+    {
+      let row = document.createElement("TR");
+      tbody.appendChild(row);
+      row.onclick = OutlayBackup.restore;
+      let td = document.createElement("TD");
+      row.appendChild(td);
+      td.innerHTML = "Восстановление базы данных";
+    }
   }
 
   static async export() {
+    if (
+      !window.confirm(
+        "Вы действительно хотите архивировать базу данных расходов,"
+      )
+    )
+      return;
+
     try {
       const dateCurrent = new Date();
       const backupFileName =
@@ -146,5 +179,9 @@ export class OutlayBackup {
     element.click();
 
     document.body.removeChild(element);
+  }
+
+  static restore() {
+    alert("Восстановление базы данных пока НЕ реализовано");
   }
 }
