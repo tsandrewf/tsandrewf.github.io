@@ -2,6 +2,7 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
+import { Setting } from "./setting.js";
 import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import {
