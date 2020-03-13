@@ -4,7 +4,11 @@ import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
-import { outlayCategoryObjectStoreName, outlayObjectStoreName } from "./db.js";
+import {
+  db,
+  outlayCategoryObjectStoreName,
+  outlayObjectStoreName
+} from "./db.js";
 
 let divContent;
 
@@ -154,11 +158,15 @@ export class OutlayBackup {
       OutlayBackup.download(
         backupFileName,
         "{ " +
+          '"' +
           outlayCategoryObjectStoreName +
+          '"' +
           " : " +
           JSON.stringify(await Category.getAll()) +
           ", " +
+          '"' +
           outlayObjectStoreName +
+          '"' +
           " : " +
           JSON.stringify(await OutlayEntry.getAll()) +
           "}"
@@ -200,14 +208,36 @@ export class OutlayBackup {
       return;
     }
 
-    let json;
     let reader = new FileReader();
     reader.onerror = function() {
       alert('Ошибка загрузки файла "' + file.name + '"' + reader.error);
     };
-    reader.onload = function() {
-      console.log("reader.result", reader.result);
+
+    reader.onload = async function() {
+      const dbObect = JSON.parse(reader.result);
+
+      const transaction = db.transaction(
+        [outlayCategoryObjectStoreName, outlayObjectStoreName],
+        "readwrite"
+      );
+      transaction.onabort = function() {
+        console.log("onabort");
+      };
+      transaction.onerror = function(event) {
+        console.log("Error: ", event);
+      };
+      transaction.oncomplete = function() {
+        console.log("Database restored!");
+      };
+
+      for (let category of dbObect.outlayCategory) {
+        await Category.set(category, transaction);
+      }
+      for (let entry of dbObect.outlay) {
+        await OutlayEntry.set(entry, transaction);
+      }
     };
+
     reader.readAsText(file);
   }
 }

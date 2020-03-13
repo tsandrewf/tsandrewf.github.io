@@ -1,10 +1,6 @@
 "use strict";
 
-import {
-  db,
-  outlayObjectStoreName,
-  outlayCategoryObjectStoreName
-} from "./db.js";
+import { db, outlayObjectStoreName } from "./db.js";
 import { Category } from "./category.js";
 
 export class OutlayEntry {
