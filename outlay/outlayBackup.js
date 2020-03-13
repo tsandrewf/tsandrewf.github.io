@@ -124,10 +124,18 @@ export class OutlayBackup {
     {
       let row = document.createElement("TR");
       tbody.appendChild(row);
-      row.onclick = OutlayBackup.restore;
+      //row.onclick = OutlayBackup.restore;
       let td = document.createElement("TD");
       row.appendChild(td);
       td.innerHTML = "Восстановление базы данных";
+
+      const br = document.createElement("BR");
+      td.appendChild(br);
+      const inputFile = document.createElement("INPUT");
+      td.appendChild(inputFile);
+      inputFile.type = "file";
+      inputFile.id = "inputFile";
+      inputFile.onchange = OutlayBackup.restore;
     }
   }
 
@@ -145,18 +153,15 @@ export class OutlayBackup {
         outlayCategoryObjectStoreName + "_" + dateCurrent._toCurrent();
       OutlayBackup.download(
         backupFileName,
-        "const " +
+        "{ " +
           outlayCategoryObjectStoreName +
-          "ObjectStoreBackup" +
-          "=" +
+          " : " +
           JSON.stringify(await Category.getAll()) +
-          ";\n\r" +
-          "const " +
+          ", " +
           outlayObjectStoreName +
-          "ObjectStoreBackup" +
-          "=" +
+          " : " +
           JSON.stringify(await OutlayEntry.getAll()) +
-          ";"
+          "}"
       );
       alert('Создан файл "' + backupFileName + '"');
     } catch (error) {
@@ -182,6 +187,27 @@ export class OutlayBackup {
   }
 
   static restore() {
-    alert("Восстановление базы данных пока НЕ реализовано");
+    console.log("restore");
+    const inputFile = document.getElementById("inputFile");
+    console.log("inputFile", inputFile.files);
+    if (1 !== inputFile.files.length) {
+      return;
+    }
+    const file = inputFile.files[0];
+    console.log("file", file);
+    if ("application/json" !== file.type) {
+      console.log("file.type", file.type);
+      return;
+    }
+
+    let json;
+    let reader = new FileReader();
+    reader.onerror = function() {
+      alert('Ошибка загрузки файла "' + file.name + '"' + reader.error);
+    };
+    reader.onload = function() {
+      console.log("reader.result", reader.result);
+    };
+    reader.readAsText(file);
   }
 }
