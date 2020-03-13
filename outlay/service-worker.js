@@ -1,4 +1,4 @@
-const CACHE_NAME = "outlay_v_202003122227";
+const CACHE_NAME = "outlay_v_202003131059";
 const cacheUrls = [
   // HTML
   "./outlay.html",
@@ -48,9 +48,23 @@ self.addEventListener("install", function(event) {
   );
 });
 
-self.addEventListener("activate", event => {
+/*self.addEventListener("activate", event => {
   console.log("Service Worker Activate", event);
   return self.clients.claim();
+});*/
+// https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers#Updates
+self.addEventListener("activate", e => {
+  e.waitUntil(
+    caches.keys().then(keyList => {
+      return Promise.all(
+        keyList.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
 });
 
 /*self.addEventListener("fetch", function(event) {
@@ -89,6 +103,7 @@ self.addEventListener("activate", event => {
     })
   );
 });*/
+// https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 self.addEventListener("fetch", e => {
   e.respondWith(
     caches.match(e.request).then(r => {
