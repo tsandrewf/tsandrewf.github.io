@@ -6,6 +6,7 @@ import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import {
   db,
+  settingObjectStoreName,
   outlayCategoryObjectStoreName,
   outlayObjectStoreName
 } from "./db.js";
