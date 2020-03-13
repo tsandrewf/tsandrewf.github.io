@@ -8,6 +8,26 @@ export class OutlayEntry {
     this.entry = entry;
   }
 
+  static async clear(transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
+
+      const category = await new Promise(function(resolve, reject) {
+        let request = transaction.objectStore(outlayObjectStoreName).clear();
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return category;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async delete(entryId, transaction) {
     try {
       if (!entryId) return null;
@@ -141,7 +161,10 @@ export class OutlayEntry {
               break;
             }
 
-            let ancestors = await Category.getAncestors(categoryId);
+            let ancestors = await Category.getAncestors(
+              categoryId,
+              transaction
+            );
             if (!ancestorsAll) {
               ancestorsAll = ancestors.slice();
             } else {

@@ -12,7 +12,7 @@ import {
 
 let divContent;
 
-function checkSupport(feature) {
+/*function checkSupport(feature) {
   const div = document.createElement("DIV");
   divContent.appendChild(div);
   div.innerHTML =
@@ -22,7 +22,7 @@ function checkSupport(feature) {
       ? ""
       : ' <span style="font-weight:bold;color:red;">NOT</span>') +
     " OK!";
-}
+}*/
 
 export class OutlayBackup {
   static displayData() {
@@ -159,6 +159,12 @@ export class OutlayBackup {
         backupFileName,
         "{ " +
           '"' +
+          settingObjectStoreName +
+          '"' +
+          " : " +
+          JSON.stringify(await Setting.getAll()) +
+          ", " +
+          '"' +
           outlayCategoryObjectStoreName +
           '"' +
           " : " +
@@ -230,10 +236,19 @@ export class OutlayBackup {
         console.log("Database restored!");
       };
 
+      await Setting.clear(transaction);
+      for (let setting of dbObect.setting) {
+        await Setting.set(setting.id, setting.value, transaction);
+      }
+
+      await Category.clear(transaction);
       for (let category of dbObect.outlayCategory) {
         await Category.set(category, transaction);
       }
+
+      await OutlayEntry.clear(transaction);
       for (let entry of dbObect.outlay) {
+        entry.date = new Date(entry.date);
         await OutlayEntry.set(entry, transaction);
       }
     };

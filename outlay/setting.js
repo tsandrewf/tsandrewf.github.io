@@ -3,6 +3,46 @@
 import { db, settingObjectStoreName } from "./db.js";
 
 export class Setting {
+  static async clear(transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(settingObjectStoreName);
+
+      const category = await new Promise(function(resolve, reject) {
+        let request = transaction.objectStore(settingObjectStoreName).clear();
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return category;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async getAll(transaction) {
+    try {
+      if (!transaction) transaction = db.transaction(settingObjectStoreName);
+
+      const category = await new Promise(function(resolve, reject) {
+        let request = transaction.objectStore(settingObjectStoreName).getAll();
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+
+      return category;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async get(key, transaction) {
     try {
       if (!transaction) transaction = db.transaction(settingObjectStoreName);
