@@ -9,6 +9,7 @@ export const outlayDateSelectedKeyName = "outlayDateSelected";
 export const outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
 export const windowOnloadKeyName = "windowOnload";
 export const retValKeyName = "retVal";
+export const categoryHtmlKeyName = "categoryHtml";
 
 export function openDb(displayData) {
   const DBOpenRequest = window.indexedDB.open("mymoney", 1);

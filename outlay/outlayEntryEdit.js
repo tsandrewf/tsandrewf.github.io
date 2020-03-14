@@ -236,7 +236,8 @@ export class OutlayEntryEdit {
     let outlayEntry = entryId
       ? await OutlayEntry.get(entryId)
       : {
-          date: await Setting.get(outlayDateSelectedKeyName),
+          //date: await Setting.get(outlayDateSelectedKeyName),
+          date: new Date(await Setting.get(outlayDateSelectedKeyName)),
           sumAll: 0,
           categories: [null],
           sums: [null]

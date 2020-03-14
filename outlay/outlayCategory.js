@@ -6,7 +6,7 @@ import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
-import { retValKeyName } from "./db.js";
+import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayBackup } from "./outlayBackup.js";
 
 import {
@@ -84,6 +84,7 @@ export class OutlayCategory {
 
   static async itemCategorySave(categoryId) {
     await Setting.set(retValKeyName, categoryId);
+    await Setting.set(categoryHtmlKeyName, { content: divContent.innerHTML });
 
     history.back();
   }
@@ -267,6 +268,8 @@ export class OutlayCategory {
     entryId = id;
     try {
       if (!entryId) {
+        await Setting.set(categoryHtmlKeyName, null);
+
         const funcName = "OutlayCategory";
         if (funcName !== (await Setting.get(windowOnloadKeyName))) {
           await Setting.set(windowOnloadKeyName, funcName);
@@ -341,9 +344,10 @@ export class OutlayCategory {
       let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
       if (!categorySelectedId) categorySelectedId = 0;
 
-      if (window.history.state && window.history.state.content) {
-        document.getElementsByClassName("content")[0].innerHTML =
-          window.history.state && window.history.state.content;
+      const contentRem =
+        window.history.state || (await Setting.get(categoryHtmlKeyName));
+      if (contentRem.content) {
+        divContent.innerHTML = contentRem.content;
 
         const categorySel = await Category.get(categorySelectedId);
         const liCategory = document.getElementById(categorySelectedId);
