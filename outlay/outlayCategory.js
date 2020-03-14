@@ -84,7 +84,10 @@ export class OutlayCategory {
 
   static async itemCategorySave(categoryId) {
     await Setting.set(retValKeyName, categoryId);
-    await Setting.set(categoryHtmlKeyName, { content: divContent.innerHTML });
+    await Setting.set(categoryHtmlKeyName, {
+      content: divContent.innerHTML,
+      divContent_scrollTop: divContent.scrollTop
+    });
 
     history.back();
   }
@@ -282,10 +285,16 @@ export class OutlayCategory {
 
       window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
 
-      if (!entryId) {
-        let hideSave = document.createElement("style");
-        document.head.append(hideSave);
-        hideSave.innerHTML = "li a {display:none;}";
+      {
+        let hideSaveCSS = document.getElementById("hideSaveCSS");
+        if (!entryId && !hideSaveCSS) {
+          hideSaveCSS = document.createElement("style");
+          document.head.append(hideSaveCSS);
+          hideSaveCSS.innerHTML = "li a {display:none;}";
+          hideSaveCSS.id = "hideSaveCSS";
+        } else if (entryId && hideSaveCSS) {
+          document.head.removeChild(hideSaveCSS);
+        }
       }
 
       document.title = "Категории расходов";
@@ -345,9 +354,10 @@ export class OutlayCategory {
       if (!categorySelectedId) categorySelectedId = 0;
 
       const contentRem =
-        window.history.state || (await Setting.get(categoryHtmlKeyName));
-      if (contentRem.content) {
+        (await Setting.get(categoryHtmlKeyName)) || window.history.state;
+      if (contentRem && contentRem.content) {
         divContent.innerHTML = contentRem.content;
+        divContent.scrollTop = contentRem.divContent_scrollTop;
 
         const categorySel = await Category.get(categorySelectedId);
         const liCategory = document.getElementById(categorySelectedId);
@@ -429,8 +439,11 @@ export class OutlayCategory {
       OutlayCategory.categorySelectedMark(categorySelectedId);
 
       if (window.history.state) {
-        divContent.scrollTop = window.history.state.divContent_scrollTop;
+        //divContent.scrollTop = window.history.state.divContent_scrollTop;
+        divContent.scrollTop = contentRem.divContent_scrollTop;
         window.history.replaceState(null, window.title);
+      } else if (contentRem) {
+        divContent.scrollTop = contentRem.divContent_scrollTop;
       }
 
       for (let li of document.body
