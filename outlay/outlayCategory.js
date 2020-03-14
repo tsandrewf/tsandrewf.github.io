@@ -25,6 +25,7 @@ window.OutlayBackup_displayData = function() {
 };
 
 let entryId;
+let divContent;
 
 const expanded = String.fromCharCode(9650);
 const compressed = String.fromCharCode(9660);
@@ -330,9 +331,8 @@ export class OutlayCategory {
         { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
       ]);
 
+      divContent = document.getElementsByClassName("content")[0];
       {
-        const divContent = document.getElementsByClassName("content")[0];
-
         while (divContent.firstChild) {
           divContent.removeChild(divContent.firstChild);
         }
@@ -425,7 +425,7 @@ export class OutlayCategory {
       OutlayCategory.categorySelectedMark(categorySelectedId);
 
       if (window.history.state) {
-        window.scrollTo(0, window.history.state.window_scrollY);
+        divContent.scrollTop = window.history.state.divContent_scrollTop;
         window.history.replaceState(null, window.title);
       }
 
@@ -503,8 +503,8 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        window_scrollY: window.scrollY,
-        content: document.body.getElementsByClassName("content")[0].innerHTML
+        divContent_scrollTop: divContent.scrollTop,
+        content: divContent.innerHTML
       },
       window.title,
       "#func=OutlayCategory&entryId=" + entryId
@@ -520,8 +520,8 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        window_scrollY: window.scrollY,
-        content: document.body.getElementsByClassName("content")[0].innerHTML
+        divContent_scrollTop: divContent.scrollTop,
+        content: divContent.innerHTML
       },
       window.title,
       "#func=OutlayCategory&entryId=" + entryId

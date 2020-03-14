@@ -94,6 +94,15 @@ export class OutlaySummary {
       summaryContent = document.getElementsByClassName("content")[0];
 
       let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+      datePeriod.dateBeg =
+        "string" === typeof datePeriod.dateBeg
+          ? new Date(datePeriod.dateBeg)
+          : datePeriod.dateBeg;
+      datePeriod.dateEnd =
+        "string" === typeof datePeriod.dateEnd
+          ? new Date(datePeriod.dateEnd)
+          : datePeriod.dateEnd;
+
       if (!datePeriod) {
         let date = new Date();
         date = new Date(date.getFullYear(), date.getMonth(), date.getDate());

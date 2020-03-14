@@ -225,7 +225,11 @@ export class OutlayBackup {
       const dbObect = JSON.parse(reader.result);
 
       const transaction = db.transaction(
-        [outlayCategoryObjectStoreName, outlayObjectStoreName],
+        [
+          outlayCategoryObjectStoreName,
+          outlayObjectStoreName,
+          settingObjectStoreName
+        ],
         "readwrite"
       );
       transaction.onabort = function() {
