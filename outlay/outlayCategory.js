@@ -63,10 +63,10 @@ export class OutlayCategory {
   }
 
   static categorySelectedMark(categorySel) {
-    if (categorySelected) {
-      categorySelected
-        .getElementsByTagName("SPAN")[1]
-        .classList.remove("selectedCategory");
+    for (let liCategory of divContent.getElementsByClassName(
+      "selectedCategory"
+    )) {
+      liCategory.classList.remove("selectedCategory");
     }
 
     if ("number" == (typeof categorySel).toLowerCase()) {
@@ -439,11 +439,6 @@ export class OutlayCategory {
         .appendChild(ulRoot);
     }
 
-    for (let selectedCategory of divContent.getElementsByClassName(
-      "selectedCategory"
-    )) {
-      selectedCategory.classList.remove("selectedCategory");
-    }
     OutlayCategory.categorySelectedMark(categorySelectedId);
 
     if (window.history.state) {
