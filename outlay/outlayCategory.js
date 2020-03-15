@@ -62,22 +62,23 @@ export class OutlayCategory {
     return ul;
   }
 
-  static categorySelectedMark(categorySel) {
+  static categorySelectedMark(categoryId) {
     for (let liCategory of divContent.getElementsByClassName(
       "selectedCategory"
     )) {
       liCategory.classList.remove("selectedCategory");
     }
 
-    if ("number" == (typeof categorySel).toLowerCase()) {
-      categorySelected = document.getElementById(categorySel);
+    if ("number" == (typeof categoryId).toLowerCase()) {
+      categorySelected = document.getElementById(categoryId);
       if (!categorySelected) {
         categorySelected = document.getElementById("0");
       }
-    } else if ("object" == (typeof categorySel).toLowerCase()) {
-      if ("LI" === categorySel.tagName.toUpperCase()) {
-        categorySelected = categorySel;
-      }
+    } else if (
+      "object" == (typeof categoryId).toLowerCase() &&
+      "LI" === categoryId.tagName.toUpperCase()
+    ) {
+      categorySelected = categoryId;
     }
 
     categorySelected
