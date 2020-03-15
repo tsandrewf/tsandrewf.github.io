@@ -1,12 +1,11 @@
 "use strict";
 
 import { Setting } from "./setting.js";
-import { openDb, windowOnloadKeyName } from "./db.js";
+import { openDb, windowOnloadKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
-import { OutlayBackup } from "./outlayBackup.js";
 import { getQueryVar } from "./url.js";
 
 window.onload = openDb(window_onload);
@@ -62,6 +61,11 @@ async function window_onload(funcName) {
     const serviceWorker = "./service-worker.js";
     console.log('Registering of Setvice Worker "' + serviceWorker + '"');
     navigator.serviceWorker.register(serviceWorker);
+  }
+
+  if (await Setting.get(categoryHtmlKeyName)) {
+    // Если страница категорий сохранена, обнуляем эту страницу
+    await Setting.set(categoryHtmlKeyName, null);
   }
 
   // https://shterkel.com/pwa.html

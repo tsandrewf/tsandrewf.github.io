@@ -1,4 +1,4 @@
-const CACHE_NAME = "outlay_v_202003151037";
+const CACHE_NAME = "outlay_v_202003151142";
 const cacheUrls = [
   // HTML
   "./outlay.html",

@@ -271,8 +271,8 @@ export class OutlayCategory {
     await Setting.set(outlayCategorySelectedKeyName, Number(liCategory.id));
   }
 
-  static async displayData(id) {
-    needCategorySave = id;
+  static async displayData(options) {
+    needCategorySave = options;
     //try {
     if (!needCategorySave) {
       await Setting.set(categoryHtmlKeyName, null);
@@ -447,7 +447,6 @@ export class OutlayCategory {
     OutlayCategory.categorySelectedMark(categorySelectedId);
 
     if (window.history.state) {
-      //divContent.scrollTop = window.history.state.divContent_scrollTop;
       divContent.scrollTop = contentRem.divContent_scrollTop;
       window.history.replaceState(null, window.title);
     } else if (contentRem) {
