@@ -7,12 +7,12 @@ import { outlaySummaryPeriodKeyName, windowOnloadKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
-import { OutlayBackup } from "./outlayBackup.js";
+import { OutlayUtils } from "./outlayUtils.js";
 
-window.OutlayBackup_displayData = function() {
+window.OutlayUtils_displayData = function() {
   window.history.pushState(null, "title");
 
-  OutlayBackup.displayData();
+  OutlayUtils.displayData();
 };
 
 let summaries;
@@ -68,7 +68,7 @@ export class OutlaySummary {
             },
             {
               innerHTML: "Архивирование и восстановление",
-              href: "Javascript:OutlayBackup_displayData();"
+              href: "Javascript:OutlayUtils_displayData();"
             }
           ]
         },

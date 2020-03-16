@@ -1,0 +1,21 @@
+.tableOutlayBackup tbody tr td:nth-child(1) {
+  width: 100vw;
+}
+
+.utils {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap; /* Допускается перенос на новую строку */
+}
+
+.utilItem {
+  cursor: pointer;
+  text-align: center;
+  font-family: sans-serif;
+  width: 33vw;
+}
+
+.utilIcon {
+  font-size: xx-large;
+}

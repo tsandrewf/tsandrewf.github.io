@@ -7,7 +7,7 @@ import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
-import { OutlayBackup } from "./outlayBackup.js";
+import { OutlayUtils } from "./outlayUtils.js";
 
 import {
   db,
@@ -18,10 +18,10 @@ import {
   outlayCategorySelectedKeyName
 } from "./db.js";
 
-window.OutlayBackup_displayData = function() {
+window.OutlayUtils_displayData = function() {
   window.history.pushState(null, "title");
 
-  OutlayBackup.displayData();
+  OutlayUtils.displayData();
 };
 
 let needCategorySave;
@@ -318,7 +318,7 @@ export class OutlayCategory {
           },
           {
             innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayBackup_displayData();"
+            href: "Javascript:OutlayUtils_displayData();"
           }
         ]
       },

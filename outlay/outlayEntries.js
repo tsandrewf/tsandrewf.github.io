@@ -5,13 +5,13 @@ import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
-import { OutlayBackup } from "./outlayBackup.js";
+import { OutlayUtils } from "./outlayUtils.js";
 import { windowOnloadKeyName } from "./db.js";
 
-window.OutlayBackup_displayData = function() {
+window.OutlayUtils_displayData = function() {
   window.history.pushState(null, "title");
 
-  OutlayBackup.displayData();
+  OutlayUtils.displayData();
 };
 
 export class OutlayEntries {
@@ -61,7 +61,8 @@ export class OutlayEntries {
           },
           {
             innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayBackup_displayData();"
+            //href: "Javascript:OutlayUtils_displayData();"
+            href: "#func=OutlayUtils"
           }
         ]
       },

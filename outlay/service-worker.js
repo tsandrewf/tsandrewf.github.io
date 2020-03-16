@@ -1,4 +1,4 @@
-const CACHE_NAME = "outlay_v_202003161213";
+const CACHE_NAME = "outlay_v_202003161908";
 const cacheUrls = [
   // HTML
   "./outlay.html",
@@ -8,12 +8,12 @@ const cacheUrls = [
   "./content.css",
   "./menuDropdown.css",
   "./navbar.css",
-  "./outlayBackup.css",
   "./outlayCategory.css",
   "./outlayCategoryEdit.css",
   "./outlayEntries.css",
   "./outlayEntryEdit.css",
   "./outlaySummary.css",
+  "./outlayUtils.css",
   "./standbyIndicator.css",
   "./tableBase.css",
   "./category.js",
@@ -24,13 +24,13 @@ const cacheUrls = [
   "./navbarBottom.js",
   "./navbarTop.js",
   "./outlay.js",
-  "./outlayBackup.js",
   "./outlayCategory.js",
   "./outlayCategoryEdit.js",
   "./outlayEntries.js",
   "./outlayEntry.js",
   "./outlayEntryEdit.js",
   "./outlaySummary.js",
+  "./outlayUtils.js",
   "./setting.js",
   "./standbyIndicator.js",
   "./url.js",

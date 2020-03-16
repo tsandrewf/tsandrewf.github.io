@@ -6,6 +6,7 @@ import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
+import { OutlayUtils } from "./outlayUtils.js";
 import { getQueryVar } from "./url.js";
 
 window.onload = openDb(window_onload);
@@ -47,6 +48,9 @@ window.onpopstate = async function(event) {
       break;
     case "OutlayEntryEdit":
       OutlayEntryEdit.displayData(Number(getQueryVar("entryId")));
+      break;
+    case "OutlayUtils":
+      OutlayUtils.displayData();
       break;
     default:
       OutlayEntries.displayData();

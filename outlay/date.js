@@ -30,8 +30,24 @@ Date.prototype._toStringBrief = function() {
     padStr(this.getDate()) +
     "." +
     padStr(this.getMonth() + 1) +
-    "." + // +
+    "." +
     this.getFullYear()
+  );
+};
+
+Date.prototype._toStringBriefWithTime = function() {
+  return (
+    padStr(this.getDate()) +
+    "." +
+    padStr(this.getMonth() + 1) +
+    "." +
+    this.getFullYear() +
+    " " +
+    padStr(this.getHours()) +
+    ":" +
+    padStr(this.getMinutes()) +
+    ":" +
+    padStr(this.getSeconds())
   );
 };
 
