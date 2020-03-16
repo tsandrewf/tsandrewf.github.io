@@ -110,6 +110,48 @@ export class OutlayBackup {
     outputFile.value = "Export";
     outputFile.onclick = OutlayBackup.export;*/
 
+    const divUtils = document.createElement("DIV");
+    divContent.appendChild(divUtils);
+    divUtils.className = "utils";
+
+    {
+      // Архивирование
+      const divBackup = document.createElement("DIV");
+      divUtils.appendChild(divBackup);
+      divBackup.onclick = OutlayBackup.export;
+      divBackup.className = "utilItem";
+
+      const divIcon = document.createElement("DIV");
+      divBackup.appendChild(divIcon);
+      // Спецсимволы
+      // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
+      divIcon.innerHTML = "&#128190;";
+      divIcon.className = "utilIcon";
+
+      const divText = document.createElement("DIV");
+      divBackup.appendChild(divText);
+      divText.innerHTML = "Архивирование";
+    }
+
+    {
+      // Восстановление
+      const divBackup = document.createElement("DIV");
+      divUtils.appendChild(divBackup);
+      divBackup.onclick = OutlayBackup.restore;
+      divBackup.className = "utilItem";
+
+      const divIcon = document.createElement("DIV");
+      divBackup.appendChild(divIcon);
+      // Спецсимволы
+      // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
+      divIcon.innerHTML = "&#128295;";
+      divIcon.className = "utilIcon";
+
+      const divText = document.createElement("DIV");
+      divBackup.appendChild(divText);
+      divText.innerHTML = "Восстановление";
+    }
+
     const tbody = document.createElement("TBODY");
     {
       const table = document.createElement("TABLE");
@@ -118,16 +160,7 @@ export class OutlayBackup {
       table.appendChild(tbody);
     }
 
-    {
-      let row = document.createElement("TR");
-      tbody.appendChild(row);
-      row.onclick = OutlayBackup.export;
-      let td = document.createElement("TD");
-      row.appendChild(td);
-      td.innerHTML = "Архивирование базы данных";
-    }
-
-    {
+    /*{
       let row = document.createElement("TR");
       tbody.appendChild(row);
       //row.onclick = OutlayBackup.restore;
@@ -142,7 +175,7 @@ export class OutlayBackup {
       inputFile.type = "file";
       inputFile.id = "inputFile";
       inputFile.onchange = OutlayBackup.restore;
-    }
+    }*/
   }
 
   static async export() {
@@ -203,6 +236,9 @@ export class OutlayBackup {
   }
 
   static restore() {
+    alert('"Восстановление" в стадии реализации');
+    return;
+
     console.log("restore");
     const inputFile = document.getElementById("inputFile");
     console.log("inputFile", inputFile.files);
