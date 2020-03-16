@@ -100,7 +100,7 @@ export class OutlayRestore {
           aFile.innerHTML = file.name;
           spanFileDescription.innerHTML =
             " (" +
-            file.size / 1000 +
+            (file.size / 1024).toFixed(2) +
             "kB, " +
             file.lastModifiedDate._toStringBriefWithTime() +
             ")";
@@ -145,14 +145,11 @@ export class OutlayRestore {
     )
       return;
 
-    console.log("restore");
     const inputFile = document.getElementById("inputFile");
-    console.log("inputFile", inputFile.files);
     if (1 !== inputFile.files.length) {
       return;
     }
     const file = inputFile.files[0];
-    console.log("file", file);
     if ("application/json" !== file.type) {
       console.log("file.type", file.type);
       return;
