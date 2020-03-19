@@ -8,6 +8,7 @@ import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { getQueryVar } from "./url.js";
+//import { CACHE_NAME } from "./service-worker.js";
 
 window.onload = openDb(window_onload);
 
@@ -58,13 +59,57 @@ window.onpopstate = async function(event) {
   }
 };
 
+// https://stackoverflow.com/questions/5746598/is-it-possible-with-javascript-to-find-files-last-modified-time
+/*var getMTime = function(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("HEAD", url, true); // use HEAD - we only need the headers
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log("xhr", xhr);
+      var mtime = new Date(xhr.getResponseHeader("Last-Modified"));
+      const etag = xhr.getResponseHeader("etag");
+      if (mtime.toString() === "Invalid Date") {
+        callback(url); // dont want to return a bad date
+      } else {
+        callback(url, mtime, etag);
+      }
+    }
+  };
+  xhr.send();
+};*/
+
 async function window_onload(funcName) {
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
   if ("serviceWorker" in navigator) {
     const serviceWorker = "./service-worker.js";
-    console.log('Registering of Setvice Worker "' + serviceWorker + '"');
-    navigator.serviceWorker.register(serviceWorker);
+    console.log('Registering of Service Worker "' + serviceWorker + '"');
+    //navigator.serviceWorker.register(serviceWorker);
+    navigator.serviceWorker
+      .register(serviceWorker)
+      .then(navigator.serviceWorker.ready)
+      .then(function() {
+        navigator.serviceWorker.controller.postMessage("OutlayUpdateCheck");
+      });
+
+    /*getMTime("./base.css", async function(url, mtime, responseEtag) {
+      if (mtime) {
+        console.log('the mtime of "' + url + '" is: ' + mtime);
+        const cache = await caches.open("outlay_v_202003191127");
+        cache.match(new Request(url)).then(function(response) {
+          console.log("response", response);
+          console.log("responseEtag", responseEtag);
+          console.log("etag", response.headers.get("etag"));
+          const lastModified = new Date(response.headers.get("last-modified"));
+          console.log("last-modified", lastModified);
+          if (mtime.getTime() === lastModified.getTime()) {
+            console.log('last-modified: File "' + url + '" is fresh');
+          } else {
+            console.log('last-modified: File "' + url + '" need to be updated');
+          }
+        });
+      }
+    });*/
   }
 
   if (await Setting.get(categoryHtmlKeyName)) {
