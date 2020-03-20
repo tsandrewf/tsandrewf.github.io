@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003200953";
+const CACHE_NAME = "outlay_v_202003201123";
 
 let cacheUrls = [
   // HTML
@@ -42,9 +42,9 @@ let cacheUrls = [
 ];
 
 self.addEventListener("message", async function(event) {
-  if ("OutlayUpdateCheck" === event.data) {
-    console.log('Received event "' + event.data + '"');
+  console.log('Service worker received event "' + event.data + '"');
 
+  if ("outlay.html_onload" === event.data) {
     const cache = await caches.open(CACHE_NAME);
     let responsesToCache = [];
     for (let request of await cache.keys()) {
@@ -66,11 +66,13 @@ self.addEventListener("message", async function(event) {
       } catch (error) {
         return;
       }
-      for (response of responsesToCache) {
+      for (let response of responsesToCache) {
         if (response.ok) {
           cache.put(request, response);
+          console.log('Cached response "' + response.url + '"');
         } else {
           cache.delete(request);
+          console.log('Deleted from csche response "' + response.url + '"');
         }
       }
     }
