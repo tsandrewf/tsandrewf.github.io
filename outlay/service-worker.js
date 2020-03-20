@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003191754";
+const CACHE_NAME = "outlay_v_202003200953";
 
 let cacheUrls = [
   // HTML
@@ -41,69 +41,38 @@ let cacheUrls = [
   "./icons/outlay256.png"*/
 ];
 
-// https://stackoverflow.com/questions/5746598/is-it-possible-with-javascript-to-find-files-last-modified-time
-var getMTime = function(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("HEAD", url, true); // use HEAD - we only need the headers
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      console.log("xhr", xhr);
-      var mtime = new Date(xhr.getResponseHeader("Last-Modified"));
-      const etag = xhr.getResponseHeader("etag");
-      if (mtime.toString() === "Invalid Date") {
-        callback(url); // dont want to return a bad date
-      } else {
-        callback(url, mtime, etag);
-      }
-    }
-  };
-  xhr.send();
-};
-
 self.addEventListener("message", async function(event) {
   if ("OutlayUpdateCheck" === event.data) {
     console.log('Received event "' + event.data + '"');
+
     const cache = await caches.open(CACHE_NAME);
+    let responsesToCache = [];
     for (let request of await cache.keys()) {
-      //console.log("request", request);
-      let responseCached = await cache.match(request);
-      //console.log("responseCached", responseCached);
-      //console.log("responseCached etag", responseCached.headers.get("etag"));
-      /*console.log(
-        "responseCached last-modified",
-        new Date(responseCached.headers.get("last-modified"))
-      );*/
+      const responseCached = await cache.match(request);
       request.headers.set("etag", responseCached.headers.get("etag"));
       request.headers.set(
         "last-modified",
         responseCached.headers.get("last-modified")
       );
-      //console.log("request etag", request.headers.get("etag"));
-      /*console.log(
-        "request last-modified",
-        new Date(request.headers.get("last-modified"))
-      );*/
       try {
         const response = await fetch(request);
-        //console.log("response", response);
-        //console.log("response etag", response.headers.get("etag"));
-        /*console.log(
-        "response last-modified",
-        new Date(response.headers.get("last-modified"))
-      );*/
         if (
           response.headers.get("etag") !== request.headers.get("etag") ||
           response.headers.get("last-modified") !==
             request.headers.get("last-modified")
         ) {
-          console.log("request", request);
-          console.log('Different "etag" and/or "last-modified"');
-          cache.put(request, response.clone());
-          console.log(
-            "-----------------------------------------------------------"
-          );
+          responsesToCache.push(response.clone());
         }
-      } catch (error) {}
+      } catch (error) {
+        return;
+      }
+      for (response of responsesToCache) {
+        if (response.ok) {
+          cache.put(request, response);
+        } else {
+          cache.delete(request);
+        }
+      }
     }
   }
 });
