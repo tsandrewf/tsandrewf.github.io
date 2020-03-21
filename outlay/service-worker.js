@@ -1,10 +1,10 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003201123";
+const CACHE_NAME = "outlay_v_202003212248";
 
 let cacheUrls = [
   // HTML
-  /*"./outlay.html",
+  "./outlay.html",
   // CSS
   "./base.css",
   "./button.css",
@@ -38,7 +38,7 @@ let cacheUrls = [
   "./standbyIndicator.js",
   "./url.js",
   // PNG
-  "./icons/outlay256.png"*/
+  "./icons/outlay256.png"
 ];
 
 self.addEventListener("message", async function(event) {
@@ -46,7 +46,7 @@ self.addEventListener("message", async function(event) {
 
   if ("outlay.html_onload" === event.data) {
     const cache = await caches.open(CACHE_NAME);
-    let responsesToCache = [];
+    let cacheChanges = [];
     for (let request of await cache.keys()) {
       const responseCached = await cache.match(request);
       request.headers.set("etag", responseCached.headers.get("etag"));
@@ -61,19 +61,23 @@ self.addEventListener("message", async function(event) {
           response.headers.get("last-modified") !==
             request.headers.get("last-modified")
         ) {
-          responsesToCache.push(response.clone());
+          cacheChanges.push({ request: request, response: response.clone() });
         }
       } catch (error) {
         return;
       }
-      for (let response of responsesToCache) {
-        if (response.ok) {
-          cache.put(request, response);
-          console.log('Cached response "' + response.url + '"');
-        } else {
-          cache.delete(request);
-          console.log('Deleted from csche response "' + response.url + '"');
-        }
+    }
+
+    for (let cacheChange of cacheChanges) {
+      if (cacheChange.response.ok) {
+        cache.put(cacheChange.request, cacheChange.response);
+        console.log('Cached request "' + cacheChange.request.url + '"');
+        console.log('Cached response "' + cacheChange.response.url + '"');
+      } else {
+        cache.delete(cacheChange.request);
+        console.log(
+          'Deleted response "' + cacheChange.response.url + '" from cache'
+        );
       }
     }
   }

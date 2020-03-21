@@ -99,131 +99,135 @@ export class OutlayCategory {
   static async outlayCategoryDel() {
     if (StandbyIndicator.isShowing()) return;
 
-    //try {
-    if (!categorySelected) {
-      throw Error("НЕ выбрана категория");
-    }
+    try {
+      if (!categorySelected) {
+        throw Error("НЕ выбрана категория");
+      }
 
-    let categorySelectedId = Number(categorySelected.id);
+      let categorySelectedId = Number(categorySelected.id);
 
-    if (0 === categorySelectedId) {
-      throw Error("НЕвозможно удалить корневую категорию");
-    }
+      if (0 === categorySelectedId) {
+        throw Error("НЕвозможно удалить корневую категорию");
+      }
 
-    if (
-      !window.confirm("Вы действительно хотите удалить категорию расходов?")
-    ) {
-      return;
-    }
+      if (
+        !window.confirm("Вы действительно хотите удалить категорию расходов?")
+      ) {
+        return;
+      }
 
-    let transaction = db.transaction(
-      [
-        outlayCategoryObjectStoreName,
-        settingObjectStoreName,
-        outlayObjectStoreName
-      ],
-      "readwrite"
-    );
-
-    let categorySel = await Category.get(categorySelectedId, transaction);
-
-    let categorySelNewId;
-    {
-      let categoryNextSibling = await Category.getNextSibling(
-        categorySel,
-        transaction
+      let transaction = db.transaction(
+        [
+          outlayCategoryObjectStoreName,
+          settingObjectStoreName,
+          outlayObjectStoreName
+        ],
+        "readwrite"
       );
-      if (categoryNextSibling) {
-        categorySelNewId = categoryNextSibling.id;
-      } else {
-        let categoryPreviousSibling = await Category.getPreviousSibling(
+
+      let categorySel = await Category.get(categorySelectedId, transaction);
+
+      let categorySelNewId;
+      {
+        let categoryNextSibling = await Category.getNextSibling(
           categorySel,
           transaction
         );
-        if (categoryPreviousSibling) {
-          categorySelNewId = categoryPreviousSibling.id;
+        if (categoryNextSibling) {
+          categorySelNewId = categoryNextSibling.id;
         } else {
-          categorySelNewId = categorySel.parentId;
+          let categoryPreviousSibling = await Category.getPreviousSibling(
+            categorySel,
+            transaction
+          );
+          if (categoryPreviousSibling) {
+            categorySelNewId = categoryPreviousSibling.id;
+          } else {
+            categorySelNewId = categorySel.parentId;
+          }
         }
-      }
 
-      Setting.set(outlayCategorySelectedKeyName, categorySelNewId, transaction);
-    }
-
-    let categoryDescendants = await Category.getDescendants(
-      categorySel,
-      transaction
-    );
-
-    {
-      const categoryIsUsedReason = await Category.getIsUsedReason(
-        categorySel.id,
-        transaction
-      );
-
-      if (categoryIsUsedReason) {
-        transaction.abort();
-
-        throw new Error(
-          "Категорию НЕЛЬЗЯ удалить, т.к. на нее " + categoryIsUsedReason
+        Setting.set(
+          outlayCategorySelectedKeyName,
+          categorySelNewId,
+          transaction
         );
       }
 
-      transaction
-        .objectStore(outlayCategoryObjectStoreName)
-        .delete(categorySel.id);
-    }
+      let categoryDescendants = await Category.getDescendants(
+        categorySel,
+        transaction
+      );
 
-    {
-      for (let categoryDescendant of categoryDescendants) {
+      {
         const categoryIsUsedReason = await Category.getIsUsedReason(
-          categoryDescendant.id,
+          categorySel.id,
           transaction
         );
 
         if (categoryIsUsedReason) {
           transaction.abort();
 
-          throw Error(
-            'Категорию НЕЛЬЗЯ удалить, т.к. на ее подкатегорию "' +
-              categoryDescendant.name +
-              '" ' +
-              categoryIsUsedReason
+          throw new Error(
+            "Категорию НЕЛЬЗЯ удалить, т.к. на нее " + categoryIsUsedReason
           );
         }
 
         transaction
           .objectStore(outlayCategoryObjectStoreName)
-          .delete(categoryDescendant.id);
+          .delete(categorySel.id);
       }
+
+      {
+        for (let categoryDescendant of categoryDescendants) {
+          const categoryIsUsedReason = await Category.getIsUsedReason(
+            categoryDescendant.id,
+            transaction
+          );
+
+          if (categoryIsUsedReason) {
+            transaction.abort();
+
+            throw Error(
+              'Категорию НЕЛЬЗЯ удалить, т.к. на ее подкатегорию "' +
+                categoryDescendant.name +
+                '" ' +
+                categoryIsUsedReason
+            );
+          }
+
+          transaction
+            .objectStore(outlayCategoryObjectStoreName)
+            .delete(categoryDescendant.id);
+        }
+      }
+      {
+        document
+          .getElementById(categorySel.parentId)
+          .removeChild(document.getElementById(categorySel.id).parentElement);
+
+        OutlayCategory.categorySelectedMark(categorySelNewId);
+
+        await Setting.set(categoryHtmlKeyName, {
+          content: divContent.innerHTML,
+          divContent_scrollTop: divContent.scrollTop
+        });
+      }
+
+      transaction.onerror = function(event) {
+        console.log("onerror");
+      };
+
+      transaction.onabort = function() {
+        console.log("onabort");
+      };
+
+      transaction.oncomplete = function() {
+        console.log("oncomplete");
+      };
+    } catch (error) {
+      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
     }
-    {
-      document
-        .getElementById(categorySel.parentId)
-        .removeChild(document.getElementById(categorySel.id).parentElement);
-
-      OutlayCategory.categorySelectedMark(categorySelNewId);
-
-      await Setting.set(categoryHtmlKeyName, {
-        content: divContent.innerHTML,
-        divContent_scrollTop: divContent.scrollTop
-      });
-    }
-
-    transaction.onerror = function(event) {
-      console.log("onerror");
-    };
-
-    transaction.onabort = function() {
-      console.log("onabort");
-    };
-
-    transaction.oncomplete = function() {
-      console.log("oncomplete");
-    };
-    //} catch (error) {
-    //  alert(error);
-    //}
   }
 
   static leafChange(elem) {
@@ -274,192 +278,194 @@ export class OutlayCategory {
 
   static async displayData(options) {
     needCategorySave = options;
-    //try {
-    if (!needCategorySave) {
-      await Setting.set(categoryHtmlKeyName, null);
+    try {
+      if (!needCategorySave) {
+        await Setting.set(categoryHtmlKeyName, null);
 
-      const funcName = "OutlayCategory";
-      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-        await Setting.set(windowOnloadKeyName, funcName);
+        const funcName = "OutlayCategory";
+        if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+          await Setting.set(windowOnloadKeyName, funcName);
+        }
       }
-    }
 
-    StandbyIndicator.show();
+      StandbyIndicator.show();
 
-    await Setting.set(retValKeyName, null);
+      await Setting.set(retValKeyName, null);
 
-    window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
+      window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
 
-    {
-      let hideSaveCSS = document.getElementById("hideSaveCSS");
-      if (!needCategorySave && !hideSaveCSS) {
-        hideSaveCSS = document.createElement("style");
-        document.head.append(hideSaveCSS);
-        hideSaveCSS.innerHTML = "li a {display:none;}";
-        hideSaveCSS.id = "hideSaveCSS";
-      } else if (needCategorySave && hideSaveCSS) {
-        document.head.removeChild(hideSaveCSS);
+      {
+        let hideSaveCSS = document.getElementById("hideSaveCSS");
+        if (!needCategorySave && !hideSaveCSS) {
+          hideSaveCSS = document.createElement("style");
+          document.head.append(hideSaveCSS);
+          hideSaveCSS.innerHTML = "li a {display:none;}";
+          hideSaveCSS.id = "hideSaveCSS";
+        } else if (needCategorySave && hideSaveCSS) {
+          document.head.removeChild(hideSaveCSS);
+        }
       }
-    }
 
-    document.title = "Категории расходов";
+      document.title = "Категории расходов";
 
-    NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
+      NavbarTop.show({
+        menu: {
+          buttonHTML: "&#9776;",
+          content: [
+            {
+              innerHTML: "Категории расходов",
+              href: "Javascript:OutlayCategory_displayData()"
+            },
+            {
+              innerHTML: "Итоги в разрезе категорий",
+              href: "Javascript:OutlaySummary_displayData()"
+            },
+            {
+              innerHTML: "Архивирование и восстановление",
+              href: "Javascript:OutlayUtils_displayData();"
+            }
+          ]
+        },
+        titleHTML: "Категории расходов",
+        buttons: [
           {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
+            onclick: OutlayCategory.outlayCategoryNew,
+            title: "Добавить категорию",
+            innerHTML: "&#10010;"
           },
           {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
+            onclick: OutlayCategory.outlayCategoryEdit,
+            title: "Изменить название категории",
+            innerHTML: "&#9999;"
           },
           {
-            innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayUtils_displayData();"
+            onclick: OutlayCategory.outlayCategoryDel,
+            title: "Удалить категорию",
+            innerHTML: "&#10006;"
           }
         ]
-      },
-      titleHTML: "Категории расходов",
-      buttons: [
-        {
-          onclick: OutlayCategory.outlayCategoryNew,
-          title: "Добавить категорию",
-          innerHTML: "&#10010;"
-        },
-        {
-          onclick: OutlayCategory.outlayCategoryEdit,
-          title: "Изменить название категории",
-          innerHTML: "&#9999;"
-        },
-        {
-          onclick: OutlayCategory.outlayCategoryDel,
-          title: "Удалить категорию",
-          innerHTML: "&#10006;"
+      });
+
+      NavbarBottom.show([
+        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+        { text: "Категории" },
+        { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+      ]);
+
+      divContent = document.getElementsByClassName("content")[0];
+      {
+        while (divContent.firstChild) {
+          divContent.removeChild(divContent.firstChild);
         }
-      ]
-    });
-
-    NavbarBottom.show([
-      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
-      { text: "Категории" },
-      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
-    ]);
-
-    divContent = document.getElementsByClassName("content")[0];
-    {
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
       }
-    }
 
-    let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-    if (!categorySelectedId) categorySelectedId = 0;
+      let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+      if (!categorySelectedId) categorySelectedId = 0;
 
-    const contentRem =
-      (await Setting.get(categoryHtmlKeyName)) || window.history.state;
-    if (contentRem && contentRem.content) {
-      divContent.innerHTML = contentRem.content;
-      divContent.scrollTop = contentRem.divContent_scrollTop;
+      const contentRem =
+        (await Setting.get(categoryHtmlKeyName)) || window.history.state;
+      if (contentRem && contentRem.content) {
+        divContent.innerHTML = contentRem.content;
+        divContent.scrollTop = contentRem.divContent_scrollTop;
 
-      const categorySel = await Category.get(categorySelectedId);
-      const liCategory = document.getElementById(categorySelectedId);
-      const categoryName = liCategory.childNodes[1].innerHTML.trim();
+        const categorySel = await Category.get(categorySelectedId);
+        const liCategory = document.getElementById(categorySelectedId);
+        const categoryName = liCategory.childNodes[1].innerHTML.trim();
 
-      if (categorySel && categorySel.name !== categoryName) {
-        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
-        const ulCategory = liCategory.parentElement;
-        const parentNode = ulCategory.parentElement;
-        parentNode.removeChild(ulCategory);
-        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-          node => "UL" === node.tagName
-        );
-        {
-          let categoryRestored = false;
-          for (let node of ulCategoryChilds) {
-            if (
-              " " + categorySel.name <
-              node.firstChild.childNodes[1].innerHTML
-            ) {
-              parentNode.insertBefore(ulCategory, node);
-              categoryRestored = true;
-              break;
+        if (categorySel && categorySel.name !== categoryName) {
+          liCategory.childNodes[1].innerHTML = " " + categorySel.name;
+          const ulCategory = liCategory.parentElement;
+          const parentNode = ulCategory.parentElement;
+          parentNode.removeChild(ulCategory);
+          let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
+            node => "UL" === node.tagName
+          );
+          {
+            let categoryRestored = false;
+            for (let node of ulCategoryChilds) {
+              if (
+                " " + categorySel.name <
+                node.firstChild.childNodes[1].innerHTML
+              ) {
+                parentNode.insertBefore(ulCategory, node);
+                categoryRestored = true;
+                break;
+              }
+            }
+            if (!categoryRestored) {
+              parentNode.appendChild(ulCategory);
             }
           }
-          if (!categoryRestored) {
-            parentNode.appendChild(ulCategory);
+        } else {
+          const categoryChildren = await Category.getChildren(
+            categorySelectedId
+          );
+          let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
+            node => "UL" === node.tagName
+          );
+          if (categoryChildren.length !== ulCategoryChilds.length) {
+            for (let i = 0; i < categoryChildren.length; i++) {
+              const category = categoryChildren[i];
+              if (!ulCategoryChilds[i]) {
+                liCategory.appendChild(
+                  OutlayCategory.getNodeCategoryNew(category)
+                );
+                OutlayCategory.liExpand(liCategory);
+              } else if (ulCategoryChilds[i].firstChild.id != category.id) {
+                liCategory.insertBefore(
+                  OutlayCategory.getNodeCategoryNew(category),
+                  ulCategoryChilds[i]
+                );
+                OutlayCategory.liExpand(liCategory);
+                break;
+              }
+            }
           }
         }
       } else {
-        const categoryChildren = await Category.getChildren(categorySelectedId);
-        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-          node => "UL" === node.tagName
+        let ulRoot = document.createElement("UL");
+        ulRoot.setAttribute("expanded", "true");
+        ulRoot.style.paddingLeft = "0";
+        let liRoot = document.createElement("LI");
+        liRoot.id = "0";
+        ulRoot.appendChild(liRoot);
+        let spanExpanded = document.createElement("SPAN");
+        spanExpanded.innerHTML = expanded;
+        liRoot.appendChild(spanExpanded);
+        let spanCategoryName = document.createElement("SPAN");
+        spanCategoryName.innerHTML = "Корень";
+        spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
+        liRoot.appendChild(spanCategoryName);
+        await OutlayCategory.displayTree(
+          liRoot,
+          db.transaction(outlayCategoryObjectStoreName)
         );
-        if (categoryChildren.length !== ulCategoryChilds.length) {
-          for (let i = 0; i < categoryChildren.length; i++) {
-            const category = categoryChildren[i];
-            if (!ulCategoryChilds[i]) {
-              liCategory.appendChild(
-                OutlayCategory.getNodeCategoryNew(category)
-              );
-              OutlayCategory.liExpand(liCategory);
-            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
-              liCategory.insertBefore(
-                OutlayCategory.getNodeCategoryNew(category),
-                ulCategoryChilds[i]
-              );
-              OutlayCategory.liExpand(liCategory);
-              break;
-            }
-          }
-        }
+        document
+          .getElementsByClassName("content")
+          .item(0)
+          .appendChild(ulRoot);
       }
-    } else {
-      let ulRoot = document.createElement("UL");
-      ulRoot.setAttribute("expanded", "true");
-      ulRoot.style.paddingLeft = "0";
-      let liRoot = document.createElement("LI");
-      liRoot.id = "0";
-      ulRoot.appendChild(liRoot);
-      let spanExpanded = document.createElement("SPAN");
-      spanExpanded.innerHTML = expanded;
-      liRoot.appendChild(spanExpanded);
-      let spanCategoryName = document.createElement("SPAN");
-      spanCategoryName.innerHTML = "Корень";
-      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
-      liRoot.appendChild(spanCategoryName);
-      await OutlayCategory.displayTree(
-        liRoot,
-        db.transaction(outlayCategoryObjectStoreName)
-      );
-      document
-        .getElementsByClassName("content")
-        .item(0)
-        .appendChild(ulRoot);
-    }
 
-    OutlayCategory.categorySelectedMark(categorySelectedId);
+      OutlayCategory.categorySelectedMark(categorySelectedId);
 
-    if (window.history.state) {
-      divContent.scrollTop = contentRem.divContent_scrollTop;
-      window.history.replaceState(null, window.title);
-    } else if (contentRem) {
-      divContent.scrollTop = contentRem.divContent_scrollTop;
-    }
+      if (window.history.state) {
+        divContent.scrollTop = contentRem.divContent_scrollTop;
+        window.history.replaceState(null, window.title);
+      } else if (contentRem) {
+        divContent.scrollTop = contentRem.divContent_scrollTop;
+      }
 
-    for (let li of document.body
-      .getElementsByClassName("content")[0]
-      .getElementsByTagName("LI")) {
-      li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
-      li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
+      for (let li of document.body
+        .getElementsByClassName("content")[0]
+        .getElementsByTagName("LI")) {
+        li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
+        li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
+      }
+    } catch (error) {
+      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
+    } finally {
+      StandbyIndicator.hide();
     }
-    //} catch (error) {
-    //  alert(error);
-    //} finally {
-    StandbyIndicator.hide();
-    //}
   }
 
   static leaf_name_onclick() {
@@ -512,8 +518,8 @@ export class OutlayCategory {
 
         await OutlayCategory.displayTree(li, transaction);
       }
-    } catch (err) {
-      alert("Ошибка: " + err);
+    } catch (error) {
+      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
     }
   }
 
