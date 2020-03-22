@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003212248";
+const CACHE_NAME = "outlay_v_202003221049";
 
 let cacheUrls = [
   // HTML
@@ -61,9 +61,33 @@ self.addEventListener("message", async function(event) {
           response.headers.get("last-modified") !==
             request.headers.get("last-modified")
         ) {
+          console.log("------------------------------------------------------");
+          console.log('New file "' + request.url + '"');
+          if (response.headers.get("etag") !== request.headers.get("etag")) {
+            console.log(
+              'Request etag "' +
+                request.headers.get("etag") +
+                '" differs from response etag "' +
+                response.headers.get("etag") +
+                '"'
+            );
+          }
+          if (
+            response.headers.get("last-modified") !==
+            request.headers.get("last-modified")
+          ) {
+            console.log(
+              'Request last-modified "' +
+                request.headers.get("last-modified") +
+                '" differs from response last-modified "' +
+                response.headers.get("last-modified") +
+                '"'
+            );
+          }
           cacheChanges.push({ request: request, response: response.clone() });
         }
       } catch (error) {
+        console.log('Error fetch "' + request.url + '": ' + error);
         return;
       }
     }
@@ -76,7 +100,7 @@ self.addEventListener("message", async function(event) {
       } else {
         cache.delete(cacheChange.request);
         console.log(
-          'Deleted response "' + cacheChange.response.url + '" from cache'
+          'Deleted response "' + cacheChange.request.url + '" from cache'
         );
       }
     }
