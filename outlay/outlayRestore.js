@@ -100,9 +100,11 @@ export class OutlayRestore {
           aFile.innerHTML = file.name;
           spanFileDescription.innerHTML =
             " (" +
-            (file.size / 1024).toFixed(2) +
+            (file.size ? (file.size / 1024).toFixed(2) : "") +
             "kB, " +
-            file.lastModifiedDate._toStringBriefWithTime() +
+            (file.lastModifiedDate
+              ? file.lastModifiedDate._toStringBriefWithTime()
+              : "") +
             ")";
           spanFilePrefix.style = "display:inline";
           spanFileDescription.style = "display:inline";
