@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003221049";
+const CACHE_NAME = "outlay_v_202003251710";
 
 let cacheUrls = [
   // HTML
@@ -38,6 +38,7 @@ let cacheUrls = [
   "./standbyIndicator.js",
   "./url.js",
   // PNG
+  "./icons/outlay32.png",
   "./icons/outlay256.png"
 ];
 

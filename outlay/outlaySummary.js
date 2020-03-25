@@ -43,86 +43,91 @@ export class OutlaySummary {
   }
 
   static async displayData() {
-    try {
-      {
-        const funcName = "OutlaySummary";
-        if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-          await Setting.set(windowOnloadKeyName, funcName);
-        }
+    //try {
+    {
+      const funcName = "OutlaySummary";
+      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+        await Setting.set(windowOnloadKeyName, funcName);
       }
-
-      window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
-      document.title = "Итоги";
-
-      NavbarTop.show({
-        menu: {
-          buttonHTML: "&#9776;",
-          content: [
-            {
-              innerHTML: "Чеки",
-              href: "Javascript:OutlayEntries_displayData()"
-            },
-            {
-              innerHTML: "Категории расходов",
-              href: "Javascript:OutlayCategory_displayData()"
-            },
-            {
-              innerHTML: "Архивирование и восстановление",
-              href: "Javascript:OutlayUtils_displayData();"
-            }
-          ]
-        },
-        titleHTML:
-          '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
-        buttons: []
-      });
-
-      NavbarBottom.show([
-        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
-        { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
-        { text: "Итоги" }
-      ]);
-
-      {
-        const divContent = document.getElementsByClassName("content")[0];
-
-        while (divContent.firstChild) {
-          divContent.removeChild(divContent.firstChild);
-        }
-      }
-
-      summaryContent = document.getElementsByClassName("content")[0];
-
-      let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
-      datePeriod.dateBeg =
-        "string" === typeof datePeriod.dateBeg
-          ? new Date(datePeriod.dateBeg)
-          : datePeriod.dateBeg;
-      datePeriod.dateEnd =
-        "string" === typeof datePeriod.dateEnd
-          ? new Date(datePeriod.dateEnd)
-          : datePeriod.dateEnd;
-
-      if (!datePeriod) {
-        let date = new Date();
-        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        datePeriod = { dateBeg: date, dateEnd: date };
-      }
-
-      document.getElementById("iptDateBeg").value = datePeriod.dateBeg
-        ? datePeriod.dateBeg._toForm()
-        : null;
-      document.getElementById("iptDateEnd").value = datePeriod.dateEnd
-        ? datePeriod.dateEnd._toForm()
-        : null;
-      await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
-
-      await OutlaySummary.summariesRefresh();
-
-      await OutlaySummary.summaryContentRefresh(0);
-    } catch (error) {
-      alert(error);
     }
+
+    window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
+    document.title = "Итоги";
+
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
+          {
+            innerHTML: "Чеки",
+            href: "Javascript:OutlayEntries_displayData()"
+          },
+          {
+            innerHTML: "Категории расходов",
+            href: "Javascript:OutlayCategory_displayData()"
+          },
+          {
+            innerHTML: "Архивирование и восстановление",
+            href: "Javascript:OutlayUtils_displayData();"
+          }
+        ]
+      },
+      titleHTML:
+        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
+      buttons: []
+    });
+
+    NavbarBottom.show([
+      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+      { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
+      { text: "Итоги" }
+    ]);
+
+    {
+      const divContent = document.getElementsByClassName("content")[0];
+
+      while (divContent.firstChild) {
+        divContent.removeChild(divContent.firstChild);
+      }
+    }
+
+    summaryContent = document.getElementsByClassName("content")[0];
+
+    let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+
+    if (!datePeriod) {
+      return;
+    }
+
+    datePeriod.dateBeg =
+      "string" === typeof datePeriod.dateBeg
+        ? new Date(datePeriod.dateBeg)
+        : datePeriod.dateBeg;
+    datePeriod.dateEnd =
+      "string" === typeof datePeriod.dateEnd
+        ? new Date(datePeriod.dateEnd)
+        : datePeriod.dateEnd;
+
+    if (!datePeriod) {
+      let date = new Date();
+      date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      datePeriod = { dateBeg: date, dateEnd: date };
+    }
+
+    document.getElementById("iptDateBeg").value = datePeriod.dateBeg
+      ? datePeriod.dateBeg._toForm()
+      : null;
+    document.getElementById("iptDateEnd").value = datePeriod.dateEnd
+      ? datePeriod.dateEnd._toForm()
+      : null;
+    await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
+
+    await OutlaySummary.summariesRefresh();
+
+    await OutlaySummary.summaryContentRefresh(0);
+    //} catch (error) {
+    //  alert(error);
+    //}
   }
 
   static async summariesRefresh() {

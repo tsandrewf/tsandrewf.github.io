@@ -3,9 +3,9 @@
 import {
   db,
   outlayObjectStoreName,
-  outlayCategoryObjectStoreName
+  outlayCategoryObjectStoreName,
+  getCategoryChilds
 } from "./db.js";
-import { OutlayEntry } from "./outlayEntry.js";
 
 // https://habr.com/ru/company/mailru/blog/269465/
 export class Category {
@@ -74,26 +74,9 @@ export class Category {
     try {
       if (!transaction)
         transaction = db.transaction(outlayCategoryObjectStoreName);
-
-      const categoryChilds = await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayCategoryObjectStoreName)
-          .index("parentCategoryId_idx")
-          .getAll(
-            IDBKeyRange.bound([categoryId], [categoryId + 1], false, true)
-          );
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-
-      return categoryChilds;
+      return getCategoryChilds(categoryId, transaction);
     } catch (error) {
+      console.log("error", error);
       return error;
     }
   }

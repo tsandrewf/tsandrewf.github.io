@@ -236,16 +236,15 @@ export class OutlayEntryEdit {
     let outlayEntry = entryId
       ? await OutlayEntry.get(entryId)
       : {
-          //date: await Setting.get(outlayDateSelectedKeyName),
           date: new Date(await Setting.get(outlayDateSelectedKeyName)),
           sumAll: 0,
           categories: [null],
           sums: [null]
         };
 
-    document.getElementById("iptDate").value = outlayEntry.date
-      ? outlayEntry.date._toForm()
-      : null;
+    if (outlayEntry.date) {
+      document.getElementById("iptDate").value = outlayEntry.date._toForm();
+    }
     document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
 
     for (let i = 0; i < outlayEntry.categories.length; i++) {

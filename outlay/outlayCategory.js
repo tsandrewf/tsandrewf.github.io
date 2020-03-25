@@ -277,195 +277,194 @@ export class OutlayCategory {
   }
 
   static async displayData(options) {
+    //console.log("OutlayCategory.displayData");
     needCategorySave = options;
-    try {
-      if (!needCategorySave) {
-        await Setting.set(categoryHtmlKeyName, null);
+    //try {
+    if (!needCategorySave) {
+      await Setting.set(categoryHtmlKeyName, null);
 
-        const funcName = "OutlayCategory";
-        if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-          await Setting.set(windowOnloadKeyName, funcName);
-        }
+      const funcName = "OutlayCategory";
+      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+        await Setting.set(windowOnloadKeyName, funcName);
       }
+    }
 
-      StandbyIndicator.show();
+    StandbyIndicator.show();
 
-      await Setting.set(retValKeyName, null);
+    await Setting.set(retValKeyName, null);
 
-      window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
+    window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
 
-      {
-        let hideSaveCSS = document.getElementById("hideSaveCSS");
-        if (!needCategorySave && !hideSaveCSS) {
-          hideSaveCSS = document.createElement("style");
-          document.head.append(hideSaveCSS);
-          hideSaveCSS.innerHTML = "li a {display:none;}";
-          hideSaveCSS.id = "hideSaveCSS";
-        } else if (needCategorySave && hideSaveCSS) {
-          document.head.removeChild(hideSaveCSS);
-        }
+    {
+      let hideSaveCSS = document.getElementById("hideSaveCSS");
+      if (!needCategorySave && !hideSaveCSS) {
+        hideSaveCSS = document.createElement("style");
+        document.head.append(hideSaveCSS);
+        hideSaveCSS.innerHTML = "li a {display:none;}";
+        hideSaveCSS.id = "hideSaveCSS";
+      } else if (needCategorySave && hideSaveCSS) {
+        document.head.removeChild(hideSaveCSS);
       }
+    }
 
-      document.title = "Категории расходов";
+    document.title = "Категории расходов";
 
-      NavbarTop.show({
-        menu: {
-          buttonHTML: "&#9776;",
-          content: [
-            {
-              innerHTML: "Категории расходов",
-              href: "Javascript:OutlayCategory_displayData()"
-            },
-            {
-              innerHTML: "Итоги в разрезе категорий",
-              href: "Javascript:OutlaySummary_displayData()"
-            },
-            {
-              innerHTML: "Архивирование и восстановление",
-              href: "Javascript:OutlayUtils_displayData();"
-            }
-          ]
-        },
-        titleHTML: "Категории расходов",
-        buttons: [
+    NavbarTop.show({
+      menu: {
+        buttonHTML: "&#9776;",
+        content: [
           {
-            onclick: OutlayCategory.outlayCategoryNew,
-            title: "Добавить категорию",
-            innerHTML: "&#10010;"
+            innerHTML: "Категории расходов",
+            href: "Javascript:OutlayCategory_displayData()"
           },
           {
-            onclick: OutlayCategory.outlayCategoryEdit,
-            title: "Изменить название категории",
-            innerHTML: "&#9999;"
+            innerHTML: "Итоги в разрезе категорий",
+            href: "Javascript:OutlaySummary_displayData()"
           },
           {
-            onclick: OutlayCategory.outlayCategoryDel,
-            title: "Удалить категорию",
-            innerHTML: "&#10006;"
+            innerHTML: "Архивирование и восстановление",
+            href: "Javascript:OutlayUtils_displayData();"
           }
         ]
-      });
-
-      NavbarBottom.show([
-        { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
-        { text: "Категории" },
-        { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
-      ]);
-
-      divContent = document.getElementsByClassName("content")[0];
-      {
-        while (divContent.firstChild) {
-          divContent.removeChild(divContent.firstChild);
+      },
+      titleHTML: "Категории расходов",
+      buttons: [
+        {
+          onclick: OutlayCategory.outlayCategoryNew,
+          title: "Добавить категорию",
+          innerHTML: "&#10010;"
+        },
+        {
+          onclick: OutlayCategory.outlayCategoryEdit,
+          title: "Изменить название категории",
+          innerHTML: "&#9999;"
+        },
+        {
+          onclick: OutlayCategory.outlayCategoryDel,
+          title: "Удалить категорию",
+          innerHTML: "&#10006;"
         }
+      ]
+    });
+
+    NavbarBottom.show([
+      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+      { text: "Категории" },
+      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+    ]);
+
+    divContent = document.getElementsByClassName("content")[0];
+    {
+      while (divContent.firstChild) {
+        divContent.removeChild(divContent.firstChild);
       }
+    }
 
-      let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
-      if (!categorySelectedId) categorySelectedId = 0;
+    let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
+    if (!categorySelectedId) categorySelectedId = 0;
 
-      const contentRem =
-        (await Setting.get(categoryHtmlKeyName)) || window.history.state;
-      if (contentRem && contentRem.content) {
-        divContent.innerHTML = contentRem.content;
-        divContent.scrollTop = contentRem.divContent_scrollTop;
+    const contentRem =
+      (await Setting.get(categoryHtmlKeyName)) || window.history.state;
+    if (contentRem && contentRem.content) {
+      divContent.innerHTML = contentRem.content;
+      divContent.scrollTop = contentRem.divContent_scrollTop;
 
-        const categorySel = await Category.get(categorySelectedId);
-        const liCategory = document.getElementById(categorySelectedId);
-        const categoryName = liCategory.childNodes[1].innerHTML.trim();
+      const categorySel = await Category.get(categorySelectedId);
+      const liCategory = document.getElementById(categorySelectedId);
+      const categoryName = liCategory.childNodes[1].innerHTML.trim();
 
-        if (categorySel && categorySel.name !== categoryName) {
-          liCategory.childNodes[1].innerHTML = " " + categorySel.name;
-          const ulCategory = liCategory.parentElement;
-          const parentNode = ulCategory.parentElement;
-          parentNode.removeChild(ulCategory);
-          let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-            node => "UL" === node.tagName
-          );
-          {
-            let categoryRestored = false;
-            for (let node of ulCategoryChilds) {
-              if (
-                " " + categorySel.name <
-                node.firstChild.childNodes[1].innerHTML
-              ) {
-                parentNode.insertBefore(ulCategory, node);
-                categoryRestored = true;
-                break;
-              }
-            }
-            if (!categoryRestored) {
-              parentNode.appendChild(ulCategory);
+      if (categorySel && categorySel.name !== categoryName) {
+        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
+        const ulCategory = liCategory.parentElement;
+        const parentNode = ulCategory.parentElement;
+        parentNode.removeChild(ulCategory);
+        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
+          node => "UL" === node.tagName
+        );
+        {
+          let categoryRestored = false;
+          for (let node of ulCategoryChilds) {
+            if (
+              " " + categorySel.name <
+              node.firstChild.childNodes[1].innerHTML
+            ) {
+              parentNode.insertBefore(ulCategory, node);
+              categoryRestored = true;
+              break;
             }
           }
-        } else {
-          const categoryChildren = await Category.getChildren(
-            categorySelectedId
-          );
-          let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-            node => "UL" === node.tagName
-          );
-          if (categoryChildren.length !== ulCategoryChilds.length) {
-            for (let i = 0; i < categoryChildren.length; i++) {
-              const category = categoryChildren[i];
-              if (!ulCategoryChilds[i]) {
-                liCategory.appendChild(
-                  OutlayCategory.getNodeCategoryNew(category)
-                );
-                OutlayCategory.liExpand(liCategory);
-              } else if (ulCategoryChilds[i].firstChild.id != category.id) {
-                liCategory.insertBefore(
-                  OutlayCategory.getNodeCategoryNew(category),
-                  ulCategoryChilds[i]
-                );
-                OutlayCategory.liExpand(liCategory);
-                break;
-              }
-            }
+          if (!categoryRestored) {
+            parentNode.appendChild(ulCategory);
           }
         }
       } else {
-        let ulRoot = document.createElement("UL");
-        ulRoot.setAttribute("expanded", "true");
-        ulRoot.style.paddingLeft = "0";
-        let liRoot = document.createElement("LI");
-        liRoot.id = "0";
-        ulRoot.appendChild(liRoot);
-        let spanExpanded = document.createElement("SPAN");
-        spanExpanded.innerHTML = expanded;
-        liRoot.appendChild(spanExpanded);
-        let spanCategoryName = document.createElement("SPAN");
-        spanCategoryName.innerHTML = "Корень";
-        spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
-        liRoot.appendChild(spanCategoryName);
-        await OutlayCategory.displayTree(
-          liRoot,
-          db.transaction(outlayCategoryObjectStoreName)
+        const categoryChildren = await Category.getChildren(categorySelectedId);
+        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
+          node => "UL" === node.tagName
         );
-        document
-          .getElementsByClassName("content")
-          .item(0)
-          .appendChild(ulRoot);
+        if (categoryChildren.length !== ulCategoryChilds.length) {
+          for (let i = 0; i < categoryChildren.length; i++) {
+            const category = categoryChildren[i];
+            if (!ulCategoryChilds[i]) {
+              liCategory.appendChild(
+                OutlayCategory.getNodeCategoryNew(category)
+              );
+              OutlayCategory.liExpand(liCategory);
+            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
+              liCategory.insertBefore(
+                OutlayCategory.getNodeCategoryNew(category),
+                ulCategoryChilds[i]
+              );
+              OutlayCategory.liExpand(liCategory);
+              break;
+            }
+          }
+        }
       }
-
-      OutlayCategory.categorySelectedMark(categorySelectedId);
-
-      if (window.history.state) {
-        divContent.scrollTop = contentRem.divContent_scrollTop;
-        window.history.replaceState(null, window.title);
-      } else if (contentRem) {
-        divContent.scrollTop = contentRem.divContent_scrollTop;
-      }
-
-      for (let li of document.body
-        .getElementsByClassName("content")[0]
-        .getElementsByTagName("LI")) {
-        li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
-        li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
-      }
-    } catch (error) {
-      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
-    } finally {
-      StandbyIndicator.hide();
+    } else {
+      let ulRoot = document.createElement("UL");
+      ulRoot.setAttribute("expanded", "true");
+      ulRoot.style.paddingLeft = "0";
+      let liRoot = document.createElement("LI");
+      liRoot.id = "0";
+      ulRoot.appendChild(liRoot);
+      let spanExpanded = document.createElement("SPAN");
+      spanExpanded.innerHTML = expanded;
+      liRoot.appendChild(spanExpanded);
+      let spanCategoryName = document.createElement("SPAN");
+      spanCategoryName.innerHTML = "Корень";
+      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
+      liRoot.appendChild(spanCategoryName);
+      await OutlayCategory.displayTree(
+        liRoot,
+        db.transaction(outlayCategoryObjectStoreName)
+      );
+      document
+        .getElementsByClassName("content")
+        .item(0)
+        .appendChild(ulRoot);
     }
+
+    OutlayCategory.categorySelectedMark(categorySelectedId);
+
+    if (window.history.state) {
+      divContent.scrollTop = contentRem.divContent_scrollTop;
+      window.history.replaceState(null, window.title);
+    } else if (contentRem) {
+      divContent.scrollTop = contentRem.divContent_scrollTop;
+    }
+
+    for (let li of document.body
+      .getElementsByClassName("content")[0]
+      .getElementsByTagName("LI")) {
+      li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
+      li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
+    }
+    //} catch (error) {
+    //  alert(error.stack);
+    //} finally {
+    StandbyIndicator.hide();
+    //}
   }
 
   static leaf_name_onclick() {
@@ -478,49 +477,49 @@ export class OutlayCategory {
   }
 
   static async displayTree(node, transaction) {
-    try {
-      let nodeId = Number(node.id);
+    //try {
+    let nodeId = Number(node.id);
 
-      let i = 0;
-      let ul;
+    let i = 0;
+    let ul;
 
-      for (let category of await Category.getChildren(nodeId, transaction)) {
-        if (0 === i) {
-          ul = document.createElement("UL");
-          node.appendChild(ul);
-          if (
-            "false" === ul.parentElement.parentElement.getAttribute("expanded")
-          ) {
-            ul.style.display = "none";
-          }
-          ul.setAttribute("expanded", category.expanded);
+    for (let category of await Category.getChildren(nodeId, transaction)) {
+      if (0 === i) {
+        ul = document.createElement("UL");
+        node.appendChild(ul);
+        if (
+          "false" === ul.parentElement.parentElement.getAttribute("expanded")
+        ) {
+          ul.style.display = "none";
         }
-        let li = document.createElement("LI");
-        ul.appendChild(li);
-        li.id = category.id;
-        let spanName = document.createElement("SPAN");
-        let spanExpand = document.createElement("SPAN");
-        li.appendChild(spanExpand);
-        li.appendChild(spanName);
-        spanExpand.innerHTML =
-          "false" ==
-          spanExpand.parentElement.parentElement.getAttribute("expanded")
-            ? compressed
-            : expanded;
-
-        spanName.innerHTML = " " + category.name;
-        spanName.innerHTML += " ";
-        let aItemCategorySave = document.createElement("A");
-        li.appendChild(aItemCategorySave);
-        aItemCategorySave.innerHTML = "&#10004;";
-        aItemCategorySave.href =
-          "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
-
-        await OutlayCategory.displayTree(li, transaction);
+        ul.setAttribute("expanded", category.expanded);
       }
-    } catch (error) {
-      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
+      let li = document.createElement("LI");
+      ul.appendChild(li);
+      li.id = category.id;
+      let spanName = document.createElement("SPAN");
+      let spanExpand = document.createElement("SPAN");
+      li.appendChild(spanExpand);
+      li.appendChild(spanName);
+      spanExpand.innerHTML =
+        "false" ==
+        spanExpand.parentElement.parentElement.getAttribute("expanded")
+          ? compressed
+          : expanded;
+
+      spanName.innerHTML = " " + category.name;
+      spanName.innerHTML += " ";
+      let aItemCategorySave = document.createElement("A");
+      li.appendChild(aItemCategorySave);
+      aItemCategorySave.innerHTML = "&#10004;";
+      aItemCategorySave.href =
+        "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
+
+      await OutlayCategory.displayTree(li, transaction);
     }
+    //} catch (error) {
+    //  alert(error.stack);
+    //}
   }
 
   static outlayCategoryEdit() {

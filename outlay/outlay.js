@@ -89,7 +89,12 @@ async function window_onload(funcName) {
       .register(serviceWorker)
       .then(navigator.serviceWorker.ready)
       .then(function() {
+        console.log(
+          "navigator.serviceWorker.controller",
+          navigator.serviceWorker.controller
+        );
         navigator.serviceWorker.controller.postMessage("outlay.html_onload");
+        console.log('Sended message "outlay.html_onload"');
       });
 
     /*getMTime("./base.css", async function(url, mtime, responseEtag) {

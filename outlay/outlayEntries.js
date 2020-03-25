@@ -130,6 +130,7 @@ export class OutlayEntries {
       }
     }
 
+    //try {
     let outlayEntries = await OutlayEntry.getEntries({
       dateBeg: dateBeg,
       dateEnd: dateEnd
@@ -168,7 +169,7 @@ export class OutlayEntries {
           ? outlayEntry.date._toStringBrief()
           : "НЕ задана";
       let category = await Category.get(outlayEntry.categoryId);
-      tdCategory.innerHTML = category ? category.name : null;
+      tdCategory.innerHTML = category ? category.name : "";
       tdSum.innerHTML =
         /*'<a href="#func=OutlayEntryEdit&entryId=' +
         outlayEntry.id +
@@ -209,6 +210,9 @@ export class OutlayEntries {
         "г.";
       tdAppend.colSpan = 4;
     }
+    //} catch (error) {
+    //  alert(error.stack);
+    //}
   }
 
   static async outlayEntryDelete(key) {

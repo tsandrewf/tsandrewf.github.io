@@ -10,6 +10,7 @@ export const outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
 export const windowOnloadKeyName = "windowOnload";
 export const retValKeyName = "retVal";
 export const categoryHtmlKeyName = "categoryHtml";
+export let getCategoryChilds;
 
 export function openDb(displayData) {
   const DBOpenRequest = window.indexedDB.open("mymoney", 1);
@@ -18,12 +19,62 @@ export function openDb(displayData) {
     // store the result of opening the database in the db variable. This is used a lot below
     db = DBOpenRequest.result;
 
-    /*console.log('IndexedDb "' + db.name + '" was opened');
-    console.log(db.objectStoreNames);
-    for (let objectStoreName of db.objectStoreNames) {
-      console.log('ObjectStore "' + objectStoreName + '"');
-      console.log(db.transaction(objectStoreName).objectStore(objectStoreName));
-    }*/
+    const index = db
+      .transaction(outlayCategoryObjectStoreName)
+      .objectStore(outlayCategoryObjectStoreName)
+      .index("parentCategoryId_idx");
+
+    if ("object" === typeof index.keyPath) {
+      getCategoryChilds = async function(categoryId, transaction) {
+        const categoryChilds = await new Promise(function(resolve, reject) {
+          const request = transaction
+            .objectStore(outlayCategoryObjectStoreName)
+            .index("parentCategoryId_idx")
+            .getAll(
+              IDBKeyRange.bound([categoryId], [categoryId + 1], false, true)
+            );
+
+          request.onsuccess = function() {
+            resolve(request.result);
+          };
+
+          request.onerror = function() {
+            reject(request.error);
+          };
+        });
+
+        return categoryChilds;
+      };
+    } else {
+      getCategoryChilds = async function(categoryId, transaction) {
+        const categoryChilds = await new Promise(function(resolve, reject) {
+          const request = transaction
+            .objectStore(outlayCategoryObjectStoreName)
+            .index("parentCategoryId_idx")
+            .getAll(IDBKeyRange.only(categoryId));
+
+          request.onsuccess = function() {
+            resolve(
+              request.result.sort(function(x, y) {
+                return x.name > y.name
+                  ? 1
+                  : x.name < y.name
+                  ? -1
+                  : x.id > y.id
+                  ? 1
+                  : -1;
+              })
+            );
+          };
+
+          request.onerror = function() {
+            reject(request.error);
+          };
+        });
+
+        return categoryChilds;
+      };
+    }
 
     if (displayData) displayData();
   };
@@ -110,18 +161,8 @@ function _createObjectStore(osOptionsArray) {
         db.name +
         '"'
     );
-    /*if (osOptions.indexOptions) {
-      objectStore.createIndex(
-        osOptions.indexOptions.name,
-        osOptions.indexOptions.keyPath,
-        undefined === osOptions.indexOptions.options
-          ? {
-              unique: false
-            }
-          : osOptions.indexOptions.options
-      );
-    }*/
-    if (osOptions.indexes) {
+
+    /*if (osOptions.indexes) {
       for (let index of osOptions.indexes) {
         objectStore.createIndex(
           index.name,
@@ -132,6 +173,35 @@ function _createObjectStore(osOptionsArray) {
               }
             : index.options
         );
+      }
+    }*/
+    if (osOptions.indexes) {
+      for (let index of osOptions.indexes) {
+        console.log("index.name", index.name);
+        console.log("index.keyPath", index.keyPath);
+        console.log("typeof index.keyPath", typeof index.keyPath);
+        if ("string" === typeof index.keyPath || objectStore.getAll) {
+          objectStore.createIndex(
+            index.name,
+            index.keyPath,
+            undefined === index.options
+              ? {
+                  unique: false
+                }
+              : index.options
+          );
+        } else {
+          console.log("Составные индексы НЕ поддерживаются");
+          objectStore.createIndex(
+            index.name,
+            index.keyPath[0],
+            undefined === index.options
+              ? {
+                  unique: false
+                }
+              : index.options
+          );
+        }
       }
     }
   }
