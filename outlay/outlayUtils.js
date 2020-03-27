@@ -104,7 +104,7 @@ export class OutlayUtils {
     }
   }
 
-  static async export() {
+  static export() {
     if (
       !window.confirm(
         "Вы действительно хотите архивировать базу данных расходов,"
@@ -112,118 +112,12 @@ export class OutlayUtils {
     )
       return;
 
-    try {
-      const dateCurrent = new Date();
-      const backupFileName =
-        outlayCategoryObjectStoreName + "_" + dateCurrent._toCurrent();
-      OutlayUtils.download(
-        backupFileName,
-        "{ " +
-          '"' +
-          settingObjectStoreName +
-          '"' +
-          " : " +
-          JSON.stringify(await Setting.getAll()) +
-          ", " +
-          '"' +
-          outlayCategoryObjectStoreName +
-          '"' +
-          " : " +
-          JSON.stringify(await Category.getAll()) +
-          ", " +
-          '"' +
-          outlayObjectStoreName +
-          '"' +
-          " : " +
-          JSON.stringify(await OutlayEntry.getAll()) +
-          "}"
-      );
-      alert('Создан файл "' + backupFileName + '"');
-    } catch (error) {
-      alert(error);
-    }
-  }
-
-  // https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
-  static download(filename, text) {
-    var element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      "data:application/json;charset=utf-8," + encodeURIComponent(text)
-    );
-    element.setAttribute("download", filename);
-
-    element.style.display = "none";
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
+    location.href = "#func=OutlayExport";
   }
 
   static restore() {
     window.history.pushState(null, "title");
 
     OutlayRestore.displayData();
-    //alert('"Восстановление" в стадии реализации');
-    return;
-
-    console.log("restore");
-    const inputFile = document.getElementById("inputFile");
-    console.log("inputFile", inputFile.files);
-    if (1 !== inputFile.files.length) {
-      return;
-    }
-    const file = inputFile.files[0];
-    console.log("file", file);
-    if ("application/json" !== file.type) {
-      console.log("file.type", file.type);
-      return;
-    }
-
-    let reader = new FileReader();
-    reader.onerror = function() {
-      alert('Ошибка загрузки файла "' + file.name + '"' + reader.error);
-    };
-
-    reader.onload = async function() {
-      const dbObect = JSON.parse(reader.result);
-
-      const transaction = db.transaction(
-        [
-          outlayCategoryObjectStoreName,
-          outlayObjectStoreName,
-          settingObjectStoreName
-        ],
-        "readwrite"
-      );
-      transaction.onabort = function() {
-        console.log("onabort");
-      };
-      transaction.onerror = function(event) {
-        console.log("Error: ", event);
-      };
-      transaction.oncomplete = function() {
-        console.log("Database restored!");
-      };
-
-      await Setting.clear(transaction);
-      for (let setting of dbObect.setting) {
-        await Setting.set(setting.id, setting.value, transaction);
-      }
-
-      await Category.clear(transaction);
-      for (let category of dbObect.outlayCategory) {
-        await Category.set(category, transaction);
-      }
-
-      await OutlayEntry.clear(transaction);
-      for (let entry of dbObect.outlay) {
-        entry.date = new Date(entry.date);
-        await OutlayEntry.set(entry, transaction);
-      }
-    };
-
-    reader.readAsText(file);
   }
 }

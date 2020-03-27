@@ -7,6 +7,7 @@ import { OutlayCategory } from "./outlayCategory.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 import { OutlayUtils } from "./outlayUtils.js";
+import { OutlayExport } from "./outlayExport.js";
 import { getQueryVar } from "./url.js";
 //import { CACHE_NAME } from "./service-worker.js";
 
@@ -52,6 +53,9 @@ window.onpopstate = async function(event) {
       break;
     case "OutlayUtils":
       OutlayUtils.displayData();
+      break;
+    case "OutlayExport":
+      OutlayExport.displayData();
       break;
     default:
       OutlayEntries.displayData();
