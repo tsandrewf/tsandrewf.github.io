@@ -60,8 +60,7 @@ export class OutlayEntries {
             href: "Javascript:OutlaySummary_displayData()"
           },
           {
-            innerHTML: "Архивирование и восстановление",
-            //href: "Javascript:OutlayUtils_displayData();"
+            innerHTML: "Утилиты",
             href: "#func=OutlayUtils"
           }
         ]

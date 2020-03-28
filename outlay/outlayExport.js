@@ -130,9 +130,17 @@ export class OutlayExport {
     const backupFileName =
       outlayCategoryObjectStoreName + "_" + new Date()._toCurrent();
 
-    OutlayExport.download(backupFileName, exportJSON);
+    if (window.navigator.msSaveBlob) {
+      // Edge
+      // https://stackoverflow.com/questions/44289189/javascript-file-download-edge-set-from-to-actual-site
+      //window.navigator.msSaveOrOpenBlob(
+      window.navigator.msSaveBlob(
+        new Blob([exportJSON], { type: "application/json" }),
+        backupFileName + ".json"
+      );
+    } else {
+      OutlayExport.download(backupFileName, exportJSON);
 
-    {
       const div = document.createElement("DIV");
       divContent.appendChild(div);
       div.innerText = 'Создан файл "' + backupFileName + '.json"';

@@ -67,8 +67,8 @@ export class OutlaySummary {
             href: "Javascript:OutlayCategory_displayData()"
           },
           {
-            innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayUtils_displayData();"
+            innerHTML: "Утилиты",
+            href: "#func=OutlayUtils"
           }
         ]
       },

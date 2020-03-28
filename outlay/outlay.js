@@ -4,6 +4,7 @@ import { Setting } from "./setting.js";
 import { openDb, windowOnloadKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
+import { OutlayCategoryMove } from "./outlayCategoryMove.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 import { OutlayUtils } from "./outlayUtils.js";
@@ -44,6 +45,9 @@ window.onpopstate = async function(event) {
       break;
     case "OutlayCategory":
       OutlayCategory.displayData(getQueryVar("entryId"));
+      break;
+    case "OutlayCategoryMove":
+      OutlayCategoryMove.displayData(getQueryVar("entryId"));
       break;
     case "OutlaySummary":
       OutlaySummary.displayData();

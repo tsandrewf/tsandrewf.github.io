@@ -314,16 +314,20 @@ export class OutlayCategory {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
+            innerHTML: "Переместить категорию",
+            href: "#func=OutlayCategoryMove"
+          },
+          {
+            innerHTML: "Чеки",
+            href: "Javascript:OutlayEntries_displayData()"
           },
           {
             innerHTML: "Итоги в разрезе категорий",
             href: "Javascript:OutlaySummary_displayData()"
           },
           {
-            innerHTML: "Архивирование и восстановление",
-            href: "Javascript:OutlayUtils_displayData();"
+            innerHTML: "Утилиты",
+            href: "#func=OutlayUtils"
           }
         ]
       },
@@ -363,8 +367,11 @@ export class OutlayCategory {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
+    /*const contentRem =
+      (await Setting.get(categoryHtmlKeyName)) || window.history.state;*/
     const contentRem =
-      (await Setting.get(categoryHtmlKeyName)) || window.history.state;
+      window.history.state || (await Setting.get(categoryHtmlKeyName));
+
     if (contentRem && contentRem.content) {
       divContent.innerHTML = contentRem.content;
       divContent.scrollTop = contentRem.divContent_scrollTop;
