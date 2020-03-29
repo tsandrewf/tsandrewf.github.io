@@ -55,5 +55,7 @@ export class OutlayCategoryMove {
 
   static save() {
     console.log("Trying to save category move");
+
+    history.back();
   }
 }
