@@ -109,14 +109,12 @@ export class OutlayEntries {
       let entryYoungest = await OutlayEntry.getEntryYoungest();
 
       if (!dateBeg) {
-        dateBeg = entryYoungest ? entryYoungest.date : new Date();
-        dateBeg = dateBeg._getMonthBeg();
-
-        dateBeg.setDate(dateBeg.getDate() - 1);
-        dateBeg = dateBeg._getMonthBeg();
-
-        dateBeg.setDate(dateBeg.getDate() - 1);
-        dateBeg = dateBeg._getMonthBeg();
+        dateBeg = (entryYoungest ? entryYoungest.date : new Date())
+          ._getMonthBeg()
+          ._prevDay()
+          ._getMonthBeg()
+          ._prevDay()
+          ._getMonthBeg();
       }
 
       if (tbodyOutlayEntries.rows.length) {
