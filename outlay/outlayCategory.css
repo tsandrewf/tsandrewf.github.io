@@ -5,6 +5,7 @@
 }
 
 .selectedCategory {
+  color: white;
   background-color: red;
 }
 

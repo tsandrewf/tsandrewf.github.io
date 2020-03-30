@@ -1,0 +1,18 @@
+.categoryToMove {
+  background-color: #ccffff;
+}
+
+/* https://learn.javascript.ru/css-selectors */
+.categoryToMove > li > span:nth-child(2) {
+  color: white;
+  background-color: red;
+}
+
+/*.categoryToMove li ul span {
+  color: grey;
+}*/
+
+/* https://learn.javascript.ru/css-selectors */
+.categoryToMoveParent > li > span:nth-child(2) {
+  color: red;
+}

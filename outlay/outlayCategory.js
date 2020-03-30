@@ -27,7 +27,7 @@ window.OutlayUtils_displayData = function() {
 let needCategorySave;
 let divContent;
 
-const expanded = String.fromCharCode(9650);
+export const expanded = String.fromCharCode(9650);
 const compressed = String.fromCharCode(9660);
 
 let categorySelected;
@@ -429,7 +429,7 @@ export class OutlayCategory {
         }
       }
     } else {
-      let ulRoot = document.createElement("UL");
+      /*let ulRoot = document.createElement("UL");
       ulRoot.setAttribute("expanded", "true");
       ulRoot.style.paddingLeft = "0";
       let liRoot = document.createElement("LI");
@@ -449,7 +449,13 @@ export class OutlayCategory {
       document
         .getElementsByClassName("content")
         .item(0)
-        .appendChild(ulRoot);
+        .appendChild(ulRoot);*/
+      divContent.appendChild(
+        await OutlayCategory.displayTree(
+          null,
+          db.transaction(outlayCategoryObjectStoreName)
+        )
+      );
     }
 
     OutlayCategory.categorySelectedMark(categorySelectedId);
@@ -483,14 +489,40 @@ export class OutlayCategory {
     OutlayCategory.leafChange(this);
   }
 
-  static async displayTree(node, transaction) {
+  static async displayTree(node, transaction, expandedAll) {
     //try {
+    //let nodeId = Number(node.id);
+    //let nodeId;
+    //let ulRoot;
+    if (true !== expandedAll) expandedAll = false;
+
+    let ulRoot;
+    if (!node) {
+      ulRoot = document.createElement("UL");
+      ulRoot.setAttribute("expanded", "true");
+      ulRoot.style.paddingLeft = "0";
+      const liRoot = document.createElement("LI");
+      liRoot.id = "0";
+      ulRoot.appendChild(liRoot);
+      const spanExpanded = document.createElement("SPAN");
+      spanExpanded.innerHTML = expanded;
+      liRoot.appendChild(spanExpanded);
+      const spanCategoryName = document.createElement("SPAN");
+      spanCategoryName.innerHTML = "Корень";
+      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
+      liRoot.appendChild(spanCategoryName);
+
+      node = liRoot;
+    }
+
     let nodeId = Number(node.id);
 
     let i = 0;
     let ul;
 
     for (let category of await Category.getChildren(nodeId, transaction)) {
+      category.expanded = category.expanded || expandedAll;
+
       if (0 === i) {
         ul = document.createElement("UL");
         node.appendChild(ul);
@@ -522,11 +554,12 @@ export class OutlayCategory {
       aItemCategorySave.href =
         "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
 
-      await OutlayCategory.displayTree(li, transaction);
+      await OutlayCategory.displayTree(li, transaction, expandedAll);
     }
     //} catch (error) {
     //  alert(error.stack);
     //}
+    return ulRoot;
   }
 
   static outlayCategoryEdit() {

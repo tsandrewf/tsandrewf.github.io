@@ -28,9 +28,10 @@ export class NavbarTop {
         aMenuContentItem.href = menuContentItem.href;
       }
 
-      let divTitle = document.createElement("DIV");
+      const divTitle = document.createElement("DIV");
       navbarTop.appendChild(divTitle);
       divTitle.innerHTML = options.titleHTML;
+      divTitle.className = "navBarTopTitle";
 
       let divButtons = document.createElement("DIV");
       navbarTop.appendChild(divButtons);

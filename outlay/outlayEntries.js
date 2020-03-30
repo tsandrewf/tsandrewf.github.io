@@ -6,7 +6,9 @@ import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { windowOnloadKeyName } from "./db.js";
+import { windowOnloadKeyName, outlayEntriesDateMinCalcKeyName } from "./db.js";
+
+let tbodyOutlayEntries;
 
 window.OutlayUtils_displayData = function() {
   window.history.pushState(null, "title");
@@ -22,19 +24,6 @@ export class OutlayEntries {
   }
 
   static async displayData(dateBeg, dateEnd) {
-    function appendRowNewMonth(date) {
-      let row = document.createElement("TR");
-      tbodyOutlayEntries.appendChild(row);
-      row.style.backgroundColor = "grey";
-      row.style.color = "white";
-      let td = document.createElement("TD");
-      row.appendChild(td);
-      td.innerHTML = date._getMonthString() + " " + date.getFullYear() + "г.";
-      td.innerHTML =
-        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
-      td.colSpan = 4;
-    }
-
     {
       const funcName = "Outlay";
       if (funcName !== (await Setting.get(windowOnloadKeyName))) {
@@ -89,13 +78,29 @@ export class OutlayEntries {
       }
     }
 
-    const tbodyOutlayEntries = document.createElement("TBODY");
+    tbodyOutlayEntries = document.createElement("TBODY");
     {
       const divContent = document.getElementsByClassName("content")[0];
       const tableOutlayEntries = document.createElement("TABLE");
       divContent.appendChild(tableOutlayEntries);
       tableOutlayEntries.className = "tableBase tableOutlayEntries";
       tableOutlayEntries.appendChild(tbodyOutlayEntries);
+    }
+    OutlayEntries.addEntries(dateBeg, dateEnd);
+  }
+
+  static async addEntries(dateBeg, dateEnd) {
+    function appendRowNewMonth(date) {
+      let row = document.createElement("TR");
+      tbodyOutlayEntries.appendChild(row);
+      row.style.backgroundColor = "grey";
+      row.style.color = "white";
+      let td = document.createElement("TD");
+      row.appendChild(td);
+      td.innerHTML = date._getMonthString() + " " + date.getFullYear() + "г.";
+      td.innerHTML =
+        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+      td.colSpan = 4;
     }
 
     let monthNumRem = null;
@@ -134,6 +139,11 @@ export class OutlayEntries {
       dateBeg: dateBeg,
       dateEnd: dateEnd
     });
+
+    const outlayEntriesDateMinCalc = await Setting.get(
+      outlayEntriesDateMinCalcKeyName
+    );
+
     for (let i = outlayEntries.length - 1; i >= 0; i--) {
       let outlayEntry = outlayEntries[i];
       if (null === monthNumRem) {
@@ -167,7 +177,18 @@ export class OutlayEntries {
         outlayEntry.date && outlayEntry.date instanceof Date
           ? outlayEntry.date._toStringBrief()
           : "НЕ задана";
-      let category = await Category.get(outlayEntry.categoryId);
+
+      let category;
+      if (outlayEntriesDateMinCalc >= outlayEntry.date) {
+        const categoryIdNew = await OutlayEntry.getCategoryIdTop(outlayEntry);
+
+        if (categoryIdNew !== outlayEntry.categoryId) {
+          outlayEntry.categoryId = categoryIdNew;
+          OutlayEntry.set(outlayEntry);
+        }
+      }
+      category = await Category.get(outlayEntry.categoryId);
+
       tdCategory.innerHTML = category ? category.name : "";
       tdSum.innerHTML =
         /*'<a href="#func=OutlayEntryEdit&entryId=' +
@@ -184,6 +205,10 @@ export class OutlayEntries {
         ')">&#10006</a>';
     }
 
+    if (outlayEntriesDateMinCalc >= dateBeg) {
+      await Setting.set(outlayEntriesDateMinCalcKeyName, dateBeg._prevDay());
+    }
+
     let entryOlder = await OutlayEntry.getEntryOlder(dateBeg);
     if (entryOlder) {
       let dateEndNew = entryOlder.date._getMonthEnd();
@@ -195,7 +220,7 @@ export class OutlayEntries {
       row.style.backgroundColor = "grey";
       row.style.color = "white";
       row.onclick = function() {
-        displayData(dateBegNew, dateEndNew);
+        OutlayEntries.addEntries(dateBegNew, dateEndNew);
       };
       row.style.cursor = "pointer";
 
@@ -209,9 +234,6 @@ export class OutlayEntries {
         "г.";
       tdAppend.colSpan = 4;
     }
-    //} catch (error) {
-    //  alert(error.stack);
-    //}
   }
 
   static async outlayEntryDelete(key) {

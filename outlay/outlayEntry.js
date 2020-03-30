@@ -8,6 +8,47 @@ export class OutlayEntry {
     this.entry = entry;
   }
 
+  static async getCategoryIdTop(outlayEntry, transaction) {
+    if (1 === outlayEntry.categories.length) {
+      return outlayEntry.categories[0];
+    }
+
+    let ancestorsAll = null;
+    for (let i = 0; i < outlayEntry.categories.length; i++) {
+      const categoryId = outlayEntry.categories[i];
+      if (outlayEntry.sums[i]) {
+        if (!categoryId) {
+          ancestorsAll = null;
+          break;
+        }
+
+        let ancestors = await Category.getAncestors(categoryId, transaction);
+        if (!ancestorsAll) {
+          ancestorsAll = ancestors.slice();
+        } else {
+          let length =
+            ancestorsAll.length > ancestors.length
+              ? ancestorsAll.length
+              : ancestors.length;
+          let i;
+          for (i = 1; i <= length; i++) {
+            if (
+              ancestorsAll[ancestorsAll.length - i] !==
+              ancestors[ancestors.length - i]
+            ) {
+              ancestorsAll.splice(0, ancestorsAll.length - i + 1);
+              break;
+            }
+          }
+
+          if (0 === ancestorsAll.length) break;
+        }
+      }
+    }
+
+    return !ancestorsAll || 0 === ancestorsAll.length ? null : ancestorsAll[0];
+  }
+
   static async clear(transaction) {
     try {
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);

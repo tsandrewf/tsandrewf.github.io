@@ -4,6 +4,10 @@ function padStr(i) {
   return i < 10 ? "0" + i : "" + i;
 }
 
+Date.prototype._prevDay = function() {
+  return new Date(this.getTime() - 1000 * 60 * 60 * 24);
+};
+
 Date.prototype._toCurrent = function() {
   return (
     this.getFullYear() +
