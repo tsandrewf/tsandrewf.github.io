@@ -166,9 +166,9 @@ export class OutlaySummary {
     StandbyIndicator.hide();
   }
 
-  static trOnclick(elem) {
+  static trOnclick() {
     OutlaySummary.summaryContentRefresh(
-      Number(elem.getAttribute("categoryId"))
+      Number(this.getAttribute("categoryId"))
     );
   }
 
@@ -186,9 +186,7 @@ export class OutlaySummary {
     parentUl.appendChild(li);
     li.innerHTML = "&#9650; Корень";
     li.setAttribute("categoryId", 0);
-    li.onclick = function() {
-      OutlaySummary.trOnclick(this);
-    };
+    li.onclick = OutlaySummary.trOnclick;
 
     for (let category of upperCategoryArray.reverse()) {
       let ul = document.createElement("UL");
@@ -197,9 +195,7 @@ export class OutlaySummary {
       ul.appendChild(li);
       li.innerHTML = "&#9650; " + category.name;
       li.setAttribute("categoryId", category.id);
-      li.onclick = function() {
-        OutlaySummary.trOnclick(this);
-      };
+      li.onclick = OutlaySummary.trOnclick;
       parentUl = ul;
     }
   }
@@ -212,9 +208,7 @@ export class OutlaySummary {
       let tr = document.createElement("TR");
       tbody.appendChild(tr);
       tr.setAttribute("categoryId", categoryId);
-      tr.onclick = function() {
-        OutlaySummary.trOnclick(this);
-      };
+      tr.onclick = OutlaySummary.trOnclick;
 
       let tdCategoryName = document.createElement("TD");
       tr.appendChild(tdCategoryName);
