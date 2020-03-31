@@ -51,15 +51,16 @@ export class OutlayCategoryMove {
         {
           onclick: OutlayCategoryMove.save,
           title: "Сохранить",
-          innerHTML: "&#10004;"
+          innerHTML: "&#10004;",
+          id: "buttonSave"
         }
       ]
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
-      { text: "Категории" },
-      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
+      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
     ]);
 
     const divContent = document.getElementsByClassName("content")[0];
@@ -141,6 +142,7 @@ export class OutlayCategoryMove {
     const navBarTopTitle = document
       .getElementsByClassName("navBarTopTitle")
       .item(0);
+
     navBarTopTitle.innerHTML =
       ' "' +
       categorySelected
@@ -151,9 +153,11 @@ export class OutlayCategoryMove {
         .querySelector("li > span:nth-child(2)")
         .innerHTML.trim() +
       '"';
+
     if (categorySelectedParentInit === categorySelectedParent) {
       navBarTopTitle.innerHTML = "Перемещение " + navBarTopTitle.innerHTML;
-      document.getElementsByClassName("buttons").item(0).style.display = "none";
+
+      document.getElementById("buttonSave").className = "buttonDisabled";
     } else {
       navBarTopTitle.innerHTML =
         "Переместить " +
@@ -163,12 +167,16 @@ export class OutlayCategoryMove {
           .querySelector("li > span:nth-child(2)")
           .innerHTML.trim() +
         '"';
-      document.getElementsByClassName("buttons").item(0).style.display =
-        "inline";
+
+      document.getElementById("buttonSave").className = "button";
     }
   }
 
   static async save() {
+    if ("buttonDisabled" === document.getElementById("buttonSave").className) {
+      return;
+    }
+
     if (
       !window.confirm(
         'Вы действительно хотите переместить "' +

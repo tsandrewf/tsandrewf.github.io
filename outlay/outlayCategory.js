@@ -352,9 +352,9 @@ export class OutlayCategory {
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
+      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
       { text: "Категории" },
-      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
     ]);
 
     divContent = document.getElementsByClassName("content")[0];

@@ -66,8 +66,8 @@ export class OutlayEntries {
 
     NavbarBottom.show([
       { text: "Чеки" },
-      { text: "Категории", href: "Javascript:OutlayCategory_displayData()" },
-      { text: "Итоги", href: "Javascript:OutlaySummary_displayData()" }
+      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
     ]);
 
     {

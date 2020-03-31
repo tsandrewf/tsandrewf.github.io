@@ -18,6 +18,13 @@ window.OutlayEntries_displayData = OutlayEntries.displayData;
 window.OutlayCategory_displayData = OutlayCategory.displayData;
 window.OutlaySummary_displayData = OutlaySummary.displayData;
 
+const historyLengthInit = window.history.length;
+
+window.displayData = async function(funcName) {
+  await Setting.set(windowOnloadKeyName, funcName);
+  history.go(historyLengthInit - window.history.length);
+};
+
 window.onpopstate = async function(event) {
   const url = new URL(location.href);
 

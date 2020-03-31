@@ -41,6 +41,7 @@ export class NavbarTop {
         divButtons.appendChild(divButton);
         divButton.className = "button";
         divButton.onclick = button.onclick;
+        if (button.id) divButton.id = button.id;
 
         let divButtonInnerHTML = document.createElement("DIV");
         divButton.appendChild(divButtonInnerHTML);
