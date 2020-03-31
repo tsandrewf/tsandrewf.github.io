@@ -563,12 +563,14 @@ export class OutlayCategory {
         divContent_scrollTop: divContent.scrollTop,
         content: divContent.innerHTML
       },
-      window.title,
-      "#func=OutlayCategory&entryId=" + needCategorySave
+      window.title /*,
+      "#func=OutlayCategory&entryId=" + needCategorySave*/
     );
-    window.history.pushState({ data: "data" }, "title");
+    /*window.history.pushState({ data: "data" }, "title");
 
-    OutlayCategoryEdit.displayData({ id: categorySelected.id });
+    OutlayCategoryEdit.displayData({ id: categorySelected.id });*/
+    console.log("#func=OutlayCategoryEdit&id=" + categorySelected.id);
+    location.href = "#func=OutlayCategoryEdit&id=" + categorySelected.id;
   }
 
   static outlayCategoryNew() {
@@ -580,11 +582,12 @@ export class OutlayCategory {
         divContent_scrollTop: divContent.scrollTop,
         content: divContent.innerHTML
       },
-      window.title,
-      "#func=OutlayCategory&entryId=" + needCategorySave
+      window.title /*,
+      "#func=OutlayCategory&entryId=" + needCategorySave*/
     );
-    window.history.pushState({ data: "data" }, "title");
+    /*window.history.pushState({ data: "data" }, "title");
 
-    OutlayCategoryEdit.displayData({ parentId: categorySelected.id });
+    OutlayCategoryEdit.displayData({ parentId: categorySelected.id });*/
+    location.href = "#func=OutlayCategoryEdit&parentId=" + categorySelected.id;
   }
 }

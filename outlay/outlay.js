@@ -4,6 +4,7 @@ import { Setting } from "./setting.js";
 import { openDb, windowOnloadKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayEntries } from "./outlayEntries.js";
 import { OutlayCategory } from "./outlayCategory.js";
+import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 import { OutlayCategoryMove } from "./outlayCategoryMove.js";
 import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
@@ -36,6 +37,7 @@ window.onpopstate = async function(event) {
   if (!funcName) {
     funcName = await Setting.get(windowOnloadKeyName);
   } else {
+    console.log("funcName", funcName);
     switch (funcName) {
       case null:
       case "Outlay": // OutlayEntries
@@ -45,6 +47,16 @@ window.onpopstate = async function(event) {
       case "OutlayCategory":
         if (!getQueryVar("entryId")) {
           await Setting.set(windowOnloadKeyName, funcName);
+        }
+        break;
+      case "OutlayCategoryEdit":
+        console.log('getQueryVar("id")', getQueryVar("id"));
+        if (getQueryVar("id")) {
+          OutlayCategoryEdit.displayData({ id: getQueryVar("id") });
+          return;
+        } else if (getQueryVar("parentId")) {
+          OutlayCategoryEdit.displayData({ parentId: getQueryVar("parentId") });
+          return;
         }
         break;
     }
@@ -98,6 +110,8 @@ window.onpopstate = async function(event) {
 };*/
 
 async function window_onload(funcName) {
+  console.log("window.history.length", window.history.length);
+  console.log("-----------------------------------------------------");
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
   if ("serviceWorker" in navigator) {
