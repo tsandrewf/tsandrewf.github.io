@@ -10,6 +10,7 @@ import { OutlaySummary } from "./outlaySummary.js";
 import { OutlayEntryEdit } from "./outlayEntryEdit.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { OutlayExport } from "./outlayExport.js";
+import { OutlayRestore } from "./outlayRestore.js";
 import { getQueryVar } from "./url.js";
 //import { CACHE_NAME } from "./service-worker.js";
 
@@ -20,24 +21,34 @@ window.OutlayCategory_displayData = OutlayCategory.displayData;
 window.OutlaySummary_displayData = OutlaySummary.displayData;
 
 const historyLengthInit = window.history.length;
+let historyLengthCurrent = historyLengthInit;
+let historyLengthIncrease = false;
+//let historyLengthRem = window.history.length;
+export function historyLengthIncreaseSet() {
+  historyLengthIncrease = true;
+}
 
 window.displayData = async function(funcName) {
-  console.log("funcName", funcName);
-  console.log("historyLengthInit", historyLengthInit);
-  console.log("window.history.length", window.history.length);
-  console.log("-----------------------------------------------------");
   await Setting.set(windowOnloadKeyName, funcName);
-  history.go(historyLengthInit - window.history.length);
+  //history.go(historyLengthInit - window.history.length);
+  history.go(historyLengthInit - historyLengthCurrent);
 };
 
 window.onpopstate = async function(event) {
-  const url = new URL(location.href);
+  if (historyLengthIncrease) {
+    historyLengthCurrent++;
+    historyLengthIncrease = false;
+  } else historyLengthCurrent--;
+  console.log("historyLengthInit", historyLengthInit);
+  console.log("historyLengthCurrent", historyLengthCurrent);
 
+  console.log("window.onpopstate", event);
+  console.log("window.history.length", window.history.length);
+  console.log("-------------------------------------------");
   let funcName = getQueryVar("func");
   if (!funcName) {
     funcName = await Setting.get(windowOnloadKeyName);
   } else {
-    console.log("funcName", funcName);
     switch (funcName) {
       case null:
       case "Outlay": // OutlayEntries
@@ -45,12 +56,15 @@ window.onpopstate = async function(event) {
         await Setting.set(windowOnloadKeyName, funcName);
         break;
       case "OutlayCategory":
-        if (!getQueryVar("entryId")) {
-          await Setting.set(windowOnloadKeyName, funcName);
+        if (getQueryVar("needCategorySave")) {
+          OutlayCategory.displayData(getQueryVar("needCategorySave"));
+          return;
         }
+        //if (!getQueryVar("entryId")) {
+        await Setting.set(windowOnloadKeyName, funcName);
+        //}
         break;
       case "OutlayCategoryEdit":
-        console.log('getQueryVar("id")', getQueryVar("id"));
         if (getQueryVar("id")) {
           OutlayCategoryEdit.displayData({ id: getQueryVar("id") });
           return;
@@ -59,6 +73,9 @@ window.onpopstate = async function(event) {
           return;
         }
         break;
+      case "OutlayRestore":
+        OutlayRestore.displayData();
+        return;
     }
   }
 
@@ -110,8 +127,6 @@ window.onpopstate = async function(event) {
 };*/
 
 async function window_onload(funcName) {
-  console.log("window.history.length", window.history.length);
-  console.log("-----------------------------------------------------");
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
   if ("serviceWorker" in navigator) {

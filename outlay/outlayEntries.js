@@ -7,6 +7,7 @@ import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { windowOnloadKeyName, outlayEntriesDateMinCalcKeyName } from "./db.js";
+import { historyLengthIncreaseSet } from "./outlay.js";
 
 let tbodyOutlayEntries;
 
@@ -18,6 +19,7 @@ window.OutlayUtils_displayData = function() {
 
 export class OutlayEntries {
   static outlayEntryEdit(entryId) {
+    historyLengthIncreaseSet();
     location.href =
       "#func=OutlayEntryEdit&entryId=" +
       ("number" === (typeof entryId).toLowerCase() ? entryId : "");

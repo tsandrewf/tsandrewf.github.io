@@ -2,16 +2,8 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import { Setting } from "./setting.js";
-import { Category } from "./category.js";
-import { OutlayEntry } from "./outlayEntry.js";
-import {
-  db,
-  settingObjectStoreName,
-  outlayCategoryObjectStoreName,
-  outlayObjectStoreName
-} from "./db.js";
 import { OutlayRestore } from "./outlayRestore.js";
+import { historyLengthIncreaseSet } from "./outlay.js";
 
 let divContent;
 
@@ -112,12 +104,15 @@ export class OutlayUtils {
     )
       return;
 
+    historyLengthIncreaseSet();
     location.href = "#func=OutlayExport";
   }
 
   static restore() {
-    window.history.pushState(null, "title");
+    /*window.history.pushState(null, "title");
 
-    OutlayRestore.displayData();
+    OutlayRestore.displayData();*/
+    historyLengthIncreaseSet();
+    location.href = "#func=OutlayRestore";
   }
 }

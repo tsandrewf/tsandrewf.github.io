@@ -6,8 +6,8 @@ import { outlayDateSelectedKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { Setting } from "./setting.js";
-import { OutlayCategory } from "./outlayCategory.js";
 import { retValKeyName } from "./db.js";
+import { historyLengthIncreaseSet } from "./outlay.js";
 
 let outlayTBody;
 let entryId;
@@ -75,9 +75,7 @@ export class OutlayEntryEdit {
     inputSum.type = "text";
     inputSum.size = "10";
     inputSum.value = sum;
-    inputSum.oninput = async function() {
-      await OutlayEntryEdit.inputSum_oninput(this);
-    };
+    inputSum.oninput = OutlayEntryEdit.inputSum_oninput;
     inputSum.onkeydown = OutlayEntryEdit.inputSum_onkeydown;
     tdSum.appendChild(inputSum);
 
@@ -135,9 +133,11 @@ export class OutlayEntryEdit {
       },
       window.title
     );
-    window.history.pushState({ data: "data" }, "title");
+    /*window.history.pushState({ data: "data" }, "title");
 
-    OutlayCategory.displayData(true);
+    OutlayCategory.displayData(true);*/
+    historyLengthIncreaseSet();
+    location.href = "#func=OutlayCategory&needCategorySave=true";
   }
 
   static async displayData(id) {

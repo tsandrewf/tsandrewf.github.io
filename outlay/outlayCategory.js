@@ -8,6 +8,7 @@ import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
+import { historyLengthIncreaseSet } from "./outlay.js";
 
 import {
   db,
@@ -277,7 +278,6 @@ export class OutlayCategory {
   }
 
   static async displayData(options) {
-    //console.log("OutlayCategory.displayData");
     needCategorySave = options;
     //try {
     if (!needCategorySave) {
@@ -563,13 +563,10 @@ export class OutlayCategory {
         divContent_scrollTop: divContent.scrollTop,
         content: divContent.innerHTML
       },
-      window.title /*,
-      "#func=OutlayCategory&entryId=" + needCategorySave*/
+      window.title
     );
-    /*window.history.pushState({ data: "data" }, "title");
 
-    OutlayCategoryEdit.displayData({ id: categorySelected.id });*/
-    console.log("#func=OutlayCategoryEdit&id=" + categorySelected.id);
+    historyLengthIncreaseSet();
     location.href = "#func=OutlayCategoryEdit&id=" + categorySelected.id;
   }
 
@@ -582,12 +579,10 @@ export class OutlayCategory {
         divContent_scrollTop: divContent.scrollTop,
         content: divContent.innerHTML
       },
-      window.title /*,
-      "#func=OutlayCategory&entryId=" + needCategorySave*/
+      window.title
     );
-    /*window.history.pushState({ data: "data" }, "title");
 
-    OutlayCategoryEdit.displayData({ parentId: categorySelected.id });*/
+    historyLengthIncreaseSet();
     location.href = "#func=OutlayCategoryEdit&parentId=" + categorySelected.id;
   }
 }

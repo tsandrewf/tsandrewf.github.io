@@ -1,6 +1,15 @@
 "use strict";
 
+import { historyLengthIncreaseSet } from "./outlay.js";
+
 export class NavbarTop {
+  static hrefOnClick() {
+    historyLengthIncreaseSet();
+    location.href = this.href;
+
+    return false;
+  }
+
   static show(options) {
     let navbarTop = document.getElementsByClassName("navbar-top").item(0);
 
@@ -26,6 +35,7 @@ export class NavbarTop {
         divDropdownContent.appendChild(aMenuContentItem);
         aMenuContentItem.innerHTML = menuContentItem.innerHTML;
         aMenuContentItem.href = menuContentItem.href;
+        aMenuContentItem.onclick = NavbarTop.hrefOnClick;
       }
 
       const divTitle = document.createElement("DIV");
