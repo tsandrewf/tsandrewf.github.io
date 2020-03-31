@@ -59,14 +59,6 @@ export class OutlaySummary {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
-          },
-          {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
-          },
-          {
             innerHTML: "Утилиты",
             href: "#func=OutlayUtils"
           }
@@ -206,7 +198,7 @@ export class OutlaySummary {
       li.innerHTML = "&#9650; " + category.name;
       li.setAttribute("categoryId", category.id);
       li.onclick = function() {
-        trOnclick(this);
+        OutlaySummary.trOnclick(this);
       };
       parentUl = ul;
     }

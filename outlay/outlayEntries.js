@@ -41,14 +41,6 @@ export class OutlayEntries {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
-          },
-          {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          },
-          {
             innerHTML: "Утилиты",
             href: "#func=OutlayUtils"
           }

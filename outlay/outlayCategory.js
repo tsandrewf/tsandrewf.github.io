@@ -318,14 +318,6 @@ export class OutlayCategory {
             href: "#func=OutlayCategoryMove"
           },
           {
-            innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
-          },
-          {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          },
-          {
             innerHTML: "Утилиты",
             href: "#func=OutlayUtils"
           }

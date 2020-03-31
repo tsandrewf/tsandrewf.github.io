@@ -21,6 +21,10 @@ window.OutlaySummary_displayData = OutlaySummary.displayData;
 const historyLengthInit = window.history.length;
 
 window.displayData = async function(funcName) {
+  console.log("funcName", funcName);
+  console.log("historyLengthInit", historyLengthInit);
+  console.log("window.history.length", window.history.length);
+  console.log("-----------------------------------------------------");
   await Setting.set(windowOnloadKeyName, funcName);
   history.go(historyLengthInit - window.history.length);
 };
