@@ -176,6 +176,12 @@ export class OutlayEntryEdit {
         }
       ]
     });
+    {
+      document
+        .getElementsByClassName("navbar-top")
+        .item(0)
+        .classList.add("navbar-bottom-wrap");
+    }
 
     NavbarBottom.show([
       { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
