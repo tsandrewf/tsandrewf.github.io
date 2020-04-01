@@ -196,31 +196,35 @@ export class OutlayCategoryMove {
     )
       return;
 
-    const transaction = db.transaction(
-      [
-        outlayCategoryObjectStoreName,
-        outlayObjectStoreName,
-        settingObjectStoreName
-      ],
-      "readwrite"
-    );
+    try {
+      const transaction = db.transaction(
+        [
+          outlayCategoryObjectStoreName,
+          outlayObjectStoreName,
+          settingObjectStoreName
+        ],
+        "readwrite"
+      );
 
-    const category = await Category.get(categorySelectedId, transaction);
-    category.parentId = Number(categorySelectedParent.firstChild.id);
-    await Category.set(category, transaction);
+      await Setting.set(
+        outlayEntriesDateMinCalcKeyName,
+        (await OutlayEntry.getEntryYoungest(transaction)).date,
+        transaction
+      );
 
-    await Setting.set(
-      outlayEntriesDateMinCalcKeyName,
-      (await OutlayEntry.getEntryYoungest(transaction)).date,
-      transaction
-    );
+      const category = await Category.get(categorySelectedId, transaction);
+      category.parentId = Number(categorySelectedParent.firstChild.id);
+      await Category.set(category, transaction);
 
-    transaction.onerror = function(event) {
-      alert("ОШИБКА: " + event.target.error);
-    };
+      transaction.onerror = function(event) {
+        alert("ОШИБКА: " + event.target.error);
+      };
 
-    transaction.oncomplete = function() {
-      history.back();
-    };
+      transaction.oncomplete = function() {
+        history.back();
+      };
+    } catch (error) {
+      alert(error);
+    }
   }
 }

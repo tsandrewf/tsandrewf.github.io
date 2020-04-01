@@ -55,9 +55,11 @@ export class OutlayEntry {
 
       const category = await new Promise(function(resolve, reject) {
         let request = transaction.objectStore(outlayObjectStoreName).clear();
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -65,7 +67,8 @@ export class OutlayEntry {
 
       return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -80,9 +83,11 @@ export class OutlayEntry {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .delete(entryId);
+
         request.onsuccess = function() {
           resolve();
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -99,9 +104,11 @@ export class OutlayEntry {
 
       const category = await new Promise(function(resolve, reject) {
         let request = transaction.objectStore(outlayObjectStoreName).getAll();
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -109,7 +116,8 @@ export class OutlayEntry {
 
       return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -123,9 +131,11 @@ export class OutlayEntry {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .get(entryId);
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -133,7 +143,8 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -146,9 +157,11 @@ export class OutlayEntry {
           .objectStore(outlayObjectStoreName)
           .index("date_idx")
           .openCursor(IDBKeyRange.upperBound(date, true), "prev");
+
         request.onsuccess = function() {
           resolve(request.result ? request.result.value : null);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -156,7 +169,8 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -169,9 +183,11 @@ export class OutlayEntry {
           .objectStore(outlayObjectStoreName)
           .index("date_idx")
           .openCursor(null, "prev");
+
         request.onsuccess = function() {
           resolve(request.result ? request.result.value : null);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -179,7 +195,8 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -296,8 +313,6 @@ export class OutlayEntry {
           .objectStore(outlayObjectStoreName)
           .index("date_idx"); // В Edge при включенных "Дополнительных инструментах разработчика" дает ошибку после получения 1-й записи: "SCRIPT1006: SCRIPT1006: Expected ')'" и "AbortError"
 
-        //if (index.getAll) {
-        //console.log("index.getAll", index.getAll);
         const request = index.getAll(keyRange);
 
         request.onsuccess = function() {
@@ -307,30 +322,11 @@ export class OutlayEntry {
         request.onerror = function() {
           reject(request.error);
         };
-        /*} else {
-          const request = index.openCursor(keyRange);
-
-          let records = [];
-          request.onsuccess = function(event) {
-            const cursor = event.target.result;
-            if (cursor) {
-              records.push(cursor.value);
-              cursor.continue();
-            } else {
-              resolve(records);
-            }
-          };
-
-          request.onerror = function() {
-            reject(request.error);
-          };
-        }*/
       });
 
       return oulayEntries;
     } catch (error) {
-      console.log("error", error);
-      //transaction.abort();
+      transaction.abort();
       throw new Error(error);
     }
   }

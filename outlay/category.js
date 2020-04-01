@@ -18,9 +18,11 @@ export class Category {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .clear();
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -28,13 +30,16 @@ export class Category {
 
       return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
   static async getAncestors(categoryId, transaction) {
+    /*if (!transaction)
+      transaction = db.transaction(outlayCategoryObjectStoreName, "readwrite");*/
     if (!transaction)
-      transaction = db.transaction(outlayCategoryObjectStoreName, "readwrite");
+      transaction = db.transaction(outlayCategoryObjectStoreName);
 
     let ancestors = [];
     while (categoryId) {
@@ -89,13 +94,28 @@ export class Category {
           "readwrite"
         );
 
+      if (
+        0 !== category.parentId &&
+        !(await Category.get(category.parentId, transaction))
+      ) {
+        throw new Error(
+          "НЕ найдена родительская категория (" +
+            category.parentId +
+            ') категории "' +
+            category.name +
+            '"'
+        );
+      }
+
       await new Promise(function(resolve, reject) {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .put(category);
+
         request.onsuccess = function() {
           resolve();
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -142,9 +162,11 @@ export class Category {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .get(categoryId);
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -152,7 +174,8 @@ export class Category {
 
       return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -170,16 +193,19 @@ export class Category {
               true
             )
           );
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
       });
       return categoryNextSibling;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -200,6 +226,7 @@ export class Category {
               true
             )
           );
+
         request.onsuccess = function() {
           resolve(
             0 < request.result.length
@@ -207,13 +234,16 @@ export class Category {
               : null
           );
         };
+
         request.onerror = function() {
           reject(request.error);
         };
       });
+
       return categoryPreviousSibling;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -224,6 +254,7 @@ export class Category {
           .objectStore(outlayObjectStoreName)
           .index("categoryId_idx")
           .get(categoryId);
+
         request.onsuccess = function() {
           if (request.result) {
             resolve(
@@ -235,12 +266,15 @@ export class Category {
             );
           } else resolve(null);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
       });
+
       return reason;
     } catch (error) {
+      transaction.abort();
       throw new Error(error);
     }
   }

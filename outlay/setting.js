@@ -7,19 +7,20 @@ export class Setting {
     try {
       if (!transaction) transaction = db.transaction(settingObjectStoreName);
 
-      const category = await new Promise(function(resolve, reject) {
+      await new Promise(function(resolve, reject) {
         let request = transaction.objectStore(settingObjectStoreName).clear();
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
       });
-
-      return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 
@@ -29,9 +30,11 @@ export class Setting {
 
       const category = await new Promise(function(resolve, reject) {
         let request = transaction.objectStore(settingObjectStoreName).getAll();
+
         request.onsuccess = function() {
           resolve(request.result);
         };
+
         request.onerror = function() {
           reject(request.error);
         };
@@ -39,7 +42,8 @@ export class Setting {
 
       return category;
     } catch (error) {
-      return error;
+      transaction.abort();
+      throw new Error(error);
     }
   }
 

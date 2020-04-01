@@ -39,12 +39,7 @@ window.onpopstate = async function(event) {
     historyLengthCurrent++;
     historyLengthIncrease = false;
   } else historyLengthCurrent--;
-  console.log("historyLengthInit", historyLengthInit);
-  console.log("historyLengthCurrent", historyLengthCurrent);
 
-  console.log("window.onpopstate", event);
-  console.log("window.history.length", window.history.length);
-  console.log("-------------------------------------------");
   let funcName = getQueryVar("func");
   if (!funcName) {
     funcName = await Setting.get(windowOnloadKeyName);
