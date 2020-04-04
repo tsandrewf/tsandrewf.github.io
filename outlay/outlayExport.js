@@ -8,6 +8,7 @@ import {
   outlayCategoryObjectStoreName,
   outlayObjectStoreName
 } from "./db.js";
+import { ObjectStore } from "./objectStore.js";
 
 export class OutlayExport {
   static async displayData() {
@@ -69,22 +70,26 @@ export class OutlayExport {
     const transaction = db.transaction(objectStoreNames);
     let exportJSON = "";
 
+    const divLog = document.createElement("DIV");
+    divContent.appendChild(divLog);
+    divLog.className = "log";
+
+    {
+      const divLine = document.createElement("DIV");
+      divLog.appendChild(divLine);
+      divLine.innerText = "Таблицы объектов:";
+    }
+
     for (let objectStoreName of objectStoreNames) {
       const divObjectStore = document.createElement("DIV");
-      divContent.appendChild(divObjectStore);
-      divObjectStore.innerText = objectStoreName + " ";
+      divLog.appendChild(divObjectStore);
+      divObjectStore.innerText = '"' + objectStoreName + '": ';
       const spanPercent = document.createElement("SPAN");
       divObjectStore.appendChild(spanPercent);
 
-      const recCount = await new Promise(function(resolve, reject) {
-        let request = transaction.objectStore(objectStoreName).count();
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
+      const recCount = await new ObjectStore(objectStoreName).getRecCount(
+        transaction
+      );
 
       if (0 < recCount) {
         let recNum = 0;
@@ -133,7 +138,6 @@ export class OutlayExport {
     if (window.navigator.msSaveBlob) {
       // Edge
       // https://stackoverflow.com/questions/44289189/javascript-file-download-edge-set-from-to-actual-site
-      //window.navigator.msSaveOrOpenBlob(
       window.navigator.msSaveBlob(
         new Blob([exportJSON], { type: "application/json" }),
         backupFileName + ".json"
@@ -142,7 +146,7 @@ export class OutlayExport {
       OutlayExport.download(backupFileName, exportJSON);
 
       const div = document.createElement("DIV");
-      divContent.appendChild(div);
+      divLog.appendChild(div);
       div.innerText = 'Создан файл "' + backupFileName + '.json"';
     }
 

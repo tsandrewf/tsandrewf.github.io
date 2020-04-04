@@ -9,32 +9,6 @@ import {
 
 // https://habr.com/ru/company/mailru/blog/269465/
 export class Category {
-  static async clear(transaction) {
-    try {
-      if (!transaction)
-        transaction = db.transaction(outlayCategoryObjectStoreName);
-
-      const category = await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayCategoryObjectStoreName)
-          .clear();
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-
-      return category;
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
-  }
-
   static async getAncestors(categoryId, transaction) {
     /*if (!transaction)
       transaction = db.transaction(outlayCategoryObjectStoreName, "readwrite");*/
@@ -123,8 +97,10 @@ export class Category {
 
       return category;
     } catch (error) {
+      console.log("catch (error)", error.message);
       transaction.abort();
-      throw new Error(error);
+      console.log("transaction.abort()");
+      throw new Error(error.message);
     }
   }
 

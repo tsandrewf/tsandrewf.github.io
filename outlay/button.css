@@ -1,16 +1,4 @@
 /* https://ru.stackoverflow.com/questions/640689/Нарисовать-круг-используя-только-css */
-/*.button {
-  width: 2em;
-  height: 2em;
-  background: magenta;
-  border-radius: 50%;
-  cursor: pointer;
-
-  display: flex;
-
-  text-align: center;
-  text-decoration: none;
-}*/
 .button,
 .buttonDisabled {
   width: 2em;
@@ -35,9 +23,6 @@
 .buttonDisabled * {
   margin: auto;
 }
-/*.button .buttonDisabled * {
-  margin: auto;
-}*/
 
 .button:hover {
   color: white;

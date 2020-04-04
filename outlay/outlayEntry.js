@@ -49,29 +49,6 @@ export class OutlayEntry {
     return !ancestorsAll || 0 === ancestorsAll.length ? null : ancestorsAll[0];
   }
 
-  static async clear(transaction) {
-    try {
-      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
-
-      const category = await new Promise(function(resolve, reject) {
-        let request = transaction.objectStore(outlayObjectStoreName).clear();
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-
-      return category;
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
-  }
-
   static async delete(entryId, transaction) {
     try {
       if (!entryId) return null;

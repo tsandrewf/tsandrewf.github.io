@@ -1,6 +1,9 @@
+"use strict";
+
 // https://askvoprosy.com/voprosy/searching-for-compound-indexes-in-indexeddb
 
 export let db;
+
 export const settingObjectStoreName = "setting";
 export const outlayObjectStoreName = "outlay";
 export const outlayCategoryObjectStoreName = "outlayCategory";
