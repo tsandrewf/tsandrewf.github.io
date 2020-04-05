@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003050956";
+const CACHE_NAME = "outlay_v_202003051411";
 
 let cacheUrls = [
   // HTML
@@ -26,6 +26,7 @@ let cacheUrls = [
   //"./category.js",
   "./date.js",
   "./db.js",
+  "./db_getAll_shim.js",
   "./navbarBottom.js",
   "./navbarTop.js",
   "./outlay.js",
@@ -42,10 +43,10 @@ let cacheUrls = [
   // PNG
   "./icons/outlay32.png",
   "./icons/outlay128.png",
-  "./icons/outlay256.png"
+  "./icons/outlay256.png",
 ];
 
-self.addEventListener("message", async function(event) {
+self.addEventListener("message", async function (event) {
   console.log('Service worker received event "' + event.data + '"');
 
   if ("outlay.html_onload" === event.data) {
@@ -91,7 +92,9 @@ self.addEventListener("message", async function(event) {
           cacheChanges.push({ request: request, response: response.clone() });
         }
       } catch (error) {
-        console.log('Error fetch "' + request.url + '": ' + error);
+        console.log(
+          'Maybe offline. Error fetch "' + request.url + '": ' + error
+        );
         return;
       }
     }
@@ -111,22 +114,22 @@ self.addEventListener("message", async function(event) {
   }
 });
 
-self.addEventListener("install", function(event) {
+self.addEventListener("install", function (event) {
   //console.log("Service Worker Install", event);
   //self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
+    caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll(cacheUrls);
     })
   );
 });
 
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers#Updates
-self.addEventListener("activate", e => {
+self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then(keyList => {
+    caches.keys().then((keyList) => {
       return Promise.all(
-        keyList.map(key => {
+        keyList.map((key) => {
           if (key !== CACHE_NAME) {
             return caches.delete(key);
           }
@@ -193,13 +196,13 @@ self.addEventListener("activate", e => {
   );
 });*/
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
-self.addEventListener("fetch", e => {
+self.addEventListener("fetch", (e) => {
   e.respondWith(
-    caches.match(e.request).then(r => {
+    caches.match(e.request).then((r) => {
       //console.log("[Service Worker] Fetching resource: " + e.request.url);
       return (
         r ||
-        fetch(e.request).then(async response => {
+        fetch(e.request).then(async (response) => {
           if ("HEAD" !== e.request.method) {
             const cache = await caches.open(CACHE_NAME);
             console.log(

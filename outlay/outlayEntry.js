@@ -2,6 +2,7 @@
 
 import { db, outlayObjectStoreName } from "./db.js";
 import { Category } from "./category.js";
+import { ObjectStore } from "./objectStore.js";
 
 export class OutlayEntry {
   constructor(entry) {
@@ -56,16 +57,16 @@ export class OutlayEntry {
       if (!transaction)
         transaction = db.transaction(outlayObjectStoreName, "readwrite");
 
-      await new Promise(function(resolve, reject) {
+      await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .delete(entryId);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve();
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -79,14 +80,14 @@ export class OutlayEntry {
     try {
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);
 
-      const category = await new Promise(function(resolve, reject) {
+      const category = await new Promise(function (resolve, reject) {
         let request = transaction.objectStore(outlayObjectStoreName).getAll();
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -99,47 +100,24 @@ export class OutlayEntry {
   }
 
   static async get(entryId, transaction) {
-    try {
-      if (!entryId) return null;
-
-      if (!transaction) transaction = db.transaction(outlayObjectStoreName);
-
-      const entry = await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayObjectStoreName)
-          .get(entryId);
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-
-      return entry;
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
+    return await ObjectStore.get(outlayObjectStoreName, entryId, transaction);
   }
 
   static async getEntryOlder(date, transaction) {
     try {
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);
 
-      const entry = await new Promise(function(resolve, reject) {
+      const entry = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .index("date_idx")
           .openCursor(IDBKeyRange.upperBound(date, true), "prev");
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result ? request.result.value : null);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -155,17 +133,17 @@ export class OutlayEntry {
     try {
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);
 
-      const entry = await new Promise(function(resolve, reject) {
+      const entry = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .index("date_idx")
           .openCursor(null, "prev");
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result ? request.result.value : null);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -229,45 +207,21 @@ export class OutlayEntry {
       if (!transaction)
         transaction = db.transaction(outlayObjectStoreName, "readwrite");
 
-      let outlayEntryId = await new Promise(function(resolve, reject) {
+      let outlayEntryId = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .put(outlayEntry);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
 
       return outlayEntryId;
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
-  }
-
-  static async add(outlayEntry, transaction) {
-    try {
-      if (!transaction)
-        transaction = db.transaction(outlayObjectStoreName, "readwrite");
-
-      await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayObjectStoreName)
-          .add(outlayEntry);
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
     } catch (error) {
       transaction.abort();
       throw new Error(error);
@@ -298,7 +252,7 @@ export class OutlayEntry {
       }
       if (!transaction) transaction = db.transaction(outlayObjectStoreName);
 
-      const oulayEntries = await new Promise(function(resolve, reject) {
+      const oulayEntries = await new Promise(function (resolve, reject) {
         let keyRange;
         if (!dateBeg && !dateEnd) {
           keyRange = null;
@@ -316,11 +270,11 @@ export class OutlayEntry {
 
         const request = index.getAll(keyRange);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });

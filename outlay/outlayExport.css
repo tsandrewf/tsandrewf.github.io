@@ -7,22 +7,6 @@
   color: red;
 }
 
-/*.logButton {
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  cursor: pointer;
-
-  color: white;
-  background: blue;
-
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-
-  font-family: sans-serif;
-}*/
-
 .logButton {
   width: 2em;
   height: 2em;

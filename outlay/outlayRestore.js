@@ -201,8 +201,9 @@ export class OutlayRestore {
         return;
       }
 
+      let transaction;
       try {
-        const transaction = db.transaction(
+        transaction = db.transaction(
           [
             outlayCategoryObjectStoreName,
             outlayObjectStoreName,
@@ -249,28 +250,8 @@ export class OutlayRestore {
           divObjectStore.appendChild(spanPercent);
           let recNum = 0;
 
-          let recordRestore;
-          switch (objectStoreName) {
-            case "outlayCategory":
-              recordRestore = async function(record, transaction) {
-                await Category.add(record, transaction);
-              };
-              break;
-            case "outlay":
-              recordRestore = async function(record, transaction) {
-                record.date = new Date(record.date);
-                await OutlayEntry.add(record, transaction);
-              };
-              break;
-            case "setting":
-              recordRestore = async function(record, transaction) {
-                await Setting.add(record, transaction);
-              };
-              break;
-          }
-
           for (let record of objectStoreValue) {
-            await recordRestore(record, transaction);
+            await objectStore.restoreRecord(record, transaction);
             spanPercent.innerText =
               ((++recNum / objectStoreValue.length) * 100).toFixed(0) +
               "% (" +
@@ -281,6 +262,7 @@ export class OutlayRestore {
           }
         }
       } catch (error) {
+        transaction.abort();
         OutlayRestore.divLogError(error);
       }
     };

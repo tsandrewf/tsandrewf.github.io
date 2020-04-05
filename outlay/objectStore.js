@@ -1,8 +1,46 @@
 "use strict";
 
+import {
+  db,
+  outlayObjectStoreName,
+  outlayCategoryObjectStoreName,
+  getCategoryChilds,
+} from "./db.js";
+
 export class ObjectStore {
   constructor(objectStoreName) {
     this.objectStoreName = objectStoreName;
+
+    this.restoreRecordPure = async function (record, transaction) {
+      try {
+        if (!transaction)
+          transaction = db.transaction(objectStoreName, "readwrite");
+
+        await new Promise(function (resolve, reject) {
+          let request = transaction.objectStore(objectStoreName).add(record);
+
+          request.onsuccess = function () {
+            resolve();
+          };
+
+          request.onerror = function () {
+            reject(request.error);
+          };
+        });
+      } catch (error) {
+        transaction.abort();
+        throw new Error(error);
+      }
+    };
+
+    if ("outlay" === this.objectStoreName) {
+      this.restoreRecord = async function (record, transaction) {
+        record.date = new Date(record.date);
+        await this.restoreRecordPure(record, transaction);
+      };
+    } else {
+      this.restoreRecord = this.restoreRecordPure;
+    }
   }
 
   async clear(transaction) {
@@ -11,14 +49,14 @@ export class ObjectStore {
     try {
       if (!transaction) transaction = db.transaction(objectStoreName);
 
-      await new Promise(function(resolve, reject) {
+      await new Promise(function (resolve, reject) {
         let request = transaction.objectStore(objectStoreName).clear();
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -29,17 +67,20 @@ export class ObjectStore {
     }
   }
 
-  /*static async getRecCount(objectStoreName, transaction) {
-    try {
-      if (!transaction)
-        transaction = db.transaction(outlayCategoryObjectStoreName);
+  async getRecCount(transaction) {
+    const objectStoreName = this.objectStoreName;
 
-      const recCount = await new Promise(function(resolve, reject) {
+    try {
+      if (!transaction) transaction = db.transaction(objectStoreName);
+
+      const recCount = await new Promise(function (resolve, reject) {
         let request = transaction.objectStore(objectStoreName).count();
-        request.onsuccess = function() {
+
+        request.onsuccess = function () {
           resolve(request.result);
         };
-        request.onerror = function() {
+
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -49,28 +90,29 @@ export class ObjectStore {
       transaction.abort();
       throw new Error(error);
     }
-  }*/
-  async getRecCount(transaction) {
-    const objectStoreName = this.objectStoreName;
+  }
+
+  static async get(objectStoreName, key, transaction) {
+    if (!key) return null;
 
     try {
       if (!transaction) transaction = db.transaction(objectStoreName);
 
-      const recCount = await new Promise(function(resolve, reject) {
-        let request = transaction.objectStore(objectStoreName).count();
+      const record = await new Promise(function (resolve, reject) {
+        let request = transaction.objectStore(objectStoreName).get(key);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
 
-      return recCount;
+      return record;
     } catch (error) {
-      transaction.abort();
+      if (transaction) transaction.abort();
       throw new Error(error);
     }
   }

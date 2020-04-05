@@ -4,8 +4,9 @@ import {
   db,
   outlayObjectStoreName,
   outlayCategoryObjectStoreName,
-  getCategoryChilds
+  getCategoryChilds,
 } from "./db.js";
+import { ObjectStore } from "./objectStore.js";
 
 // https://habr.com/ru/company/mailru/blog/269465/
 export class Category {
@@ -81,16 +82,16 @@ export class Category {
         );
       }
 
-      await new Promise(function(resolve, reject) {
+      await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .put(category);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve();
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -104,46 +105,19 @@ export class Category {
     }
   }
 
-  static async add(category, transaction) {
-    try {
-      if (!transaction)
-        transaction = db.transaction(
-          outlayCategoryObjectStoreName,
-          "readwrite"
-        );
-
-      await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayCategoryObjectStoreName)
-          .add(category);
-
-        request.onsuccess = function() {
-          resolve();
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error.message);
-    }
-  }
-
   static async getAll(transaction) {
     try {
       if (!transaction)
         transaction = db.transaction(outlayCategoryObjectStoreName);
 
-      const category = await new Promise(function(resolve, reject) {
+      const category = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .getAll();
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -155,36 +129,16 @@ export class Category {
   }
 
   static async get(categoryId, transaction) {
-    try {
-      if (!categoryId) return null;
-
-      if (!transaction)
-        transaction = db.transaction(outlayCategoryObjectStoreName);
-
-      const category = await new Promise(function(resolve, reject) {
-        let request = transaction
-          .objectStore(outlayCategoryObjectStoreName)
-          .get(categoryId);
-
-        request.onsuccess = function() {
-          resolve(request.result);
-        };
-
-        request.onerror = function() {
-          reject(request.error);
-        };
-      });
-
-      return category;
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
+    return await ObjectStore.get(
+      outlayCategoryObjectStoreName,
+      categoryId,
+      transaction
+    );
   }
 
   static async getNextSibling(category, transaction) {
     try {
-      const categoryNextSibling = await new Promise(function(resolve, reject) {
+      const categoryNextSibling = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayCategoryObjectStoreName)
           .index("parentCategoryId_idx")
@@ -197,11 +151,11 @@ export class Category {
             )
           );
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(request.result);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -214,7 +168,7 @@ export class Category {
 
   static async getPreviousSibling(category, transaction) {
     try {
-      const categoryPreviousSibling = await new Promise(function(
+      const categoryPreviousSibling = await new Promise(function (
         resolve,
         reject
       ) {
@@ -230,7 +184,7 @@ export class Category {
             )
           );
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           resolve(
             0 < request.result.length
               ? request.result[request.result.length - 1]
@@ -238,7 +192,7 @@ export class Category {
           );
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
@@ -252,13 +206,13 @@ export class Category {
 
   static async getIsUsedReason(categoryId, transaction) {
     try {
-      const reason = await new Promise(function(resolve, reject) {
+      const reason = await new Promise(function (resolve, reject) {
         let request = transaction
           .objectStore(outlayObjectStoreName)
           .index("categoryId_idx")
           .get(categoryId);
 
-        request.onsuccess = function() {
+        request.onsuccess = function () {
           if (request.result) {
             resolve(
               " ссылается как минимум одна позиция в чеке на сумму " +
@@ -270,7 +224,7 @@ export class Category {
           } else resolve(null);
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
           reject(request.error);
         };
       });
