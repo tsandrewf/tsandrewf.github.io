@@ -71,7 +71,16 @@ export class OutlayEntry {
         };
       });
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -94,7 +103,16 @@ export class OutlayEntry {
 
       return category;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -124,7 +142,16 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -150,7 +177,16 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -204,26 +240,22 @@ export class OutlayEntry {
           !ancestorsAll || 0 === ancestorsAll.length ? null : ancestorsAll[0];
       }
 
-      if (!transaction)
-        transaction = db.transaction(outlayObjectStoreName, "readwrite");
-
-      let outlayEntryId = await new Promise(function (resolve, reject) {
-        let request = transaction
-          .objectStore(outlayObjectStoreName)
-          .put(outlayEntry);
-
-        request.onsuccess = function () {
-          resolve(request.result);
-        };
-
-        request.onerror = function () {
-          reject(request.error);
-        };
-      });
-
-      return outlayEntryId;
+      return await ObjectStore.set(
+        outlayObjectStoreName,
+        outlayEntry,
+        transaction
+      );
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -281,7 +313,16 @@ export class OutlayEntry {
 
       return oulayEntries;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }

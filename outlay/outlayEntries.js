@@ -11,7 +11,7 @@ import { historyLengthIncreaseSet } from "./outlay.js";
 
 let tbodyOutlayEntries;
 
-window.OutlayUtils_displayData = function() {
+window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
 
   OutlayUtils.displayData();
@@ -44,24 +44,24 @@ export class OutlayEntries {
         content: [
           {
             innerHTML: "Утилиты",
-            href: "#func=OutlayUtils"
-          }
-        ]
+            href: "#func=OutlayUtils",
+          },
+        ],
       },
       titleHTML: "Чеки",
       buttons: [
         {
           onclick: OutlayEntries.outlayEntryEdit,
           title: "Добавить чек",
-          innerHTML: "&#10010;"
-        }
-      ]
+          innerHTML: "&#10010;",
+        },
+      ],
     });
 
     NavbarBottom.show([
       { text: "Чеки" },
       { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
     {
@@ -129,7 +129,7 @@ export class OutlayEntries {
     //try {
     let outlayEntries = await OutlayEntry.getEntries({
       dateBeg: dateBeg,
-      dateEnd: dateEnd
+      dateEnd: dateEnd,
     });
 
     const outlayEntriesDateMinCalc = await Setting.get(
@@ -211,7 +211,7 @@ export class OutlayEntries {
       tbodyOutlayEntries.appendChild(row);
       row.style.backgroundColor = "grey";
       row.style.color = "white";
-      row.onclick = function() {
+      row.onclick = function () {
         OutlayEntries.addEntries(dateBegNew, dateEndNew);
       };
       row.style.cursor = "pointer";

@@ -22,7 +22,7 @@ export class Setting {
 
       return category;
     } catch (error) {
-      transaction.abort();
+      if (transaction && !transaction.error) transaction.abort();
       throw new Error(error);
     }
   }
@@ -37,26 +37,10 @@ export class Setting {
   }
 
   static async set(id, value, transaction) {
-    try {
-      if (!transaction)
-        transaction = db.transaction(settingObjectStoreName, "readwrite");
-
-      await new Promise(function (resolve, reject) {
-        let request = transaction
-          .objectStore(settingObjectStoreName)
-          .put({ value: value, id: id });
-
-        request.onsuccess = function () {
-          resolve();
-        };
-
-        request.onerror = function () {
-          reject(request.error);
-        };
-      });
-    } catch (error) {
-      transaction.abort();
-      throw new Error(error);
-    }
+    await ObjectStore.set(
+      settingObjectStoreName,
+      { id: id, value: value },
+      transaction
+    );
   }
 }

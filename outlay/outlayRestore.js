@@ -9,7 +9,7 @@ import {
   db,
   settingObjectStoreName,
   outlayCategoryObjectStoreName,
-  outlayObjectStoreName
+  outlayObjectStoreName,
 } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
 
@@ -24,17 +24,17 @@ export class OutlayRestore {
         content: [
           {
             innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
+            href: "Javascript:OutlayEntries_displayData()",
           },
           {
             innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
+            href: "Javascript:OutlayCategory_displayData()",
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          }
-        ]
+            href: "Javascript:OutlaySummary_displayData()",
+          },
+        ],
       },
       titleHTML: "Восстановление",
       buttons: [
@@ -43,13 +43,13 @@ export class OutlayRestore {
           title: "Сохранить категорию",
           innerHTML: "&#10004;"
         }*/
-      ]
+      ],
     });
 
     NavbarBottom.show([
       { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
       { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
     document.title = "Архивирование и восстановление";
@@ -88,7 +88,7 @@ export class OutlayRestore {
         divContent.appendChild(button);
         button.className = "logButton";
         button.innerHTML = "Да";
-        button.onclick = function(e) {
+        button.onclick = function (e) {
           OutlayRestore.restore();
           e.preventDefault(); // предотвращает перемещение к "#"
         };
@@ -98,7 +98,7 @@ export class OutlayRestore {
       inputFile.id = "inputFile";
       inputFile.type = "file";
       inputFile.style = "display:none";
-      inputFile.onchange = function(e) {
+      inputFile.onchange = function (e) {
         if (0 === this.files.length) {
           OutlayRestore.divLogClear();
 
@@ -125,7 +125,7 @@ export class OutlayRestore {
 
       aFile.href = "#";
       aFile.innerHTML = "Выберите файл архива";
-      aFile.onclick = function(e) {
+      aFile.onclick = function (e) {
         inputFile.click();
         e.preventDefault(); // предотвращает перемещение к "#"
       };
@@ -184,13 +184,13 @@ export class OutlayRestore {
     }
 
     let reader = new FileReader();
-    reader.onerror = function() {
+    reader.onerror = function () {
       OutlayRestore.divLogError(new Error())(
         'Ошибка загрузки файла "' + file.name + '"' + reader.error
       );
     };
 
-    reader.onload = async function() {
+    reader.onload = async function () {
       let dbObect;
       try {
         dbObect = JSON.parse(reader.result);
@@ -207,21 +207,31 @@ export class OutlayRestore {
           [
             outlayCategoryObjectStoreName,
             outlayObjectStoreName,
-            settingObjectStoreName
+            settingObjectStoreName,
           ],
           "readwrite"
         );
 
-        transaction.onabort = function() {
+        transaction.onabort = function () {
           console.log("onabort");
         };
 
-        transaction.onerror = function(event) {
-          console.log("Error: ", event);
-          transaction.abort();
+        transaction.onerror = function (event) {
+          console.log("transaction.onerror", event);
+          if (transaction) {
+            try {
+              transaction.abort();
+            } catch (error) {
+              if (11 !== error.code) {
+                // 11 has legacy constant name: INVALID_STATE_ERR
+                throw error;
+              }
+            }
+          }
+          OutlayRestore.divLogError(error);
         };
 
-        transaction.oncomplete = function() {
+        transaction.oncomplete = function () {
           const div = document.createElement("DIV");
           divLog.appendChild(div);
           div.innerText = "База данных восстановлена!";
@@ -252,6 +262,12 @@ export class OutlayRestore {
 
           for (let record of objectStoreValue) {
             await objectStore.restoreRecord(record, transaction);
+            // Следующий код только для отладки обработки ошибок при восстановлении
+            /*if (outlayCategoryObjectStoreName === objectStoreName) {
+              await Category.set(record, transaction);
+            } else {
+              await objectStore.restoreRecord(record, transaction);
+            }*/
             spanPercent.innerText =
               ((++recNum / objectStoreValue.length) * 100).toFixed(0) +
               "% (" +
@@ -262,7 +278,16 @@ export class OutlayRestore {
           }
         }
       } catch (error) {
-        transaction.abort();
+        if (transaction) {
+          try {
+            transaction.abort();
+          } catch (error) {
+            if (11 !== error.code) {
+              // 11 has legacy constant name: INVALID_STATE_ERR
+              throw error;
+            }
+          }
+        }
         OutlayRestore.divLogError(error);
       }
     };

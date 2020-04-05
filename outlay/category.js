@@ -82,25 +82,22 @@ export class Category {
         );
       }
 
-      await new Promise(function (resolve, reject) {
-        let request = transaction
-          .objectStore(outlayCategoryObjectStoreName)
-          .put(category);
-
-        request.onsuccess = function () {
-          resolve();
-        };
-
-        request.onerror = function () {
-          reject(request.error);
-        };
-      });
-
-      return category;
+      return await ObjectStore.set(
+        outlayCategoryObjectStoreName,
+        category,
+        transaction
+      );
     } catch (error) {
-      console.log("catch (error)", error.message);
-      transaction.abort();
-      console.log("transaction.abort()");
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error.message);
     }
   }
@@ -161,7 +158,16 @@ export class Category {
       });
       return categoryNextSibling;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -199,7 +205,16 @@ export class Category {
 
       return categoryPreviousSibling;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
@@ -231,7 +246,16 @@ export class Category {
 
       return reason;
     } catch (error) {
-      transaction.abort();
+      if (transaction) {
+        try {
+          transaction.abort();
+        } catch (error) {
+          if (11 !== error.code) {
+            // 11 has legacy constant name: INVALID_STATE_ERR
+            throw error;
+          }
+        }
+      }
       throw new Error(error);
     }
   }
