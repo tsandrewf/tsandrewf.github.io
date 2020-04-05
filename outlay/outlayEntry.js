@@ -250,6 +250,30 @@ export class OutlayEntry {
     }
   }
 
+  static async add(outlayEntry, transaction) {
+    try {
+      if (!transaction)
+        transaction = db.transaction(outlayObjectStoreName, "readwrite");
+
+      await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(outlayObjectStoreName)
+          .add(outlayEntry);
+
+        request.onsuccess = function() {
+          resolve(request.result);
+        };
+
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+    } catch (error) {
+      transaction.abort();
+      throw new Error(error);
+    }
+  }
+
   static async getEntries() {
     try {
       let dateBeg = null;

@@ -72,4 +72,28 @@ export class Setting {
       throw new Error(error);
     }
   }
+
+  static async add(record, transaction) {
+    try {
+      if (!transaction)
+        transaction = db.transaction(settingObjectStoreName, "readwrite");
+
+      await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(settingObjectStoreName)
+          .add(record);
+
+        request.onsuccess = function() {
+          resolve();
+        };
+
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+    } catch (error) {
+      transaction.abort();
+      throw new Error(error);
+    }
+  }
 }

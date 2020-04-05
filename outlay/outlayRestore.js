@@ -83,26 +83,10 @@ export class OutlayRestore {
       divContent.appendChild(spanFileDescription);
       spanFileDescription.className = "log";
 
-      let spanFileSave;
-      {
-        spanFileSave = document.createElement("SPAN");
-        divContent.appendChild(spanFileSave);
-        const aRestore = document.createElement("SPAN");
-        spanFileSave.appendChild(aRestore);
-        aRestore.innerHTML = "Да";
-        aRestore.classList.add("logButton");
-        aRestore.onclick = function(e) {
-          OutlayRestore.restore();
-          e.preventDefault(); // предотвращает перемещение к "#"
-        };
-        spanFileSave.className = "logHidden";
-      }
-
       const button = document.createElement("BUTTON");
-
       {
         divContent.appendChild(button);
-        button.className = "logButton2";
+        button.className = "logButton";
         button.innerHTML = "Да";
         button.onclick = function(e) {
           OutlayRestore.restore();
@@ -121,7 +105,6 @@ export class OutlayRestore {
           aFile.innerHTML = "Выберите файл архива";
           spanFilePrefix.style = "display:none";
           spanFileDescription.style = "display:none";
-          //spanFileSave.className = "logHidden";
           button.className = "logHidden";
         } else {
           const file = this.files[0];
@@ -136,8 +119,7 @@ export class OutlayRestore {
             ")? ";
           spanFilePrefix.style = "display:inline";
           spanFileDescription.style = "display:inline";
-          //spanFileSave.className = "log";
-          button.className = "logButton2";
+          button.className = "logButton";
         }
       };
 
@@ -183,23 +165,29 @@ export class OutlayRestore {
 
     const inputFile = document.getElementById("inputFile");
     if (0 === inputFile.files.length) {
-      alert("Файл НЕ выбран");
+      OutlayRestore.divLogError(new Error("Файл НЕ выбран"));
       return;
     }
     if (1 > inputFile.files.length) {
-      alert("Выбрано более одного файла (" + inputFile.files.length + ")");
+      OutlayRestore.divLogError(
+        new Error("Выбрано более одного файла (" + inputFile.files.length + ")")
+      );
       return;
     }
 
     const file = inputFile.files[0];
     if ("application/json" !== file.type) {
-      alert("НЕдопустимый mime-тип (" + file.type + ") файла");
+      OutlayRestore.divLogError(
+        new Error("НЕдопустимый mime-тип (" + file.type + ") файла")
+      );
       return;
     }
 
     let reader = new FileReader();
     reader.onerror = function() {
-      alert('Ошибка загрузки файла "' + file.name + '"' + reader.error);
+      OutlayRestore.divLogError(new Error())(
+        'Ошибка загрузки файла "' + file.name + '"' + reader.error
+      );
     };
 
     reader.onload = async function() {
@@ -207,7 +195,9 @@ export class OutlayRestore {
       try {
         dbObect = JSON.parse(reader.result);
       } catch (error) {
-        alert("Ошибка структуры файла: " + error);
+        OutlayRestore.divLogError(
+          new Error("Ошибка структуры файла: " + error)
+        );
         return;
       }
 
@@ -240,7 +230,7 @@ export class OutlayRestore {
         {
           const div = document.createElement("DIV");
           divLog.appendChild(div);
-          div.innerText = "Таблицы объектов:";
+          div.innerText = "Восстановление таблиц объектов";
         }
 
         for (let [objectStoreName, objectStoreValue] of Object.entries(
@@ -263,18 +253,18 @@ export class OutlayRestore {
           switch (objectStoreName) {
             case "outlayCategory":
               recordRestore = async function(record, transaction) {
-                await Category.set(record, transaction);
+                await Category.add(record, transaction);
               };
               break;
             case "outlay":
               recordRestore = async function(record, transaction) {
                 record.date = new Date(record.date);
-                await OutlayEntry.set(record, transaction);
+                await OutlayEntry.add(record, transaction);
               };
               break;
             case "setting":
               recordRestore = async function(record, transaction) {
-                await Setting.set(record.id, record.value, transaction);
+                await Setting.add(record, transaction);
               };
               break;
           }

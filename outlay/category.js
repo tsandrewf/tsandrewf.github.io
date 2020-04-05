@@ -104,6 +104,33 @@ export class Category {
     }
   }
 
+  static async add(category, transaction) {
+    try {
+      if (!transaction)
+        transaction = db.transaction(
+          outlayCategoryObjectStoreName,
+          "readwrite"
+        );
+
+      await new Promise(function(resolve, reject) {
+        let request = transaction
+          .objectStore(outlayCategoryObjectStoreName)
+          .add(category);
+
+        request.onsuccess = function() {
+          resolve();
+        };
+
+        request.onerror = function() {
+          reject(request.error);
+        };
+      });
+    } catch (error) {
+      transaction.abort();
+      throw new Error(error.message);
+    }
+  }
+
   static async getAll(transaction) {
     try {
       if (!transaction)
