@@ -22,7 +22,7 @@ export class Setting {
 
       return category;
     } catch (error) {
-      if (transaction && !transaction.error) transaction.abort();
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }

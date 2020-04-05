@@ -28,16 +28,7 @@ export class ObjectStore {
           };
         });
       } catch (error) {
-        if (transaction) {
-          try {
-            transaction.abort();
-          } catch (error) {
-            if (11 !== error.code) {
-              // 11 has legacy constant name: INVALID_STATE_ERR
-              throw error;
-            }
-          }
-        }
+        transaction._abortIfActive();
         throw new Error(error);
       }
     };
@@ -74,16 +65,7 @@ export class ObjectStore {
         };
       });
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -108,16 +90,7 @@ export class ObjectStore {
 
       return recCount;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -142,16 +115,7 @@ export class ObjectStore {
 
       return record;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -175,16 +139,7 @@ export class ObjectStore {
 
       return retVal;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }

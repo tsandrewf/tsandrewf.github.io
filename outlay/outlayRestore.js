@@ -218,16 +218,7 @@ export class OutlayRestore {
 
         transaction.onerror = function (event) {
           console.log("transaction.onerror", event);
-          if (transaction) {
-            try {
-              transaction.abort();
-            } catch (error) {
-              if (11 !== error.code) {
-                // 11 has legacy constant name: INVALID_STATE_ERR
-                throw error;
-              }
-            }
-          }
+          transaction._abortIfActive();
           OutlayRestore.divLogError(error);
         };
 
@@ -278,16 +269,7 @@ export class OutlayRestore {
           }
         }
       } catch (error) {
-        if (transaction) {
-          try {
-            transaction.abort();
-          } catch (error) {
-            if (11 !== error.code) {
-              // 11 has legacy constant name: INVALID_STATE_ERR
-              throw error;
-            }
-          }
-        }
+        transaction._abortIfActive();
         OutlayRestore.divLogError(error);
       }
     };

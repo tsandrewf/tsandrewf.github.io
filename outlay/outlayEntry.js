@@ -71,16 +71,7 @@ export class OutlayEntry {
         };
       });
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -103,16 +94,7 @@ export class OutlayEntry {
 
       return category;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -142,16 +124,7 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -177,16 +150,7 @@ export class OutlayEntry {
 
       return entry;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -246,16 +210,7 @@ export class OutlayEntry {
         transaction
       );
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -313,16 +268,7 @@ export class OutlayEntry {
 
       return oulayEntries;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }

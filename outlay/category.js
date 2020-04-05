@@ -88,16 +88,7 @@ export class Category {
         transaction
       );
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error.message);
     }
   }
@@ -158,16 +149,7 @@ export class Category {
       });
       return categoryNextSibling;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -205,16 +187,7 @@ export class Category {
 
       return categoryPreviousSibling;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
@@ -246,16 +219,7 @@ export class Category {
 
       return reason;
     } catch (error) {
-      if (transaction) {
-        try {
-          transaction.abort();
-        } catch (error) {
-          if (11 !== error.code) {
-            // 11 has legacy constant name: INVALID_STATE_ERR
-            throw error;
-          }
-        }
-      }
+      transaction._abortIfActive();
       throw new Error(error);
     }
   }
