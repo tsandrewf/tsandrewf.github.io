@@ -2,16 +2,16 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import { Setting } from "./setting.js";
-import { Category } from "./category.js";
-import { OutlayEntry } from "./outlayEntry.js";
 import {
   db,
   settingObjectStoreName,
   outlayCategoryObjectStoreName,
   outlayObjectStoreName,
+  db_objectStoreNames,
 } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
+import { OutlayEntry } from "./outlayEntry.js";
+import { throwErrorIfNotNull } from "./base.js";
 
 let divContent;
 let divLog;
@@ -99,9 +99,9 @@ export class OutlayRestore {
       inputFile.type = "file";
       inputFile.style = "display:none";
       inputFile.onchange = function (e) {
-        if (0 === this.files.length) {
-          OutlayRestore.divLogClear();
+        OutlayRestore.divLogClear();
 
+        if (0 === this.files.length) {
           aFile.innerHTML = "Выберите файл архива";
           spanFilePrefix.style = "display:none";
           spanFileDescription.style = "display:none";
@@ -193,7 +193,9 @@ export class OutlayRestore {
     reader.onload = async function () {
       let dbObect;
       try {
-        dbObect = JSON.parse(reader.result);
+        dbObect = JSON.parse(reader.result, function (key, value) {
+          return key.toLowerCase().includes("date") ? new Date(value) : value;
+        });
       } catch (error) {
         OutlayRestore.divLogError(
           new Error("Ошибка структуры файла: " + error)
@@ -203,14 +205,7 @@ export class OutlayRestore {
 
       let transaction;
       try {
-        transaction = db.transaction(
-          [
-            outlayCategoryObjectStoreName,
-            outlayObjectStoreName,
-            settingObjectStoreName,
-          ],
-          "readwrite"
-        );
+        transaction = db.transaction(db_objectStoreNames, "readwrite");
 
         transaction.onabort = function () {
           console.log("onabort");
@@ -235,39 +230,138 @@ export class OutlayRestore {
           div.innerText = "Восстановление таблиц объектов";
         }
 
+        const ulObjectStoreList = document.createElement("UL");
+        divLog.appendChild(ulObjectStoreList);
+
         for (let [objectStoreName, objectStoreValue] of Object.entries(
           dbObect
         )) {
-          const divObjectStore = document.createElement("DIV");
-          divLog.appendChild(divObjectStore);
-          divObjectStore.innerHTML = 'Таблица "' + objectStoreName + '"';
+          if (!db_objectStoreNames.includes(objectStoreName)) {
+            throw new Error(
+              'НЕдопустимое имя таблицы "' + objectStoreName + '"'
+            );
+          }
+
+          const liObjectStore = document.createElement("LI");
+          ulObjectStoreList.appendChild(liObjectStore);
+          liObjectStore.innerHTML = 'Таблица "' + objectStoreName + '"';
+
+          const ulObjectStore = document.createElement("UL");
+          liObjectStore.appendChild(ulObjectStore);
+
           const objectStore = new ObjectStore(objectStoreName);
-          divObjectStore.innerHTML += "<BR>Очистка таблицы";
-          await objectStore.clear(transaction);
-          divObjectStore.innerHTML += " - выполнено!";
 
-          divObjectStore.innerHTML += "<BR>Восстановление из архива: ";
-          const spanPercent = document.createElement("SPAN");
-          divObjectStore.appendChild(spanPercent);
-          let recNum = 0;
+          {
+            // Проверка таблицы из архива
+            const liObjectStore = document.createElement("LI");
+            ulObjectStore.appendChild(liObjectStore);
+            liObjectStore.innerHTML = "Проверка архива: ";
+            const spanPercent = document.createElement("SPAN");
+            liObjectStore.appendChild(spanPercent);
+            let recNum = 0;
 
-          for (let record of objectStoreValue) {
-            await objectStore.restoreRecord(record, transaction);
-            // Следующий код только для отладки обработки ошибок при восстановлении
-            /*if (outlayCategoryObjectStoreName === objectStoreName) {
+            let keyArray;
+            let recordControl;
+            switch (objectStoreName) {
+              case settingObjectStoreName:
+                recordControl = function (record) {
+                  throwErrorIfNotNull(
+                    record._diffStructure({
+                      id: { type: "string", nullable: false },
+                      value: { type: null, nullable: true },
+                    })
+                  );
+                };
+                break;
+              case outlayObjectStoreName:
+                recordControl = function (record) {
+                  throwErrorIfNotNull(
+                    record._diffStructure({
+                      id: { type: "number", nullable: false },
+                      date: { type: "date", nullable: false },
+                      sumAll: { type: "number", nullable: false },
+                      categories: {
+                        type: "array",
+                        nullable: false,
+                        array: { type: "number", nullable: true },
+                      },
+                      categoryId: { type: "number", nullable: true },
+                      sums: {
+                        type: "array",
+                        nullable: false,
+                        array: { type: "number", nullable: true },
+                      },
+                    })
+                  );
+
+                  record.sumAll = OutlayEntry.getSumAll(record);
+                };
+                break;
+              case outlayCategoryObjectStoreName:
+                recordControl = function (record) {
+                  throwErrorIfNotNull(
+                    record._diffStructure({
+                      id: { type: "number", nullable: false },
+                      parentId: { type: "number", nullable: false },
+                      name: { type: "string", nullable: false },
+                      expanded: { type: "boolean", nullable: false },
+                    })
+                  );
+                };
+                break;
+            }
+
+            for (let record of objectStoreValue) {
+              spanPercent.innerText =
+                ((++recNum / objectStoreValue.length) * 100).toFixed(0) +
+                "% (" +
+                recNum +
+                " из " +
+                objectStoreValue.length +
+                ")";
+              recordControl(record);
+            }
+          }
+
+          {
+            // Очистка таблицы
+            const liObjectStore = document.createElement("LI");
+            ulObjectStore.appendChild(liObjectStore);
+            liObjectStore.innerHTML = "Очистка таблицы: ";
+            await objectStore.clear(transaction);
+            const spanPercent = document.createElement("SPAN");
+            liObjectStore.appendChild(spanPercent);
+            spanPercent.innerHTML = "100%";
+          }
+
+          {
+            // Восстановление таблицы из архива
+            const liObjectStore = document.createElement("LI");
+            ulObjectStore.appendChild(liObjectStore);
+            liObjectStore.innerHTML = "Восстановление из архива: ";
+            const spanPercent = document.createElement("SPAN");
+            liObjectStore.appendChild(spanPercent);
+            let recNum = 0;
+
+            for (let record of objectStoreValue) {
+              await objectStore.restoreRecord(record, transaction);
+              // Следующий код только для отладки обработки ошибок при восстановлении
+              /*if (outlayCategoryObjectStoreName === objectStoreName) {
               await Category.set(record, transaction);
             } else {
               await objectStore.restoreRecord(record, transaction);
             }*/
-            spanPercent.innerText =
-              ((++recNum / objectStoreValue.length) * 100).toFixed(0) +
-              "% (" +
-              recNum +
-              " из " +
-              objectStoreValue.length +
-              ")";
+              spanPercent.innerText =
+                ((++recNum / objectStoreValue.length) * 100).toFixed(0) +
+                "% (" +
+                recNum +
+                " из " +
+                objectStoreValue.length +
+                ")";
+            }
           }
         }
+        //throw new Error("It''s OK!");
       } catch (error) {
         transaction._abortIfActive();
         OutlayRestore.divLogError(error);
@@ -286,7 +380,7 @@ export class OutlayRestore {
   static divLogError(error) {
     const div = document.createElement("DIV");
     divLog.appendChild(div);
-    div.innerText = "ОШИБКА: " + error.message;
+    div.innerText = "ОШИБКА: " + error.stack;
     div.className = "logError";
   }
 }

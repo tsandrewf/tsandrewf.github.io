@@ -7,6 +7,45 @@ export let db;
 export const settingObjectStoreName = "setting";
 export const outlayObjectStoreName = "outlay";
 export const outlayCategoryObjectStoreName = "outlayCategory";
+
+const db_objectStores = [
+  {
+    name: settingObjectStoreName,
+    keyOptions: {
+      keyPath: "id",
+      autoIncrement: false,
+    },
+  },
+  {
+    name: outlayObjectStoreName,
+    indexes: [
+      {
+        name: "date_idx",
+        keyPath: "date",
+      },
+      {
+        name: "categoryId_idx",
+        keyPath: "categories",
+        options: { unique: false, multiEntry: true },
+      },
+    ],
+  },
+  {
+    name: outlayCategoryObjectStoreName,
+    indexes: [
+      {
+        name: "parentCategoryId_idx",
+        //keyPath: "parentId"
+        // https://askvoprosy.com/voprosy/searching-for-compound-indexes-in-indexeddb
+        keyPath: ["parentId", "name"],
+      },
+    ],
+  },
+];
+
+export const db_objectStoreNames = db_objectStores.flatMap((x) => x.name);
+export const x = 0;
+
 export const outlayCategorySelectedKeyName = "outlayCategorySelected";
 export const outlayDateSelectedKeyName = "outlayDateSelected";
 export const outlaySummaryPeriodKeyName = "outlaySummaryPeriod";
@@ -20,7 +59,7 @@ export let getCategoryChilds;
 export function openDb(displayData) {
   const DBOpenRequest = window.indexedDB.open("mymoney", 1);
 
-  DBOpenRequest.onsuccess = function(event) {
+  DBOpenRequest.onsuccess = function (event) {
     // store the result of opening the database in the db variable. This is used a lot below
     db = DBOpenRequest.result;
 
@@ -30,8 +69,8 @@ export function openDb(displayData) {
       .index("parentCategoryId_idx");
 
     if ("object" === typeof index.keyPath) {
-      getCategoryChilds = async function(categoryId, transaction) {
-        const categoryChilds = await new Promise(function(resolve, reject) {
+      getCategoryChilds = async function (categoryId, transaction) {
+        const categoryChilds = await new Promise(function (resolve, reject) {
           const request = transaction
             .objectStore(outlayCategoryObjectStoreName)
             .index("parentCategoryId_idx")
@@ -39,11 +78,11 @@ export function openDb(displayData) {
               IDBKeyRange.bound([categoryId], [categoryId + 1], false, true)
             );
 
-          request.onsuccess = function() {
+          request.onsuccess = function () {
             resolve(request.result);
           };
 
-          request.onerror = function() {
+          request.onerror = function () {
             reject(request.error);
           };
         });
@@ -51,16 +90,16 @@ export function openDb(displayData) {
         return categoryChilds;
       };
     } else {
-      getCategoryChilds = async function(categoryId, transaction) {
-        const categoryChilds = await new Promise(function(resolve, reject) {
+      getCategoryChilds = async function (categoryId, transaction) {
+        const categoryChilds = await new Promise(function (resolve, reject) {
           const request = transaction
             .objectStore(outlayCategoryObjectStoreName)
             .index("parentCategoryId_idx")
             .getAll(IDBKeyRange.only(categoryId));
 
-          request.onsuccess = function() {
+          request.onsuccess = function () {
             resolve(
-              request.result.sort(function(x, y) {
+              request.result.sort(function (x, y) {
                 return x.name > y.name
                   ? 1
                   : x.name < y.name
@@ -72,7 +111,7 @@ export function openDb(displayData) {
             );
           };
 
-          request.onerror = function() {
+          request.onerror = function () {
             reject(request.error);
           };
         });
@@ -84,7 +123,7 @@ export function openDb(displayData) {
     if (displayData) displayData();
   };
 
-  DBOpenRequest.onupgradeneeded = function(event) {
+  DBOpenRequest.onupgradeneeded = function (event) {
     db = DBOpenRequest.result;
     console.log(
       'IndexedDb "' +
@@ -102,40 +141,7 @@ export function openDb(displayData) {
         console.log(
           'IndexedDb "' + db.name + '" does not exist. Trying to create'
         );
-        _createObjectStore([
-          {
-            name: settingObjectStoreName,
-            keyOptions: {
-              keyPath: "id",
-              autoIncrement: false
-            }
-          },
-          {
-            name: outlayObjectStoreName,
-            indexes: [
-              {
-                name: "date_idx",
-                keyPath: "date"
-              },
-              {
-                name: "categoryId_idx",
-                keyPath: "categories",
-                options: { unique: false, multiEntry: true }
-              }
-            ]
-          },
-          {
-            name: outlayCategoryObjectStoreName,
-            indexes: [
-              {
-                name: "parentCategoryId_idx",
-                //keyPath: "parentId"
-                // https://askvoprosy.com/voprosy/searching-for-compound-indexes-in-indexeddb
-                keyPath: ["parentId", "name"]
-              }
-            ]
-          }
-        ]);
+        _createObjectStore(db_objectStores);
         console.log('IndexedDb "' + db.name + '" was created');
     }
   };
@@ -155,7 +161,7 @@ function _createObjectStore(osOptionsArray) {
       undefined === osOptions.keyOptions
         ? {
             keyPath: "id",
-            autoIncrement: true
+            autoIncrement: true,
           }
         : osOptions.keyOptions
     );
@@ -191,7 +197,7 @@ function _createObjectStore(osOptionsArray) {
             index.keyPath,
             undefined === index.options
               ? {
-                  unique: false
+                  unique: false,
                 }
               : index.options
           );
@@ -202,7 +208,7 @@ function _createObjectStore(osOptionsArray) {
             index.keyPath[0],
             undefined === index.options
               ? {
-                  unique: false
+                  unique: false,
                 }
               : index.options
           );
@@ -220,10 +226,10 @@ export function _deleteDb() {
 
   console.log('Trying to delete IndexedDb "' + dbName + '"');
   let deleteRequest = indexedDB.deleteDatabase(dbName);
-  deleteRequest.onsuccess = function() {
+  deleteRequest.onsuccess = function () {
     console.log('IndexedDb "' + dbName + '" was deleted');
   };
-  deleteRequest.onerror = function() {
+  deleteRequest.onerror = function () {
     console.log('Error on deleting IndexedDb "' + dbName + '"');
   };
 }

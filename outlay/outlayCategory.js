@@ -5,7 +5,6 @@ import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
-import { OutlayCategoryEdit } from "./outlayCategoryEdit.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
@@ -16,10 +15,10 @@ import {
   outlayCategoryObjectStoreName,
   settingObjectStoreName,
   outlayObjectStoreName,
-  outlayCategorySelectedKeyName
+  outlayCategorySelectedKeyName,
 } from "./db.js";
 
-window.OutlayUtils_displayData = function() {
+window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
 
   OutlayUtils.displayData();
@@ -91,7 +90,7 @@ export class OutlayCategory {
     await Setting.set(retValKeyName, categoryId);
     await Setting.set(categoryHtmlKeyName, {
       content: divContent.innerHTML,
-      divContent_scrollTop: divContent.scrollTop
+      divContent_scrollTop: divContent.scrollTop,
     });
 
     history.back();
@@ -121,7 +120,7 @@ export class OutlayCategory {
         [
           outlayCategoryObjectStoreName,
           settingObjectStoreName,
-          outlayObjectStoreName
+          outlayObjectStoreName,
         ],
         "readwrite"
       );
@@ -211,19 +210,19 @@ export class OutlayCategory {
 
         await Setting.set(categoryHtmlKeyName, {
           content: divContent.innerHTML,
-          divContent_scrollTop: divContent.scrollTop
+          divContent_scrollTop: divContent.scrollTop,
         });
       }
 
-      transaction.onerror = function(event) {
+      transaction.onerror = function (event) {
         console.log("onerror");
       };
 
-      transaction.onabort = function() {
+      transaction.onabort = function () {
         console.log("onabort");
       };
 
-      transaction.oncomplete = function() {
+      transaction.oncomplete = function () {
         console.log("oncomplete");
       };
     } catch (error) {
@@ -315,38 +314,38 @@ export class OutlayCategory {
         content: [
           {
             innerHTML: "Переместить категорию",
-            href: "#func=OutlayCategoryMove"
+            href: "#func=OutlayCategoryMove",
           },
           {
             innerHTML: "Утилиты",
-            href: "#func=OutlayUtils"
-          }
-        ]
+            href: "#func=OutlayUtils",
+          },
+        ],
       },
       titleHTML: "Категории расходов",
       buttons: [
         {
           onclick: OutlayCategory.outlayCategoryNew,
           title: "Добавить категорию",
-          innerHTML: "&#10010;"
+          innerHTML: "&#10010;",
         },
         {
           onclick: OutlayCategory.outlayCategoryEdit,
           title: "Изменить название категории",
-          innerHTML: "&#9999;"
+          innerHTML: "&#9999;",
         },
         {
           onclick: OutlayCategory.outlayCategoryDel,
           title: "Удалить категорию",
-          innerHTML: "&#10006;"
-        }
-      ]
+          innerHTML: "&#10006;",
+        },
+      ],
     });
 
     NavbarBottom.show([
       { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
       { text: "Категории" },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
     divContent = document.getElementsByClassName("content")[0];
@@ -378,7 +377,7 @@ export class OutlayCategory {
         const parentNode = ulCategory.parentElement;
         parentNode.removeChild(ulCategory);
         let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-          node => "UL" === node.tagName
+          (node) => "UL" === node.tagName
         );
         {
           let categoryRestored = false;
@@ -399,7 +398,7 @@ export class OutlayCategory {
       } else {
         const categoryChildren = await Category.getChildren(categorySelectedId);
         let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-          node => "UL" === node.tagName
+          (node) => "UL" === node.tagName
         );
         if (categoryChildren.length !== ulCategoryChilds.length) {
           for (let i = 0; i < categoryChildren.length; i++) {
@@ -491,6 +490,7 @@ export class OutlayCategory {
     let ulRoot;
     if (!node) {
       ulRoot = document.createElement("UL");
+      ulRoot.className = "category";
       ulRoot.setAttribute("expanded", "true");
       ulRoot.style.paddingLeft = "0";
       const liRoot = document.createElement("LI");
@@ -561,7 +561,7 @@ export class OutlayCategory {
       {
         url: "OutlayCategory",
         divContent_scrollTop: divContent.scrollTop,
-        content: divContent.innerHTML
+        content: divContent.innerHTML,
       },
       window.title
     );
@@ -577,7 +577,7 @@ export class OutlayCategory {
       {
         url: "OutlayCategory",
         divContent_scrollTop: divContent.scrollTop,
-        content: divContent.innerHTML
+        content: divContent.innerHTML,
       },
       window.title
     );

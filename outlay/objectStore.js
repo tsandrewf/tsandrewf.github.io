@@ -11,40 +11,33 @@ export class ObjectStore {
   constructor(objectStoreName) {
     this.objectStoreName = objectStoreName;
 
-    this.restoreRecordPure = async function (record, transaction) {
-      try {
-        if (!transaction)
-          transaction = db.transaction(objectStoreName, "readwrite");
-
-        await new Promise(function (resolve, reject) {
-          let request = transaction.objectStore(objectStoreName).add(record);
-
-          request.onsuccess = function () {
-            resolve();
-          };
-
-          request.onerror = function () {
-            reject(request.error);
-          };
-        });
-      } catch (error) {
-        transaction._abortIfActive();
-        throw new Error(error);
-      }
-    };
-
-    if ("outlay" === this.objectStoreName) {
-      this.restoreRecord = async function (record, transaction) {
-        record.date = new Date(record.date);
-        await this.restoreRecordPure(record, transaction);
-      };
-    } else {
-      this.restoreRecord = this.restoreRecordPure;
-    }
-
     this.set = async function (record, transaction) {
       ObjectStore.set(this.objectStoreName, record, transaction);
     };
+  }
+
+  async restoreRecord(record, transaction) {
+    const objectStoreName = this.objectStoreName;
+
+    try {
+      if (!transaction)
+        transaction = db.transaction(objectStoreName, "readwrite");
+
+      await new Promise(function (resolve, reject) {
+        const request = transaction.objectStore(objectStoreName).add(record);
+
+        request.onsuccess = function () {
+          resolve();
+        };
+
+        request.onerror = function () {
+          reject(request.error);
+        };
+      });
+    } catch (error) {
+      transaction._abortIfActive();
+      throw new Error(error);
+    }
   }
 
   async clear(transaction) {
@@ -54,10 +47,10 @@ export class ObjectStore {
       if (!transaction) transaction = db.transaction(objectStoreName);
 
       await new Promise(function (resolve, reject) {
-        let request = transaction.objectStore(objectStoreName).clear();
+        const request = transaction.objectStore(objectStoreName).clear();
 
         request.onsuccess = function () {
-          resolve(request.result);
+          resolve();
         };
 
         request.onerror = function () {
@@ -126,7 +119,7 @@ export class ObjectStore {
         transaction = db.transaction(objectStoreName, "readwrite");
 
       const retVal = await new Promise(function (resolve, reject) {
-        let request = transaction.objectStore(objectStoreName).put(record);
+        const request = transaction.objectStore(objectStoreName).put(record);
 
         request.onsuccess = function () {
           resolve();

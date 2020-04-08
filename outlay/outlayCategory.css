@@ -9,7 +9,11 @@
   background-color: red;
 }
 
-ul {
+/*ul {
+  padding-left: 2em;
+  margin: 0;
+}*/
+.category ul {
   padding-left: 2em;
   margin: 0;
 }
@@ -28,7 +32,10 @@ body {
 /* End Убираем полосу прокрутки */
 
 /* Beg http://htmlbook.ru/faq/khochu-izmenit-vid-markera-na-drugoy-simvol-kak-eto-sdel */
-li {
+/*li {
+  list-style-type: none; /* Убираем маркеры у списка */
+/*}*/
+.category li {
   list-style-type: none; /* Убираем маркеры у списка */
 }
 /*li:before {
@@ -36,7 +43,12 @@ li {
 /*}*/
 /* End http://htmlbook.ru/faq/khochu-izmenit-vid-markera-na-drugoy-simvol-kak-eto-sdel */
 
-li span {
+/*li span {
+  font-family: sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+}*/
+.category li span {
   font-family: sans-serif;
   font-weight: bold;
   cursor: pointer;

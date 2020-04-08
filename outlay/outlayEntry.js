@@ -155,12 +155,17 @@ export class OutlayEntry {
     }
   }
 
+  static getSumAll(outlayEntry) {
+    outlayEntry.sumAll = 0;
+    for (let sum of outlayEntry.sums) {
+      outlayEntry.sumAll += sum;
+    }
+    return outlayEntry.sumAll._round(2);
+  }
+
   static async set(outlayEntry, transaction) {
     try {
-      outlayEntry.sumAll = 0;
-      for (let sum of outlayEntry.sums) {
-        outlayEntry.sumAll += sum;
-      }
+      outlayEntry.sumAll = OutlayEntry.getSumAll(outlayEntry);
 
       if (1 === outlayEntry.categories.length) {
         outlayEntry.categoryId = outlayEntry.categories[0];

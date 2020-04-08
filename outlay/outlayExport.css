@@ -23,3 +23,13 @@
 .logHidden {
   display: none;
 }
+
+.log ul {
+  padding-left: 1em;
+  margin: 0;
+}
+
+.log li {
+  list-style-type: none; /* Убираем маркеры у списка */
+  padding: 0;
+}

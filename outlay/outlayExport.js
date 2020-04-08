@@ -2,12 +2,7 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import {
-  db,
-  settingObjectStoreName,
-  outlayCategoryObjectStoreName,
-  outlayObjectStoreName
-} from "./db.js";
+import { db, db_objectStoreNames } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
 
 export class OutlayExport {
@@ -18,17 +13,17 @@ export class OutlayExport {
         content: [
           {
             innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
+            href: "Javascript:OutlayEntries_displayData()",
           },
           {
             innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
+            href: "Javascript:OutlayCategory_displayData()",
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          }
-        ]
+            href: "Javascript:OutlaySummary_displayData()",
+          },
+        ],
       },
       titleHTML: "Архивирование",
       buttons: [
@@ -37,13 +32,13 @@ export class OutlayExport {
         title: "Сохранить категорию",
         innerHTML: "&#10004;"
       }*/
-      ]
+      ],
     });
 
     NavbarBottom.show([
       { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
       { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
     document.title = "Архивирование и восстановление";
@@ -62,12 +57,7 @@ export class OutlayExport {
       return;
     }
 
-    const objectStoreNames = [
-      settingObjectStoreName,
-      outlayCategoryObjectStoreName,
-      outlayObjectStoreName
-    ];
-    const transaction = db.transaction(objectStoreNames);
+    const transaction = db.transaction(db_objectStoreNames);
     let exportJSON = "";
 
     const divLog = document.createElement("DIV");
@@ -80,7 +70,7 @@ export class OutlayExport {
       divLine.innerText = "Таблицы объектов:";
     }
 
-    for (let objectStoreName of objectStoreNames) {
+    for (let objectStoreName of db_objectStoreNames) {
       const divObjectStore = document.createElement("DIV");
       divLog.appendChild(divObjectStore);
       divObjectStore.innerText = '"' + objectStoreName + '": ';
@@ -95,10 +85,10 @@ export class OutlayExport {
         let recNum = 0;
         let objectStoreRecords = [];
 
-        await new Promise(function(resolve, reject) {
+        await new Promise(function (resolve, reject) {
           let request = transaction.objectStore(objectStoreName).openCursor();
 
-          request.onsuccess = function(event) {
+          request.onsuccess = function (event) {
             const cursor = event.target.result;
 
             if (cursor) {
@@ -116,7 +106,7 @@ export class OutlayExport {
             }
           };
 
-          request.onerror = function() {
+          request.onerror = function () {
             reject(request.error);
           };
         });
@@ -132,8 +122,7 @@ export class OutlayExport {
     }
     exportJSON = "{ " + exportJSON + " }";
 
-    const backupFileName =
-      outlayCategoryObjectStoreName + "_" + new Date()._toCurrent();
+    const backupFileName = db.name + "_" + new Date()._toCurrent();
 
     if (window.navigator.msSaveBlob) {
       // Edge
@@ -153,7 +142,7 @@ export class OutlayExport {
     window.history.replaceState(
       {
         window_scrollY: window.scrollY,
-        content: divContent.innerHTML
+        content: divContent.innerHTML,
       },
       window.title
     );
