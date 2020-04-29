@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Expenses",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "appDesc": {
+    "message": "Accounting of personal financial expenses",
+    "description": "The description of the application, displayed in the web store."
+  }
+}

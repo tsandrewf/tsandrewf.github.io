@@ -1,10 +1,11 @@
 {
-  "name": "Затраты",
+  "name": "__MSG_appName__",
   "short_name": "Затраты",
   "start_url": "outlay.html",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "Учет личных финансовых затрат",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
   "theme_color": "red",
   "icons": [
     {
