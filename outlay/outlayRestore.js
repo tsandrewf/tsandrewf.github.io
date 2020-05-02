@@ -12,6 +12,7 @@ import {
 import { ObjectStore } from "./objectStore.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { throwErrorIfNotNull } from "./base.js";
+import { localeString } from "./locale.js";
 
 let divContent;
 let divLog;
@@ -23,36 +24,31 @@ export class OutlayRestore {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()",
-          },
-          {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()",
-          },
-          {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()",
+            innerHTML: localeString.utility._capitalize(),
+            href: "#func=OutlayUtils",
           },
         ],
       },
-      titleHTML: "Восстановление",
-      buttons: [
-        /*{
-          onclick: window.save,
-          title: "Сохранить категорию",
-          innerHTML: "&#10004;"
-        }*/
-      ],
+      titleHTML: localeString.restore._capitalize(),
+      buttons: [],
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
+      {
+        text: localeString.checks._capitalize(),
+        href: 'Javascript:displayData("OutlayEntries")',
+      },
+      {
+        text: localeString.categories._capitalize(),
+        href: 'Javascript:displayData("OutlayCategory")',
+      },
+      {
+        text: localeString.results._capitalize(),
+        href: 'Javascript:displayData("OutlaySummary")',
+      },
     ]);
 
-    document.title = "Архивирование и восстановление";
+    document.title = localeString.restore._capitalize();
 
     {
       divContent = document.getElementsByClassName("content")[0];
@@ -67,7 +63,8 @@ export class OutlayRestore {
       {
         spanFilePrefix = document.createElement("SPAN");
         divContent.appendChild(spanFilePrefix);
-        spanFilePrefix.innerHTML = 'Восстановить базу данных из файла "';
+        spanFilePrefix.innerHTML =
+          localeString.restoreDatabaseFromFile._capitalize() + ' "';
         spanFilePrefix.className = "log";
         spanFilePrefix.style = "display:none";
       }
@@ -87,7 +84,7 @@ export class OutlayRestore {
       {
         divContent.appendChild(button);
         button.className = "logButton";
-        button.innerHTML = "Да";
+        button.innerHTML = localeString.yes._capitalize();
         button.onclick = function (e) {
           OutlayRestore.restore();
           e.preventDefault(); // предотвращает перемещение к "#"
@@ -102,7 +99,7 @@ export class OutlayRestore {
         OutlayRestore.divLogClear();
 
         if (0 === this.files.length) {
-          aFile.innerHTML = "Выберите файл архива";
+          aFile.innerHTML = localeString.chooseFileToRestore._capitalize();
           spanFilePrefix.style = "display:none";
           spanFileDescription.style = "display:none";
           button.className = "logHidden";
@@ -124,7 +121,7 @@ export class OutlayRestore {
       };
 
       aFile.href = "#";
-      aFile.innerHTML = "Выберите файл архива";
+      aFile.innerHTML = localeString.chooseFileToRestore._capitalize();
       aFile.onclick = function (e) {
         inputFile.click();
         e.preventDefault(); // предотвращает перемещение к "#"
@@ -156,21 +153,23 @@ export class OutlayRestore {
   }
 
   static restore() {
-    if (
-      !window.confirm(
-        "Вы действительно хотите восстановить базу данных из выбранного файла?"
-      )
-    )
-      return;
+    if (!window.confirm(localeString.confirmRestore._capitalize())) return;
 
     const inputFile = document.getElementById("inputFile");
     if (0 === inputFile.files.length) {
-      OutlayRestore.divLogError(new Error("Файл НЕ выбран"));
+      OutlayRestore.divLogError(
+        new Error(localeString.fileNotSelected._capitalize())
+      );
       return;
     }
     if (1 > inputFile.files.length) {
       OutlayRestore.divLogError(
-        new Error("Выбрано более одного файла (" + inputFile.files.length + ")")
+        new Error(
+          localeString.moreThenOneFileSelected._capitalize() +
+            " (" +
+            inputFile.files.length +
+            ")"
+        )
       );
       return;
     }
@@ -178,7 +177,13 @@ export class OutlayRestore {
     const file = inputFile.files[0];
     if ("application/json" !== file.type) {
       OutlayRestore.divLogError(
-        new Error("НЕдопустимый mime-тип (" + file.type + ") файла")
+        new Error(
+          localeString.invalidMimeType._capitalize() +
+            " (" +
+            file.type +
+            ") " +
+            localeString.ofFile
+        )
       );
       return;
     }
@@ -186,7 +191,11 @@ export class OutlayRestore {
     let reader = new FileReader();
     reader.onerror = function () {
       OutlayRestore.divLogError(new Error())(
-        'Ошибка загрузки файла "' + file.name + '"' + reader.error
+        localeString.errorFileLoad._capitalize() +
+          ' "' +
+          file.name +
+          '"' +
+          reader.error
       );
     };
 
@@ -198,7 +207,9 @@ export class OutlayRestore {
         });
       } catch (error) {
         OutlayRestore.divLogError(
-          new Error("Ошибка структуры файла: " + error)
+          new Error(
+            localeString.errorFileStructure._capitalize() + ": " + error
+          )
         );
         return;
       }
@@ -220,14 +231,14 @@ export class OutlayRestore {
         transaction.oncomplete = function () {
           const div = document.createElement("DIV");
           divLog.appendChild(div);
-          div.innerText = "База данных восстановлена!";
+          div.innerText = localeString.databaseRestored._capitalize();
         };
 
         OutlayRestore.divLogClear();
         {
           const div = document.createElement("DIV");
           divLog.appendChild(div);
-          div.innerText = "Восстановление таблиц объектов";
+          div.innerText = localeString.resorationOfTablesOfObjects._capitalize();
         }
 
         const ulObjectStoreList = document.createElement("UL");
@@ -238,13 +249,17 @@ export class OutlayRestore {
         )) {
           if (!db_objectStoreNames.includes(objectStoreName)) {
             throw new Error(
-              'НЕдопустимое имя таблицы "' + objectStoreName + '"'
+              localeString.invalidTableName._capitalize() +
+                ' "' +
+                objectStoreName +
+                '"'
             );
           }
 
           const liObjectStore = document.createElement("LI");
           ulObjectStoreList.appendChild(liObjectStore);
-          liObjectStore.innerHTML = 'Таблица "' + objectStoreName + '"';
+          liObjectStore.innerHTML =
+            localeString.table._capitalize() + ' "' + objectStoreName + '"';
 
           const ulObjectStore = document.createElement("UL");
           liObjectStore.appendChild(ulObjectStore);
@@ -255,12 +270,12 @@ export class OutlayRestore {
             // Проверка таблицы из архива
             const liObjectStore = document.createElement("LI");
             ulObjectStore.appendChild(liObjectStore);
-            liObjectStore.innerHTML = "Проверка архива: ";
+            liObjectStore.innerHTML =
+              localeString.fileToRestoreCheck._capitalize() + ": ";
             const spanPercent = document.createElement("SPAN");
             liObjectStore.appendChild(spanPercent);
             let recNum = 0;
 
-            let keyArray;
             let recordControl;
             switch (objectStoreName) {
               case settingObjectStoreName:
@@ -324,10 +339,11 @@ export class OutlayRestore {
           }
 
           {
-            // Очистка таблицы
+            // Table erase
             const liObjectStore = document.createElement("LI");
             ulObjectStore.appendChild(liObjectStore);
-            liObjectStore.innerHTML = "Очистка таблицы: ";
+            liObjectStore.innerHTML =
+              localeString.tableErase._capitalize() + ": ";
             await objectStore.clear(transaction);
             const spanPercent = document.createElement("SPAN");
             liObjectStore.appendChild(spanPercent);
@@ -335,10 +351,11 @@ export class OutlayRestore {
           }
 
           {
-            // Восстановление таблицы из архива
+            // Table restore from file
             const liObjectStore = document.createElement("LI");
             ulObjectStore.appendChild(liObjectStore);
-            liObjectStore.innerHTML = "Восстановление из архива: ";
+            liObjectStore.innerHTML =
+              localeString.tableRestoreFromFile._capitalize() + ": ";
             const spanPercent = document.createElement("SPAN");
             liObjectStore.appendChild(spanPercent);
             let recNum = 0;
@@ -380,7 +397,7 @@ export class OutlayRestore {
   static divLogError(error) {
     const div = document.createElement("DIV");
     divLog.appendChild(div);
-    div.innerText = "ОШИБКА: " + error.stack;
+    div.innerText = localeString.error._capitalize() + ": " + error.stack;
     div.className = "logError";
   }
 }

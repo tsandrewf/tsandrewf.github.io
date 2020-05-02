@@ -3,6 +3,7 @@
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
+import { localeString } from "./locale.js";
 
 let id;
 let parentId;
@@ -15,15 +16,25 @@ export class OutlayCategoryEdit {
 
       let displayDataCategory = null;
       if (!options.id && !options.parentId) {
-        throw new Error('НЕ задан ни один из параметров "id" и "parentId"');
+        throw new Error(
+          localeString.noneOfTheParametersSpecified._capitalize() +
+            '"id" ' +
+            localeString.and +
+            ' "parentId"'
+        );
       } else if (options.id && options.parentId) {
-        throw new Error('ОДНОВРЕМЕННО заданы параметры "id" и "parentId"');
+        throw new Error(
+          localeString.simutaneouslySetParameters._capitalize() +
+            ' "id"' +
+            localeString.and +
+            '"parentId"'
+        );
       } else if (options.id) {
-        document.title = "Изменение категории расходов";
+        document.title = localeString.categoryEdit._capitalize();
         window.OutlayCategorySave = OutlayCategoryEdit.saveEdit;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryEdit;
       } else if (options.parentId) {
-        document.title = "Новая категория расходов";
+        document.title = localeString.newCategory._capitalize();
         window.OutlayCategorySave = OutlayCategoryEdit.saveNew;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryNew;
       }
@@ -33,35 +44,36 @@ export class OutlayCategoryEdit {
           buttonHTML: "&#9776;",
           content: [
             {
-              innerHTML: "Чеки",
-              href: "Javascript:OutlayEntries_displayData()"
+              innerHTML: localeString.utility._capitalize(),
+              href: "#func=OutlayUtils",
             },
-            {
-              innerHTML: "Категории расходов",
-              href: "Javascript:OutlayCategory_displayData()"
-            },
-            {
-              innerHTML: "Итоги в разрезе категорий",
-              href: "Javascript:OutlaySummary_displayData()"
-            }
-          ]
+          ],
         },
-        titleHTML: "Категория затрат",
+        titleHTML: localeString.category._capitalize(),
         buttons: [
           {
             onclick: window.OutlayCategorySave,
-            title: "Сохранить категорию",
-            innerHTML: "&#10004;"
-          }
-        ]
+            title: localeString.categorySave._capitalize(),
+            innerHTML: "&#10004;",
+          },
+        ],
       });
       document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
         document.title;
 
       NavbarBottom.show([
-        { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-        { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-        { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+        {
+          text: localeString.checks._capitalize(),
+          href: 'Javascript:displayData("OutlayEntries")',
+        },
+        {
+          text: localeString.categories._capitalize(),
+          href: 'Javascript:displayData("OutlayCategory")',
+        },
+        {
+          text: localeString.results._capitalize(),
+          href: 'Javascript:displayData("OutlaySummary")',
+        },
       ]);
 
       {
@@ -77,7 +89,7 @@ export class OutlayCategoryEdit {
         ul.className = "upperCategory";
         const li = document.createElement("LI");
         li.id = "0";
-        li.innerHTML = "&#9650; Корень";
+        li.innerHTML = "&#9650; " + localeString.root._capitalize();
         ul.appendChild(li);
       }
 
@@ -122,7 +134,7 @@ export class OutlayCategoryEdit {
 
     id = Number(id);
     if (0 === id) {
-      alert("НЕЛЬЗЯ изменять название корневой категории расходов");
+      alert(localeString.rootCategoryCanNotBeChanged._capitalize());
       return;
     }
 
@@ -143,14 +155,14 @@ export class OutlayCategoryEdit {
     try {
       let categoryName = document.getElementById("categoryName").value.trim();
       if (!categoryName) {
-        alert("НЕ задано название категории");
+        alert(localeString.categoryNameNotSet._capitalize());
         return;
       }
 
       await Category.set({
         name: categoryName,
         parentId: parentId,
-        expanded: false
+        expanded: false,
       });
 
       if (0 !== parentId) {
@@ -166,13 +178,13 @@ export class OutlayCategoryEdit {
   static async saveEdit() {
     let categoryName = document.getElementById("categoryName").value.trim();
     if (!categoryName) {
-      alert("НЕ задано название категории");
+      alert(localeString.categoryNameNotSet._capitalize());
       return;
     }
 
     let category = await Category.get(id);
     if (categoryName === category.name) {
-      alert("Название категории затрат НЕ изменено");
+      alert(localeString.categoryNameNotChanged._capitalize());
       return;
     }
 

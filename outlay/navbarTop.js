@@ -56,6 +56,7 @@ export class NavbarTop {
         let divButtonInnerHTML = document.createElement("DIV");
         divButton.appendChild(divButtonInnerHTML);
         divButtonInnerHTML.innerHTML = button.innerHTML;
+        divButtonInnerHTML.title = button.title;
       }
     }
   }

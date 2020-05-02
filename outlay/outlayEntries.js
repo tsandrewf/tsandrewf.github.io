@@ -8,6 +8,7 @@ import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { windowOnloadKeyName, outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
+import { localeString } from "./locale.js";
 
 let tbodyOutlayEntries;
 
@@ -43,25 +44,31 @@ export class OutlayEntries {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Утилиты",
+            innerHTML: localeString.utility._capitalize(),
             href: "#func=OutlayUtils",
           },
         ],
       },
-      titleHTML: "Чеки",
+      titleHTML: localeString.checks._capitalize(),
       buttons: [
         {
           onclick: OutlayEntries.outlayEntryEdit,
-          title: "Добавить чек",
+          title: localeString.add._capitalizeWords() + " " + localeString.check,
           innerHTML: "&#10010;",
         },
       ],
     });
 
     NavbarBottom.show([
-      { text: "Чеки" },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
+      { text: localeString.checks._capitalize() },
+      {
+        text: localeString.categories._capitalize(),
+        href: 'Javascript:displayData("OutlayCategory")',
+      },
+      {
+        text: localeString.results._capitalize(),
+        href: 'Javascript:displayData("OutlaySummary")',
+      },
     ]);
 
     {
@@ -116,7 +123,11 @@ export class OutlayEntries {
         row.onclick = null;
         row.style.cursor = null;
         let td = row.getElementsByTagName("TD")[0];
-        td.innerHTML = td.innerHTML.replace(/Добавить/gi, "").trim();
+
+        td.innerHTML = td.innerHTML
+          .replace(new RegExp(localeString.add, "gi"), "")
+          .trim();
+
         td.innerHTML =
           td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
       } else if (entryYoungest) {
@@ -218,18 +229,20 @@ export class OutlayEntries {
 
       let tdAppend = document.createElement("TD");
       row.appendChild(tdAppend);
-      tdAppend.innerHTML =
-        "Добавить " +
+      tdAppend.innerHTML = (
+        localeString.add +
+        " " +
         dateBegNew._getMonthString() +
         " " +
         dateBegNew.getFullYear() +
-        "г.";
+        "г."
+      )._capitalizeWords();
       tdAppend.colSpan = 4;
     }
   }
 
   static async outlayEntryDelete(key) {
-    if (!window.confirm("Вы действительно хотите удалить чек?")) {
+    if (!window.confirm(localeString.confirmCheckDelete)) {
       return;
     }
 

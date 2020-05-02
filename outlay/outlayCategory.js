@@ -8,6 +8,7 @@ import { StandbyIndicator } from "./standbyIndicator.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
+import { localeString } from "./locale.js";
 
 import {
   db,
@@ -101,18 +102,16 @@ export class OutlayCategory {
 
     try {
       if (!categorySelected) {
-        throw Error("НЕ выбрана категория");
+        throw Error(localeString.noCategorySelected._capitalize());
       }
 
       let categorySelectedId = Number(categorySelected.id);
 
       if (0 === categorySelectedId) {
-        throw Error("НЕвозможно удалить корневую категорию");
+        throw Error(localeString.impossibleToDeleteRootCategory._capitalize());
       }
 
-      if (
-        !window.confirm("Вы действительно хотите удалить категорию расходов?")
-      ) {
+      if (!window.confirm(localeString.confirmCategoryDelete._capitalize())) {
         return;
       }
 
@@ -169,7 +168,11 @@ export class OutlayCategory {
           transaction.abort();
 
           throw new Error(
-            "Категорию НЕЛЬЗЯ удалить, т.к. на нее " + categoryIsUsedReason
+            localeString.categoryCanNotBeDeleted._capitalize() +
+              ", " +
+              localeString.since +
+              " " +
+              categoryIsUsedReason
           );
         }
 
@@ -189,9 +192,15 @@ export class OutlayCategory {
             transaction.abort();
 
             throw Error(
-              'Категорию НЕЛЬЗЯ удалить, т.к. на ее подкатегорию "' +
+              localeString.categoryCanNotBeDeleted._capitalize() +
+                ". " +
+                localeString.thisCategoryHasSubcategory._capitalize() +
+                " " +
+                '"' +
                 categoryDescendant.name +
-                '" ' +
+                '", ' +
+                localeString.and +
+                " " +
                 categoryIsUsedReason
             );
           }
@@ -226,7 +235,7 @@ export class OutlayCategory {
         console.log("oncomplete");
       };
     } catch (error) {
-      alert(error.message + "; " + error.fileName + "; " + error.lineNumber);
+      alert(error.message);
     }
   }
 
@@ -306,46 +315,52 @@ export class OutlayCategory {
       }
     }
 
-    document.title = "Категории расходов";
+    document.title = localeString.categories._capitalize();
 
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Переместить категорию",
+            innerHTML: localeString.moveCategory._capitalize(),
             href: "#func=OutlayCategoryMove",
           },
           {
-            innerHTML: "Утилиты",
+            innerHTML: localeString.utility._capitalize(),
             href: "#func=OutlayUtils",
           },
         ],
       },
-      titleHTML: "Категории расходов",
+      titleHTML: localeString.categories._capitalize(),
       buttons: [
         {
           onclick: OutlayCategory.outlayCategoryNew,
-          title: "Добавить категорию",
+          title: localeString.addCategory._capitalize(),
           innerHTML: "&#10010;",
         },
         {
           onclick: OutlayCategory.outlayCategoryEdit,
-          title: "Изменить название категории",
+          title: localeString.categoryNameEdit._capitalize(),
           innerHTML: "&#9999;",
         },
         {
           onclick: OutlayCategory.outlayCategoryDel,
-          title: "Удалить категорию",
+          title: localeString.categoryDelete._capitalize(),
           innerHTML: "&#10006;",
         },
       ],
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории" },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
+      {
+        text: localeString.checks._capitalize(),
+        href: 'Javascript:displayData("OutlayEntries")',
+      },
+      { text: localeString.categories._capitalize() },
+      {
+        text: localeString.results._capitalize(),
+        href: 'Javascript:displayData("OutlaySummary")',
+      },
     ]);
 
     divContent = document.getElementsByClassName("content")[0];
@@ -420,27 +435,6 @@ export class OutlayCategory {
         }
       }
     } else {
-      /*let ulRoot = document.createElement("UL");
-      ulRoot.setAttribute("expanded", "true");
-      ulRoot.style.paddingLeft = "0";
-      let liRoot = document.createElement("LI");
-      liRoot.id = "0";
-      ulRoot.appendChild(liRoot);
-      let spanExpanded = document.createElement("SPAN");
-      spanExpanded.innerHTML = expanded;
-      liRoot.appendChild(spanExpanded);
-      let spanCategoryName = document.createElement("SPAN");
-      spanCategoryName.innerHTML = "Корень";
-      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
-      liRoot.appendChild(spanCategoryName);
-      await OutlayCategory.displayTree(
-        liRoot,
-        db.transaction(outlayCategoryObjectStoreName)
-      );
-      document
-        .getElementsByClassName("content")
-        .item(0)
-        .appendChild(ulRoot);*/
       divContent.appendChild(
         await OutlayCategory.displayTree(
           null,
@@ -500,7 +494,7 @@ export class OutlayCategory {
       spanExpanded.innerHTML = expanded;
       liRoot.appendChild(spanExpanded);
       const spanCategoryName = document.createElement("SPAN");
-      spanCategoryName.innerHTML = "Корень";
+      spanCategoryName.innerHTML = localeString.root._capitalize();
       spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
       liRoot.appendChild(spanCategoryName);
 
@@ -555,6 +549,11 @@ export class OutlayCategory {
   }
 
   static outlayCategoryEdit() {
+    if (0 === Number(categorySelected.id)) {
+      alert(localeString.rootCategoryCanNotBeChanged._capitalize());
+      return;
+    }
+
     if (StandbyIndicator.isShowing()) return;
 
     window.history.replaceState(

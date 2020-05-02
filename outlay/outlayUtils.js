@@ -2,8 +2,8 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import { OutlayRestore } from "./outlayRestore.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
+import { localeString } from "./locale.js";
 
 let divContent;
 
@@ -14,36 +14,31 @@ export class OutlayUtils {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
+            innerHTML: localeString.utility._capitalize(),
+            href: "#func=OutlayUtils",
           },
-          {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
-          },
-          {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          }
-        ]
+        ],
       },
-      titleHTML: "Утилиты",
-      buttons: [
-        /*{
-          onclick: window.save,
-          title: "Сохранить категорию",
-          innerHTML: "&#10004;"
-        }*/
-      ]
+      titleHTML: localeString.utility._capitalize(),
+      buttons: [],
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      {
+        text: localeString.checks._capitalize(),
+        href: 'Javascript:displayData("OutlayEntries")',
+      },
+      {
+        text: localeString.categories._capitalize(),
+        href: 'Javascript:displayData("OutlayCategory")',
+      },
+      {
+        text: localeString.results._capitalize(),
+        href: 'Javascript:displayData("OutlaySummary")',
+      },
     ]);
 
-    document.title = "Архивирование и восстановление";
+    document.title = localeString.utility._capitalize();
 
     {
       divContent = document.getElementsByClassName("content")[0];
@@ -58,7 +53,7 @@ export class OutlayUtils {
     divUtils.className = "utils";
 
     {
-      // Архивирование
+      // Backup
       const divBackup = document.createElement("DIV");
       divUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.export;
@@ -66,18 +61,18 @@ export class OutlayUtils {
 
       const divIcon = document.createElement("DIV");
       divBackup.appendChild(divIcon);
-      // Спецсимволы
+      // Special characters
       // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
       divIcon.innerHTML = "&#128190;";
       divIcon.className = "utilIcon";
 
       const divText = document.createElement("DIV");
       divBackup.appendChild(divText);
-      divText.innerHTML = "Архивирование";
+      divText.innerHTML = localeString.backup._capitalize();
     }
 
     {
-      // Восстановление
+      // Restore
       const divBackup = document.createElement("DIV");
       divUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.restore;
@@ -85,33 +80,25 @@ export class OutlayUtils {
 
       const divIcon = document.createElement("DIV");
       divBackup.appendChild(divIcon);
-      // Спецсимволы
+      // Special characters
       // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
       divIcon.innerHTML = "&#128295;";
       divIcon.className = "utilIcon";
 
       const divText = document.createElement("DIV");
       divBackup.appendChild(divText);
-      divText.innerHTML = "Восстановление";
+      divText.innerHTML = localeString.restore._capitalize();
     }
   }
 
   static export() {
-    if (
-      !window.confirm(
-        "Вы действительно хотите архивировать базу данных расходов,"
-      )
-    )
-      return;
+    if (!window.confirm(localeString.confirmBackup._capitalize())) return;
 
     historyLengthIncreaseSet();
     location.href = "#func=OutlayExport";
   }
 
   static restore() {
-    /*window.history.pushState(null, "title");
-
-    OutlayRestore.displayData();*/
     historyLengthIncreaseSet();
     location.href = "#func=OutlayRestore";
   }

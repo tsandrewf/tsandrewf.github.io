@@ -13,6 +13,7 @@ import { OutlayExport } from "./outlayExport.js";
 import { OutlayRestore } from "./outlayRestore.js";
 import { getQueryVar } from "./url.js";
 //import { CACHE_NAME } from "./service-worker.js";
+import { Locale } from "./locale.js";
 
 window.onload = openDb(window_onload);
 
@@ -28,13 +29,13 @@ export function historyLengthIncreaseSet() {
   historyLengthIncrease = true;
 }
 
-window.displayData = async function(funcName) {
+window.displayData = async function (funcName) {
   await Setting.set(windowOnloadKeyName, funcName);
   //history.go(historyLengthInit - window.history.length);
   history.go(historyLengthInit - historyLengthCurrent);
 };
 
-window.onpopstate = async function(event) {
+window.onpopstate = async function (event) {
   if (historyLengthIncrease) {
     historyLengthCurrent++;
     historyLengthIncrease = false;
@@ -122,6 +123,8 @@ window.onpopstate = async function(event) {
 };*/
 
 async function window_onload(funcName) {
+  Locale.setUserLang();
+
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
   if ("serviceWorker" in navigator) {
@@ -131,7 +134,7 @@ async function window_onload(funcName) {
     navigator.serviceWorker
       .register(serviceWorker)
       .then(navigator.serviceWorker.ready)
-      .then(function() {
+      .then(function () {
         console.log(
           "navigator.serviceWorker.controller",
           navigator.serviceWorker.controller

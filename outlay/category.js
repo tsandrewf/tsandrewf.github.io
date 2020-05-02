@@ -7,6 +7,7 @@ import {
   getCategoryChilds,
 } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
+import { userLang, localeString } from "./locale.js";
 
 // https://habr.com/ru/company/mailru/blog/269465/
 export class Category {
@@ -203,11 +204,18 @@ export class Category {
         request.onsuccess = function () {
           if (request.result) {
             resolve(
-              " ссылается как минимум одна позиция в чеке на сумму " +
+              localeString.categoryIsUsedReason +
+                " (" +
                 request.result.sumAll.toFixed(2) +
-                " руб. за " +
-                request.result.date._toStringBrief() +
-                "г."
+                " " +
+                localeString.forDate +
+                " " +
+                request.result.date.toLocaleString(userLang, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }) +
+                ")"
             );
           } else resolve(null);
         };

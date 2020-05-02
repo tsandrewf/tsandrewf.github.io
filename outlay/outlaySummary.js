@@ -8,8 +8,9 @@ import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayUtils } from "./outlayUtils.js";
+import { localeString } from "./locale.js";
 
-window.OutlayUtils_displayData = function() {
+window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
 
   OutlayUtils.displayData();
@@ -32,7 +33,7 @@ export class OutlaySummary {
 
     return {
       dateBeg: dateBeg,
-      dateEnd: dateEnd
+      dateEnd: dateEnd,
     };
   }
 
@@ -52,27 +53,39 @@ export class OutlaySummary {
     }
 
     window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
-    document.title = "Итоги";
+    document.title = localeString.results._capitalize();
 
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",
         content: [
           {
-            innerHTML: "Утилиты",
-            href: "#func=OutlayUtils"
-          }
-        ]
+            innerHTML: localeString.utility._capitalize(),
+            href: "#func=OutlayUtils",
+          },
+        ],
       },
       titleHTML:
-        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">Итоги </div><div style="text-align:right;">с <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>по <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
-      buttons: []
+        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">' +
+        localeString.results._capitalize() +
+        ' </div><div style="text-align:right;">' +
+        localeString.from +
+        ' <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>' +
+        localeString.until +
+        ' <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
+      buttons: [],
     });
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги" }
+      {
+        text: localeString.checks._capitalize(),
+        href: 'Javascript:displayData("OutlayEntries")',
+      },
+      {
+        text: localeString.categories._capitalize(),
+        href: 'Javascript:displayData("OutlayCategory")',
+      },
+      { text: localeString.results._capitalize() },
     ]);
 
     {
@@ -137,7 +150,7 @@ export class OutlaySummary {
 
     let outlayEntries = await OutlayEntry.getEntries({
       dateBeg: dateBeg,
-      dateEnd: dateEnd
+      dateEnd: dateEnd,
     });
 
     for (let entry of outlayEntries) {
@@ -154,7 +167,7 @@ export class OutlaySummary {
           }
           summaries.set(categoryId, {
             sumAll: summaries.get(categoryId).sumAll + entry.sums[i],
-            sumOnly: sumOnly
+            sumOnly: sumOnly,
           });
           const category = await Category.get(categoryId);
           if (!category) break;

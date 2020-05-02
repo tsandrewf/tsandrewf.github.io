@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202003081513";
+const CACHE_NAME = "outlay_v_202005021307";
 
 let cacheUrls = [
   // HTML
@@ -28,6 +28,7 @@ let cacheUrls = [
   "./db.js",
   "./db_getAll_shim.js",
   "./IDBTransaction.js",
+  "./locale.js",
   "./navbarBottom.js",
   "./navbarTop.js",
   "./number.js",
@@ -41,6 +42,7 @@ let cacheUrls = [
   "./outlaySummary.js",
   "./outlayUtils.js",
   "./setting.js",
+  "./string.js",
   "./standbyIndicator.js",
   "./url.js",
   // PNG

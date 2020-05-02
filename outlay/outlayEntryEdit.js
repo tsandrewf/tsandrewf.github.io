@@ -8,6 +8,7 @@ import { OutlayEntry } from "./outlayEntry.js";
 import { Setting } from "./setting.js";
 import { retValKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
+import { localeString } from "./locale.js";
 
 let outlayTBody;
 let entryId;
@@ -86,7 +87,7 @@ export class OutlayEntryEdit {
 
     aCategory.innerHTML = categoryId
       ? (await Category.get(Number(categoryId))).name
-      : "НЕ задана";
+      : localeString.notSet._capitalizeWords();
   }
 
   static async outlayEntryItemNew() {
@@ -129,7 +130,7 @@ export class OutlayEntryEdit {
         rowNum: rowNum,
         sums: Array.prototype.slice
           .call(content.getElementsByTagName("INPUT"))
-          .flatMap(x => [x.value])
+          .flatMap((x) => [x.value]),
       },
       window.title
     );
@@ -150,31 +151,27 @@ export class OutlayEntryEdit {
       menu: {
         buttonHTML: "&#9776;",
         content: [
-          { innerHTML: "Чеки", href: "Javascript:OutlayEntries_displayData()" },
           {
-            innerHTML: "Категории расходов",
-            href: "Javascript:OutlayCategory_displayData()"
+            innerHTML: localeString.utility._capitalize(),
+            href: "#func=OutlayUtils",
           },
-          {
-            innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
-          }
-        ]
+        ],
       },
       titleHTML:
-        'Чек за <input type="date" id="iptDate" oninput="OutlayEntryEdit_dateChanged(this.value)" />',
+        localeString.check._capitalize() +
+        ' <input type="date" id="iptDate" oninput="OutlayEntryEdit_dateChanged(this.value)" />',
       buttons: [
         {
           onclick: OutlayEntryEdit.save,
-          title: "Сохранить",
-          innerHTML: "&#10004;"
+          title: localeString.save._capitalize(),
+          innerHTML: "&#10004;",
         },
         {
           onclick: OutlayEntryEdit.outlayEntryItemNew,
-          title: "Новая позиция",
-          innerHTML: "&#10010;"
-        }
-      ]
+          title: localeString.newRecord._capitalize(),
+          innerHTML: "&#10010;",
+        },
+      ],
     });
     {
       document
@@ -184,15 +181,26 @@ export class OutlayEntryEdit {
     }
 
     NavbarBottom.show([
-      { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
-      { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      {
+        text: localeString.checks._capitalize(),
+        href: 'Javascript:displayData("OutlayEntries")',
+      },
+      {
+        text: localeString.categories._capitalize(),
+        href: 'Javascript:displayData("OutlayCategory")',
+      },
+      {
+        text: localeString.results._capitalize(),
+        href: 'Javascript:displayData("OutlaySummary")',
+      },
     ]);
 
     let divNewString = document.createElement("DIV");
     document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
     divNewString.className = "new-string";
-    divNewString.innerHTML = 'Итого: <span id="sumAll">sumAll</span>';
+    divNewString.innerHTML =
+      localeString.total._capitalizeWords() +
+      ': <span id="sumAll">sumAll</span>';
 
     const content = document.getElementsByClassName("content")[0];
 
@@ -245,10 +253,10 @@ export class OutlayEntryEdit {
           date: new Date(await Setting.get(outlayDateSelectedKeyName)),
           sumAll: 0,
           categories: [null],
-          sums: [null]
+          sums: [null],
         };
 
-    if (outlayEntry.date) {
+    if (!isNaN(outlayEntry.date)) {
       document.getElementById("iptDate").value = outlayEntry.date._toForm();
     }
     document.getElementById("sumAll").innerHTML = outlayEntry.sumAll.toFixed(2);
@@ -283,9 +291,15 @@ export class OutlayEntryEdit {
 
   static async save() {
     try {
-      const date = new Date(document.getElementById("iptDate").value);
-      if (!date) {
-        throw Error("НЕ задана дата чека");
+      const dateString = document.getElementById("iptDate").value;
+      if (!dateString) {
+        throw Error(localeString.checkDateNotSet._capitalize());
+      }
+      const date = new Date(dateString);
+      if (isNaN(date)) {
+        throw Error(
+          localeString.invalidDate._capitalize() + ' "' + dateString + '"'
+        );
       }
 
       let outlayEntry = {
@@ -293,7 +307,7 @@ export class OutlayEntryEdit {
         sumAll: 0,
         categoryId: null,
         categories: [],
-        sums: []
+        sums: [],
       };
       if (entryId) {
         outlayEntry.id = entryId;
