@@ -1,6 +1,6 @@
 "use strict";
 
-import { localeString } from "./locale.js";
+import { userLang, localeString } from "./locale.js";
 
 function padStr(i) {
   return i < 10 ? "0" + i : "" + i;
@@ -31,14 +31,22 @@ Date.prototype._toForm = function () {
   );
 };
 
+// https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
 Date.prototype._toStringBrief = function () {
-  return (
-    padStr(this.getDate()) +
-    "." +
-    padStr(this.getMonth() + 1) +
-    "." +
-    this.getFullYear()
-  );
+  return this.toLocaleDateString(userLang, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
+
+Date.prototype._getMonthString = function () {
+  const monthsAndYear = this.toLocaleDateString(userLang, {
+    year: "numeric",
+    month: "long",
+  });
+
+  return monthsAndYear.substr(0, monthsAndYear.indexOf(" "));
 };
 
 Date.prototype._toStringBriefWithTime = function () {
@@ -94,24 +102,4 @@ Date.prototype._getYearBeg = function () {
       0
     )
   );
-};
-
-Date.prototype._getMonthString = function () {
-  const monthNames = [
-    "январь",
-    "февраль",
-    "март",
-    "апрель",
-    "май",
-    "июнь",
-    "июль",
-    "август",
-    "сентябрь",
-    "октябрь",
-    "ноябрь",
-    "декабрь",
-  ];
-
-  //return monthNames[this.getMonth()];
-  return localeString.monthNames[this.getMonth()];
 };

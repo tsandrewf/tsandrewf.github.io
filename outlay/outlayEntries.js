@@ -179,7 +179,7 @@ export class OutlayEntries {
       tdDate.innerHTML =
         outlayEntry.date && outlayEntry.date instanceof Date
           ? outlayEntry.date._toStringBrief()
-          : "НЕ задана";
+          : localeString.notSet._capitalize();
 
       let category;
       if (outlayEntriesDateMinCalc >= outlayEntry.date) {

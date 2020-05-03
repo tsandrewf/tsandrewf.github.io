@@ -4,20 +4,6 @@ export let userLang, localeString;
 
 const localeStringArray = {
   de: {
-    monthNames: [
-      "januar",
-      "februar",
-      "märz",
-      "april",
-      "kann",
-      "juni",
-      "juli",
-      "august",
-      "september",
-      "oktober",
-      "november",
-      "dezember",
-    ],
     add: "hinzufügen",
     addCategory: "Kategorie hinzufügen",
     and: "und",
@@ -80,21 +66,8 @@ const localeStringArray = {
     utility: "nützlichkeit",
     yes: "ja",
   },
+
   en: {
-    monthNames: [
-      "january",
-      "february",
-      "march",
-      "april",
-      "may",
-      "june",
-      "july",
-      "august",
-      "september",
-      "october",
-      "november",
-      "December",
-    ],
     add: "add",
     addCategory: "add category",
     and: "and",
@@ -156,21 +129,8 @@ const localeStringArray = {
     utility: "utility",
     yes: "yes",
   },
+
   ru: {
-    monthNames: [
-      "январь",
-      "февраль",
-      "март",
-      "апрель",
-      "май",
-      "июнь",
-      "июль",
-      "август",
-      "сентябрь",
-      "октябрь",
-      "ноябрь",
-      "декабрь",
-    ],
     add: "добавить",
     addCategory: "добавить категорию",
     and: "и",
