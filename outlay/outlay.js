@@ -139,6 +139,9 @@ async function window_onload(funcName) {
           "navigator.serviceWorker.controller",
           navigator.serviceWorker.controller
         );
+        // ToDo!
+        // Почему-то в EDGE при первом запуске после регистрации worker-а
+        // navigator.serviceWorker.controller = null
         navigator.serviceWorker.controller.postMessage("outlay.html_onload");
         console.log('Sended message "outlay.html_onload"');
       });

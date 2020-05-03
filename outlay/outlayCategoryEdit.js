@@ -24,7 +24,7 @@ export class OutlayCategoryEdit {
         );
       } else if (options.id && options.parentId) {
         throw new Error(
-          localeString.simutaneouslySetParameters._capitalize() +
+          localeString.simultaneouslySetParameters._capitalize() +
             ' "id"' +
             localeString.and +
             '"parentId"'

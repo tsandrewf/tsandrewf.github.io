@@ -165,7 +165,7 @@ export class OutlayRestore {
     if (1 > inputFile.files.length) {
       OutlayRestore.divLogError(
         new Error(
-          localeString.moreThenOneFileSelected._capitalize() +
+          localeString.moreThanOneFileSelected._capitalize() +
             " (" +
             inputFile.files.length +
             ")"
@@ -238,7 +238,7 @@ export class OutlayRestore {
         {
           const div = document.createElement("DIV");
           divLog.appendChild(div);
-          div.innerText = localeString.resorationOfTablesOfObjects._capitalize();
+          div.innerText = localeString.restorationOfTablesOfObjects._capitalize();
         }
 
         const ulObjectStoreList = document.createElement("UL");
