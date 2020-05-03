@@ -1,0 +1,11 @@
+{
+  "appName": {
+    "message": "Dépenses"
+  },
+  "appShortName": {
+    "message": "Dépenses"
+  },
+  "appDesc": {
+    "message": "Comptabilité des dépenses financières personnelles"
+  }
+}

@@ -2,7 +2,10 @@
   "appName": {
     "message": "Ausgaben"
   },
+  "appShortName": {
+    "message": "Ausgaben"
+  },
   "appDesc": {
-    "message": "bilanzierung persönlicher finanzieller ausgaben"
+    "message": "Bilanzierung persönlicher finanzieller ausgaben"
   }
 }

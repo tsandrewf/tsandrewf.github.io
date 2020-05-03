@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "short_name": "Затраты",
+  "short_name": "__MSG_appShortName__",
   "start_url": "outlay.html",
   "display": "standalone",
   "background_color": "#fff",
