@@ -65,14 +65,38 @@ export class OutlaySummary {
           },
         ],
       },
-      titleHTML:
-        '<div style="display: flex;flex-direction: row;align-items: center;"><div style="margin: 0 0.5em;">' +
-        localeString.results._capitalize() +
-        ' </div><div style="text-align:right;">' +
-        localeString.from +
-        ' <input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" /><br>' +
-        localeString.until +
-        ' <input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" /></div></div>',
+      titleHTML: localeString.writeFromLeftToRight
+        ? '<div style="display: flex;flex-direction: row;align-items: center;">' +
+          '<div style="margin: 0 0.5em;">' +
+          localeString.results._capitalize() +
+          " " +
+          "</div>" +
+          '<div style="text-align:right;">' +
+          localeString.from +
+          " " +
+          '<input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" />' +
+          "<br>" +
+          localeString.until +
+          " " +
+          '<input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" />' +
+          "</div>" +
+          "</div>"
+        : '<div style="display: flex;flex-direction: row;align-items: center;">' +
+          '<div style="text-align:left;">' +
+          '<input type="date" id="iptDateBeg" oninput="OutlaySummary_dateChanged()" />' +
+          " " +
+          localeString.from +
+          "<br>" +
+          '<input type="date" id="iptDateEnd" oninput="OutlaySummary_dateChanged()" />' +
+          " " +
+          localeString.until +
+          "</div>" +
+          '<div style="margin: 0 0.5em;">' +
+          " " +
+          localeString.results._capitalize() +
+          " " +
+          "</div>" +
+          "</div>",
       buttons: [],
     });
 

@@ -3,7 +3,74 @@
 export let userLang, localeString;
 
 const localeStringArray = {
+  ar: {
+    writeFromLeftToRight: false,
+
+    add: "أضف",
+    addCategory: "أضف فئة",
+    and: "و",
+    backup: "أرشفة",
+    category: "الفئة",
+    categoryCanNotBeDeleted: "لا يمكن حذف الفئة",
+    categoryDelete: "حذف الفئة",
+    categoryEdit: "تغيير الفئة",
+    categoryIsUsedReason: "يشير عنصر تحقق واحد على الأقل إلى ذلك",
+    categoryNameEdit: "تغيير اسم الفئة",
+    categoryNameNotChanged: "لم يتغير اسم الفئة",
+    categoryNameNotSet: "لم يتم تعيين اسم الفئة",
+    categorySave: "сохранить категорию",
+    categories: "حفظ الفئة",
+    check: "تحقق",
+    checkDateNotSet: "لم يتم تحديد تاريخ التحقق",
+    checks: "تحقق",
+    chooseFileToRestore: "حدد ملف لاستعادته",
+    confirmBackup: "هل أنت متأكد أنك تريد أرشفة قاعدة بيانات النفقات؟",
+    confirmCategoryDelete: "هل أنت متأكد أنك تريد حذف فئة المصاريف؟",
+    confirmCheckDelete: "هل أنت متأكد أنك تريد حذف الشيك؟",
+    confirmRestore:
+      "هل أنت متأكد من أنك تريد استعادة قاعدة البيانات من الملف المحدد؟",
+    databaseRestored: "استعادة قاعدة البيانات",
+    error: "خطأ",
+    errorFileLoad: "خطأ في تحميل الملف",
+    errorFileStructure: "خطأ في بنية الملف",
+    fileNotSelected: "الملف غير محدد",
+    fileToRestoreCheck: "تحقق من ملف الاسترداد",
+    forDate: "ل",
+    from: "مع",
+    invalidDate: "تاريخ خاطئ",
+    invalidMimeType: "نوع mime غير صالح",
+    invalidTableName: "اسم جدول غير صالح",
+    impossibleToDeleteRootCategory: "غير قادر على حذف فئة الجذر",
+    moreThanOneFileSelected: "تم اختيار أكثر من ملف",
+    moveCategory: "نقل الفئة",
+    newCategory: "فئة جديدة",
+    newRecord: "دخول جديد",
+    noCategorySelected: "لم يتم تحديد فئة",
+    noneOfTheParametersSpecified: "لم يتم تحديد أي من المعلمات",
+    notSet: "غير محدد",
+    ofFile: "ملف",
+    restore: "الانتعاش",
+    restoreDatabaseFromFile: "استعادة قاعدة البيانات من الملف",
+    results: "النتائج",
+    restorationOfTablesOfObjects: "استعادة جداول الأشياء",
+    root: "الجذر",
+    rootCategoryCanNotBeChanged: "لا يمكن تغيير فئة الجذر",
+    save: "حفظ",
+    simultaneouslySetParameters: "تعيين المعلمات في وقت واحد",
+    since: "منذ ذلك الحين",
+    table: "طاولة",
+    tableErase: "تنظيف الطاولة",
+    tableRestoreFromFile: "استعادة جدول من أرشيف",
+    thisCategoryHasSubcategory: "هذه الفئة لديها فئة فرعية",
+    total: "المجموع",
+    until: "من قبل",
+    utility: "المرافق",
+    yes: "نعم",
+  },
+
   de: {
+    writeFromLeftToRight: true,
+
     add: "hinzufügen",
     addCategory: "Kategorie hinzufügen",
     and: "und",
@@ -68,6 +135,8 @@ const localeStringArray = {
   },
 
   en: {
+    writeFromLeftToRight: true,
+
     add: "add",
     addCategory: "add category",
     and: "and",
@@ -131,6 +200,8 @@ const localeStringArray = {
   },
 
   es: {
+    writeFromLeftToRight: true,
+
     add: "añadir",
     addCategory: "añadir categoría",
     and: "y",
@@ -195,6 +266,8 @@ const localeStringArray = {
   },
 
   fr: {
+    writeFromLeftToRight: true,
+
     add: "ajouter",
     addCategory: "ajouter une catégorie",
     and: "et",
@@ -261,6 +334,8 @@ const localeStringArray = {
   },
 
   hi: {
+    writeFromLeftToRight: true,
+
     add: "जोड़ना",
     addCategory: "श्रेणी जोड़ें",
     and: "और",
@@ -324,6 +399,8 @@ const localeStringArray = {
   },
 
   it: {
+    writeFromLeftToRight: true,
+
     add: "aggiungere",
     addCategory: "aggiungi categoria",
     and: "e",
@@ -391,6 +468,8 @@ const localeStringArray = {
   },
 
   ja: {
+    writeFromLeftToRight: true,
+
     add: "追加する",
     addCategory: "カテゴリを追加",
     and: "と",
@@ -454,6 +533,8 @@ const localeStringArray = {
   },
 
   ms: {
+    writeFromLeftToRight: true,
+
     add: "tambah",
     addCategory: "tambah kategori",
     and: "dan",
@@ -519,6 +600,8 @@ const localeStringArray = {
   },
 
   pt: {
+    writeFromLeftToRight: true,
+
     add: "adicionar",
     addCategory: "adicionar categoria",
     and: "e",
@@ -584,6 +667,8 @@ const localeStringArray = {
   },
 
   ru: {
+    writeFromLeftToRight: true,
+
     add: "добавить",
     addCategory: "добавить категорию",
     and: "и",
@@ -648,6 +733,8 @@ const localeStringArray = {
   },
 
   tr: {
+    writeFromLeftToRight: true,
+
     add: "eklemek",
     addCategory: "kategori ekle",
     and: "ve",
@@ -712,6 +799,8 @@ const localeStringArray = {
   },
 
   zh: {
+    writeFromLeftToRight: true,
+
     add: "加",
     addCategory: "添加类别",
     and: "和",
