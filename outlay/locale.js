@@ -1,5 +1,8 @@
 "use strict";
 
+import { userLangCodeKeyName } from "./db.js";
+import { Setting } from "./setting.js";
+
 export let userLang, localeString;
 
 export const localeStringArray = {
@@ -44,6 +47,7 @@ export const localeStringArray = {
     invalidMimeType: "نوع mime غير صالح",
     invalidTableName: "اسم جدول غير صالح",
     impossibleToDeleteRootCategory: "غير قادر على حذف فئة الجذر",
+    language: "اللسان",
     moreThanOneFileSelected: "تم اختيار أكثر من ملف",
     moveCategory: "نقل الفئة",
     newCategory: "فئة جديدة",
@@ -113,6 +117,7 @@ export const localeStringArray = {
     invalidDate: "ungültiges datum",
     invalidMimeType: "ungültiger mime-Typ",
     invalidTableName: "ungültiger tabellenname",
+    language: "die Sprache",
     moreThanOneFileSelected: "mehr als eine datei ausgewählt",
     moveCategory: "kategorie verschieben",
     newCategory: "neue Kategorie",
@@ -180,6 +185,7 @@ export const localeStringArray = {
     invalidDate: "invalid date",
     invalidMimeType: "invalid mime-type",
     invalidTableName: "invalid table name",
+    language: "language",
     moreThanOneFileSelected: "more than one file selected",
     moveCategory: "move category",
     newCategory: "new category",
@@ -249,6 +255,7 @@ export const localeStringArray = {
     invalidDate: "fecha invalida",
     invalidMimeType: "tipo mime no válido",
     invalidTableName: "nombre de tabla inválido",
+    language: "la lengua",
     moreThanOneFileSelected: "más de un archivo seleccionado",
     moveCategory: "mover categoría",
     newCategory: "nueva categoría",
@@ -319,6 +326,7 @@ export const localeStringArray = {
     invalidMimeType: "تاریخ اشتباه",
     invalidTableName: "نام جدول نامعتبر است",
     impossibleToDeleteRootCategory: "قادر به حذف رده اصلی نیست",
+    language: "زبان",
     moreThanOneFileSelected: "بیش از یک پرونده انتخاب شد",
     moveCategory: "دسته حرکت",
     newCategory: "دسته جدید",
@@ -388,6 +396,7 @@ export const localeStringArray = {
     invalidDate: "date invalide",
     invalidMimeType: "type MIME non valide",
     invalidTableName: "nom de table non valide",
+    language: "le langage",
     moreThanOneFileSelected: "plusieurs fichiers sélectionnés",
     moveCategory: "déplacer la catégorie",
     newCategory: "nouvelle catégorie",
@@ -458,6 +467,7 @@ export const localeStringArray = {
     invalidMimeType: "अवैध माइम प्रकार",
     invalidTableName: "अमान्य तालिका नाम",
     impossibleToDeleteRootCategory: "रूट श्रेणी को हटाने में असमर्थ",
+    language: "जीभ",
     moreThanOneFileSelected: "एक से अधिक फ़ाइल चयनित हैं",
     moveCategory: "श्रेणी को स्थानांतरित करें",
     newCategory: "नई श्रेणी",
@@ -529,6 +539,7 @@ export const localeStringArray = {
     invalidTableName: "nome della tabella non valido",
     impossibleToDeleteRootCategory:
       "impossibile eliminare la categoria principale",
+    language: "la lingua",
     moreThanOneFileSelected: "più di un file selezionato",
     moveCategory: "sposta categoria",
     newCategory: "nuova categoria",
@@ -597,6 +608,7 @@ export const localeStringArray = {
     invalidMimeType: "סוג mime לא חוקי",
     invalidTableName: "שם טבלה לא חוקי",
     impossibleToDeleteRootCategory: "אין אפשרות למחוק קטגוריית שורש",
+    language: "כושר דבור",
     moreThanOneFileSelected: "יותר מקובץ אחד נבחר",
     moveCategory: "להעביר קטגוריה",
     newCategory: "קטגוריה חדשה",
@@ -665,6 +677,7 @@ export const localeStringArray = {
     invalidMimeType: "無効なMIMEタイプ",
     invalidTableName: "無効なテーブル名",
     impossibleToDeleteRootCategory: "ルートカテゴリを削除できません",
+    language: "舌",
     moreThanOneFileSelected: "複数のファイルが選択されています",
     moveCategory: "カテゴリを移動",
     newCategory: "新しいカテゴリー",
@@ -735,6 +748,7 @@ export const localeStringArray = {
     invalidMimeType: "jenis mime tidak sah",
     invalidTableName: "nama jadual tidak sah",
     impossibleToDeleteRootCategory: "tidak dapat menghapus kategori root",
+    language: "lidah",
     moreThanOneFileSelected: "lebih daripada satu fail dipilih",
     moveCategory: "kategori pindah",
     newCategory: "kategori baru",
@@ -805,6 +819,7 @@ export const localeStringArray = {
     invalidMimeType: "tipo MIME inválido",
     invalidTableName: "nome de tabela inválido",
     impossibleToDeleteRootCategory: "incapaz de excluir a categoria raiz",
+    language: "a lingua",
     moreThanOneFileSelected: "mais de um arquivo selecionado",
     moveCategory: "mover categoria",
     newCategory: "nova categoria",
@@ -873,6 +888,7 @@ export const localeStringArray = {
     invalidMimeType: "недопустимый mime-тип",
     invalidTableName: "недопустимое имя таблицы",
     impossibleToDeleteRootCategory: "невозможно удалить корневую категорию",
+    language: "язык",
     moreThanOneFileSelected: "выбрано более одного файла",
     moveCategory: "переместить категорию",
     newCategory: "новая категория",
@@ -942,6 +958,7 @@ export const localeStringArray = {
     invalidMimeType: "geçersiz mime türü",
     invalidTableName: "geçersiz tablo adı",
     impossibleToDeleteRootCategory: "kök kategori silinemiyor",
+    language: "dil",
     moreThanOneFileSelected: "birden fazla dosya seçildi",
     moveCategory: "kategoriyi taşı",
     newCategory: "yeni kategori",
@@ -1009,6 +1026,7 @@ export const localeStringArray = {
     invalidMimeType: "无效的哑剧类型",
     invalidTableName: "无效的表名",
     impossibleToDeleteRootCategory: "无法删除根类别",
+    language: "舌頭",
     moreThanOneFileSelected: "选择了多个文件",
     moveCategory: "移动类别",
     newCategory: "新类别",
@@ -1038,21 +1056,17 @@ export const localeStringArray = {
   },
 };
 
-export const langNames = Object.entries(localeStringArray).map(function (
-  value
-) {
-  return value[1]._langName;
-});
-
 export class Locale {
-  static setUserLang(userLangToSet) {
+  static async setUserLang(userLangToSet) {
     if (userLangToSet) {
       userLang = userLangToSet;
+      await Setting.set(userLangCodeKeyName, userLang);
     } else {
-      // https://qna.habr.com/q/338809
-      userLang = (navigator.language || navigator.userLanguage)
-        .substr(0, 2)
-        .toLowerCase();
+      userLang = await Setting.get(userLangCodeKeyName);
+
+      if (!userLang) {
+        userLang = Locale.getNavigatorLanguage();
+      }
     }
 
     if (!Object.getOwnPropertyDescriptor(localeStringArray, userLang)) {
@@ -1063,5 +1077,12 @@ export class Locale {
 
   static getUserLang() {
     return userLang;
+  }
+
+  static getNavigatorLanguage() {
+    // https://qna.habr.com/q/338809
+    return (navigator.language || navigator.userLanguage)
+      .substr(0, 2)
+      .toLowerCase();
   }
 }

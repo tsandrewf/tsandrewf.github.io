@@ -53,6 +53,7 @@ export const windowOnloadKeyName = "windowOnload";
 export const retValKeyName = "retVal";
 export const categoryHtmlKeyName = "categoryHtml";
 export const outlayEntriesDateMinCalcKeyName = "outlayEntriesDateMinCalc";
+export const userLangCodeKeyName = "userLangCode";
 
 export let getCategoryChilds;
 

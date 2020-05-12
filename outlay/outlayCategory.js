@@ -326,6 +326,10 @@ export class OutlayCategory {
             href: "#func=OutlayCategoryMove",
           },
           {
+            innerHTML: localeString.settings._capitalize(),
+            href: "#func=OutlaySettings",
+          },
+          {
             innerHTML: localeString.utility._capitalize(),
             href: "#func=OutlayUtils",
           },

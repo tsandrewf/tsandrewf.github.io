@@ -1,0 +1,23 @@
+.tableOutlaySettings {
+  width: 100%;
+  font-family: sans-serif;
+  border-collapse: collapse;
+}
+
+.tableOutlaySettings tbody tr:nth-child(odd) {
+  background-color: #ccffff;
+}
+
+.tableOutlaySettings tbody tr td:nth-child(1) {
+  width: 50%;
+  text-align: right;
+}
+
+.tableOutlaySettings tbody tr td:nth-child(2) {
+  width: 50%;
+  text-align: left;
+}
+
+.tableOutlaySettings tbody tr td {
+  padding: 10px;
+}

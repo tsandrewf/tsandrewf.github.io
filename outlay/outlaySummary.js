@@ -60,6 +60,10 @@ export class OutlaySummary {
         buttonHTML: "&#9776;",
         content: [
           {
+            innerHTML: localeString.settings._capitalize(),
+            href: "#func=OutlaySettings",
+          },
+          {
             innerHTML: localeString.utility._capitalize(),
             href: "#func=OutlayUtils",
           },

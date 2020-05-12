@@ -48,22 +48,44 @@ export class OutlaySettings {
     }
 
     {
-      // Locale
-      const selectLangs = document.createElement("SELECT");
-      divContent.appendChild(selectLangs);
-      selectLangs.oninput = function (event) {
-        Locale.setUserLang(
-          selectLangs.options[selectLangs.selectedIndex].value
-        );
-        OutlaySettings.displayData();
-      };
-      for (let locale of Object.entries(localeStringArray)) {
-        const optionLang = document.createElement("OPTION");
-        selectLangs.appendChild(optionLang);
-        optionLang.value = locale[0];
-        optionLang.innerText = locale[1]._langName;
-        if (Locale.getUserLang() === locale[0]) {
-          optionLang.selected = true;
+      const tableOutlaySettings = document.createElement("TABLE");
+      divContent.appendChild(tableOutlaySettings);
+      tableOutlaySettings.className = "tableOutlaySettings";
+      const tbodyOutlaySettings = document.createElement("TBODY");
+      tableOutlaySettings.appendChild(tbodyOutlaySettings);
+
+      {
+        // Locale
+        const tr = document.createElement("TR");
+        tbodyOutlaySettings.appendChild(tr);
+        {
+          const td = document.createElement("TD");
+          tr.appendChild(td);
+          td.innerHTML = localeStringArray[
+            Locale.getNavigatorLanguage()
+          ].language._capitalize();
+        }
+        {
+          const td = document.createElement("TD");
+          tr.appendChild(td);
+
+          const selectLangs = document.createElement("SELECT");
+          td.appendChild(selectLangs);
+          selectLangs.onchange = async function (event) {
+            await Locale.setUserLang(
+              selectLangs.options[selectLangs.selectedIndex].value
+            );
+            OutlaySettings.displayData();
+          };
+          for (let locale of Object.entries(localeStringArray)) {
+            const optionLang = document.createElement("OPTION");
+            selectLangs.appendChild(optionLang);
+            optionLang.value = locale[0];
+            optionLang.innerText = locale[1]._langName;
+            if (Locale.getUserLang() === locale[0]) {
+              optionLang.selected = true;
+            }
+          }
         }
       }
     }
