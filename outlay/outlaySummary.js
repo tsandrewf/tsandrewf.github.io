@@ -65,7 +65,7 @@ export class OutlaySummary {
           },
         ],
       },
-      titleHTML: localeString.writeFromLeftToRight
+      titleHTML: localeString._writeFromLeftToRight
         ? '<div style="display: flex;flex-direction: row;align-items: center;">' +
           '<div style="margin: 0 0.5em;">' +
           localeString.results._capitalize() +

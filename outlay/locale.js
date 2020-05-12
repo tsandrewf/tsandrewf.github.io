@@ -2,9 +2,12 @@
 
 export let userLang, localeString;
 
-const localeStringArray = {
+export const localeStringArray = {
   ar: {
-    writeFromLeftToRight: false,
+    // https://www.internationalphoneticalphabet.org/languages/language-names-in-native-language/
+    // Арабский
+    _langName: "العربية",
+    _writeFromLeftToRight: false,
 
     add: "أضف",
     addCategory: "أضف فئة",
@@ -56,6 +59,7 @@ const localeStringArray = {
     root: "الجذر",
     rootCategoryCanNotBeChanged: "لا يمكن تغيير فئة الجذر",
     save: "حفظ",
+    settings: "الإعدادات",
     simultaneouslySetParameters: "تعيين المعلمات في وقت واحد",
     since: "منذ ذلك الحين",
     table: "طاولة",
@@ -69,7 +73,9 @@ const localeStringArray = {
   },
 
   de: {
-    writeFromLeftToRight: true,
+    // Немецкий
+    _langName: "Deutsch",
+    _writeFromLeftToRight: true,
 
     add: "hinzufügen",
     addCategory: "Kategorie hinzufügen",
@@ -122,6 +128,7 @@ const localeStringArray = {
     root: "wurzel",
     rootCategoryCanNotBeChanged: "stammkategorie kann nicht geändert werden",
     save: "speichern",
+    settings: "einstellungen",
     simultaneouslySetParameters: "gleichzeitig parameter einstellen",
     since: "schon seit",
     thisCategoryHasSubcategory: "diese kategorie hat eine unterkategorie",
@@ -135,7 +142,8 @@ const localeStringArray = {
   },
 
   en: {
-    writeFromLeftToRight: true,
+    _langName: "English",
+    _writeFromLeftToRight: true,
 
     add: "add",
     addCategory: "add category",
@@ -187,6 +195,7 @@ const localeStringArray = {
     root: "root",
     rootCategoryCanNotBeChanged: "root category cannot be changed",
     save: "save",
+    settings: "settings",
     simultaneouslySetParameters: "simultaneously set parameters",
     since: "since",
     thisCategoryHasSubcategory: "this category has subcategory",
@@ -200,7 +209,9 @@ const localeStringArray = {
   },
 
   es: {
-    writeFromLeftToRight: true,
+    // Испанский
+    _langName: "Espanol",
+    _writeFromLeftToRight: true,
 
     add: "añadir",
     addCategory: "añadir categoría",
@@ -253,6 +264,7 @@ const localeStringArray = {
     root: "raíz",
     rootCategoryCanNotBeChanged: "la categoría raíz no se puede cambiar",
     save: "salvar",
+    settings: "ajustes",
     simultaneouslySetParameters: "establecer parámetros simultáneamente",
     since: "ya que",
     thisCategoryHasSubcategory: "esta categoría tiene subcategoría",
@@ -266,7 +278,9 @@ const localeStringArray = {
   },
 
   fa: {
-    writeFromLeftToRight: false,
+    // Персидский
+    _langName: "فارسى",
+    _writeFromLeftToRight: false,
 
     add: "اضافه کردن",
     addCategory: "افزودن دسته",
@@ -320,6 +334,7 @@ const localeStringArray = {
     root: "ریشه",
     rootCategoryCanNotBeChanged: "دسته ریشه قابل تغییر نیست",
     save: "ذخیره کنید",
+    settings: "تنظیمات",
     simultaneouslySetParameters: "همزمان پارامترها را تنظیم کنید",
     since: "از آنجا که",
     table: "میز",
@@ -333,7 +348,9 @@ const localeStringArray = {
   },
 
   fr: {
-    writeFromLeftToRight: true,
+    // Французский
+    _langName: "Français",
+    _writeFromLeftToRight: true,
 
     add: "ajouter",
     addCategory: "ajouter une catégorie",
@@ -388,6 +405,7 @@ const localeStringArray = {
     rootCategoryCanNotBeChanged:
       "la catégorie racine ne peut pas être modifiée",
     save: "enregistrer",
+    settings: "paramètres",
     simultaneouslySetParameters: "définir simultanément les paramètres",
     since: "depuis",
     thisCategoryHasSubcategory: "cette catégorie a une sous-catégorie",
@@ -401,7 +419,9 @@ const localeStringArray = {
   },
 
   hi: {
-    writeFromLeftToRight: true,
+    // Хинди
+    _langName: "हिन्दी",
+    _writeFromLeftToRight: true,
 
     add: "जोड़ना",
     addCategory: "श्रेणी जोड़ें",
@@ -453,6 +473,7 @@ const localeStringArray = {
     root: "जड़",
     rootCategoryCanNotBeChanged: "रूट श्रेणी में बदलाव न करें",
     save: "बनाए रखने के",
+    settings: "समायोजन",
     simultaneouslySetParameters: "एक साथ पैरामीटर सेट करें",
     since: "क्योंकि",
     table: "तालिका",
@@ -466,7 +487,9 @@ const localeStringArray = {
   },
 
   it: {
-    writeFromLeftToRight: true,
+    // Итальянский
+    _langName: "Italiano",
+    _writeFromLeftToRight: true,
 
     add: "aggiungere",
     addCategory: "aggiungi categoria",
@@ -522,6 +545,7 @@ const localeStringArray = {
     rootCategoryCanNotBeChanged:
       "la categoria principale non può essere modificata",
     save: "conservare",
+    settings: "impostazioni",
     simultaneouslySetParameters: "impostare contemporaneamente i parametri",
     since: "perché",
     table: "tavolo",
@@ -535,7 +559,9 @@ const localeStringArray = {
   },
 
   iw: {
-    writeFromLeftToRight: false,
+    // Иврит
+    _langName: "???",
+    _writeFromLeftToRight: false,
 
     add: "להוסיף",
     addCategory: "הוסף קטגוריה",
@@ -586,6 +612,7 @@ const localeStringArray = {
     root: "שורש",
     rootCategoryCanNotBeChanged: "לא ניתן לשנות את קטגוריית השורש",
     save: "שמור",
+    settings: "הגדרות",
     simultaneouslySetParameters: "במקביל להגדיר פרמטרים",
     since: "מאז",
     table: "שולחן",
@@ -599,7 +626,9 @@ const localeStringArray = {
   },
 
   ja: {
-    writeFromLeftToRight: true,
+    // Японский
+    _langName: "日本語",
+    _writeFromLeftToRight: true,
 
     add: "追加する",
     addCategory: "カテゴリを追加",
@@ -651,6 +680,7 @@ const localeStringArray = {
     root: "根",
     rootCategoryCanNotBeChanged: "ルートカテゴリを変更しないでください",
     save: "保存する",
+    settings: "設定",
     simultaneouslySetParameters: "同時に設定するパラメータ",
     since: "以来",
     table: "テーブル",
@@ -664,7 +694,9 @@ const localeStringArray = {
   },
 
   ms: {
-    writeFromLeftToRight: true,
+    // Малайский
+    _langName: "Bahasa melayu",
+    _writeFromLeftToRight: true,
 
     add: "tambah",
     addCategory: "tambah kategori",
@@ -718,6 +750,7 @@ const localeStringArray = {
     root: "akar",
     rootCategoryCanNotBeChanged: "kategori akar tidak boleh diubah",
     save: "berjimat",
+    settings: "tetapan",
     simultaneouslySetParameters: "serentak menetapkan parameter",
     since: "sejak",
     table: "meja",
@@ -731,7 +764,9 @@ const localeStringArray = {
   },
 
   pt: {
-    writeFromLeftToRight: true,
+    // Португальский
+    _langName: "Português",
+    _writeFromLeftToRight: true,
 
     add: "adicionar",
     addCategory: "adicionar categoria",
@@ -785,6 +820,7 @@ const localeStringArray = {
     root: "raiz",
     rootCategoryCanNotBeChanged: "você não pode alterar a categoria raiz",
     save: "salvar",
+    settings: "definições",
     simultaneouslySetParameters: "definir parâmetros simultaneamente",
     since: "desde",
     table: "mesa",
@@ -798,7 +834,8 @@ const localeStringArray = {
   },
 
   ru: {
-    writeFromLeftToRight: true,
+    _langName: "Русский",
+    _writeFromLeftToRight: true,
 
     add: "добавить",
     addCategory: "добавить категорию",
@@ -851,6 +888,7 @@ const localeStringArray = {
     root: "корень",
     rootCategoryCanNotBeChanged: "нельзя изменить корневую категорию",
     save: "сохранить",
+    settings: "настройки",
     simultaneouslySetParameters: "одновременно заданы параметры",
     since: "так как",
     table: "таблица",
@@ -864,7 +902,9 @@ const localeStringArray = {
   },
 
   tr: {
-    writeFromLeftToRight: true,
+    // Турецкий
+    _langName: "Türkçe",
+    _writeFromLeftToRight: true,
 
     add: "eklemek",
     addCategory: "kategori ekle",
@@ -917,6 +957,7 @@ const localeStringArray = {
     root: "kök",
     rootCategoryCanNotBeChanged: "kök kategorisi değiştirilemez",
     save: "tutmak",
+    settings: "ayarlar",
     simultaneouslySetParameters: "eşzamanlı olarak parametreleri ayarlama",
     since: "çünkü",
     table: "tablo",
@@ -930,7 +971,9 @@ const localeStringArray = {
   },
 
   zh: {
-    writeFromLeftToRight: true,
+    // Китайский
+    _langName: "中文",
+    _writeFromLeftToRight: true,
 
     add: "加",
     addCategory: "添加类别",
@@ -978,9 +1021,10 @@ const localeStringArray = {
     restoreDatabaseFromFile: "从文件还原数据库",
     results: "结果",
     restorationOfTablesOfObjects: "恢复对象表",
-    root: "корень",
+    root: "根",
     rootCategoryCanNotBeChanged: "不要更改根类别",
     save: "保存",
+    settings: "設定",
     simultaneouslySetParameters: "同时设置参数",
     since: "从",
     table: "桌子",
@@ -994,16 +1038,30 @@ const localeStringArray = {
   },
 };
 
+export const langNames = Object.entries(localeStringArray).map(function (
+  value
+) {
+  return value[1]._langName;
+});
+
 export class Locale {
-  static setUserLang() {
-    // https://qna.habr.com/q/338809
-    userLang = (navigator.language || navigator.userLanguage)
-      .substr(0, 2)
-      .toLowerCase();
-    //userLang = "de";
+  static setUserLang(userLangToSet) {
+    if (userLangToSet) {
+      userLang = userLangToSet;
+    } else {
+      // https://qna.habr.com/q/338809
+      userLang = (navigator.language || navigator.userLanguage)
+        .substr(0, 2)
+        .toLowerCase();
+    }
+
     if (!Object.getOwnPropertyDescriptor(localeStringArray, userLang)) {
       userLang = "en";
     }
     localeString = localeStringArray[userLang];
+  }
+
+  static getUserLang() {
+    return userLang;
   }
 }
