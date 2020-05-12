@@ -88,6 +88,8 @@ export class OutlayRestore {
       {
         divContent.appendChild(button);
         button.className = "logButton";
+        button.style.width =
+          (2 <= localeString.yes.length ? localeString.yes.length : 2) + "em";
         button.innerHTML = localeString.yes._capitalize();
         button.onclick = function (e) {
           OutlayRestore.restore();
