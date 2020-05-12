@@ -571,7 +571,7 @@ export const localeStringArray = {
 
   iw: {
     // Иврит
-    _langName: "???",
+    _langName: "עברית",
     _writeFromLeftToRight: false,
 
     add: "להוסיף",
