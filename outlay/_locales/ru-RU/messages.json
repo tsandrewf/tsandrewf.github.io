@@ -1,11 +1,14 @@
 {
   "appName": {
-    "message": "Затраты"
+    "message": "Затраты",
+    "description": "Заголовок приложения"
   },
   "appShortName": {
-    "message": "Затраты"
+    "message": "Затраты",
+    "description": "Заголовок приложения"
   },
   "appDesc": {
-    "message": "Учет личных финансовых затрат"
+    "message": "Учет личных финансовых затрат",
+    "description": "Описание приложения"
   }
 }
