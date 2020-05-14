@@ -81,6 +81,11 @@ const manifestLocales = {
     short_name: "Utgifter",
     description: "Regnskap for personlige økonomiske utgifter",
   },
+  pl: {
+    name: "Wydatki",
+    short_name: "Wydatki",
+    description: "Rozliczanie osobistych kosztów finansowych",
+  },
   pt: {
     name: "Custo",
     short_name: "Custo",
