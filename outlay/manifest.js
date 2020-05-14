@@ -6,6 +6,11 @@ const manifestLocales = {
     short_name: "التكلفة",
     description: "محاسبة النفقات المالية الشخصية",
   },
+  da: {
+    name: "Udgifter",
+    short_name: "Udgifter",
+    description: "Regnskab for personlige økonomiske udgifter",
+  },
   de: {
     name: "Ausgaben",
     short_name: "Ausgaben",
