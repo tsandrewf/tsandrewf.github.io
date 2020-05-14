@@ -71,20 +71,25 @@ const manifestLocales = {
     short_name: "Uitgaven",
     description: "Boekhouding van persoonlijke financiële uitgaven",
   },
+  no: {
+    name: "Utgifter",
+    short_name: "Utgifter",
+    description: "Regnskap for personlige økonomiske utgifter",
+  },
   pt: {
     name: "Custo",
     short_name: "Custo",
     description: "Contabilização de despesas financeiras pessoais",
   },
-  sv: {
-    name: "Kostnader",
-    short_name: "Kostnader",
-    description: "Redovisning av personliga finansiella kostnader",
-  },
   ru: {
     name: "Затраты",
     short_name: "Затраты",
     description: "Учет личных финансовых затрат",
+  },
+  sv: {
+    name: "Kostnader",
+    short_name: "Kostnader",
+    description: "Redovisning av personliga finansiella kostnader",
   },
   tr: {
     name: "Maliyetler",
