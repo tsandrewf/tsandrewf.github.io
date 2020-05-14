@@ -26,6 +26,11 @@ const manifestLocales = {
     short_name: "هزینه ها",
     description: "حسابداری برای هزینه های مالی شخصی",
   },
+  fi: {
+    name: "Kulut",
+    short_name: "Kulut",
+    description: "Henkilökohtaisten rahoituskulujen kirjanpito",
+  },
   fr: {
     name: "Dépenses",
     short_name: "Dépenses",
