@@ -16,6 +16,11 @@ const manifestLocales = {
     short_name: "Ausgaben",
     description: "Bilanzierung persönlicher finanzieller ausgaben",
   },
+  el: {
+    name: "Εξοδα",
+    short_name: "Εξοδα",
+    description: "Λογιστική για προσωπικά οικονομικά έξοδα",
+  },
   en: {
     name: "Outlays",
     short_name: "Outlays",
