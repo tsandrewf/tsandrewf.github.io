@@ -76,6 +76,11 @@ const manifestLocales = {
     short_name: "Custo",
     description: "Contabilização de despesas financeiras pessoais",
   },
+  sv: {
+    name: "Kostnader",
+    short_name: "Kostnader",
+    description: "Redovisning av personliga finansiella kostnader",
+  },
   ru: {
     name: "Затраты",
     short_name: "Затраты",
