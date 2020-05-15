@@ -56,6 +56,11 @@ const manifestLocales = {
     short_name: "लागत",
     description: "व्यक्तिगत वित्तीय खर्च के लिए लेखांकन",
   },
+  hu: {
+    name: "Költségek",
+    short_name: "Költségek",
+    description: "A személyes pénzügyi költségek elszámolása",
+  },
   it: {
     name: "Costi",
     short_name: "Costi",
