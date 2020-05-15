@@ -6,6 +6,11 @@ const manifestLocales = {
     short_name: "التكلفة",
     description: "محاسبة النفقات المالية الشخصية",
   },
+  bg: {
+    name: "Разходи",
+    short_name: "Разходи",
+    description: "Отчитане на лични финансови разходи",
+  },
   da: {
     name: "Udgifter",
     short_name: "Udgifter",
