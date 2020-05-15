@@ -101,6 +101,11 @@ const manifestLocales = {
     short_name: "Custo",
     description: "Contabilização de despesas financeiras pessoais",
   },
+  ro: {
+    name: "Cheltuieli",
+    short_name: "Cheltuieli",
+    description: "Contabilitate pentru cheltuieli financiare personale",
+  },
   ru: {
     name: "Затраты",
     short_name: "Затраты",
