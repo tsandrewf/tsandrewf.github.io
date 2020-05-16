@@ -14,14 +14,17 @@ export class NavbarBottom {
     //console.log("window.history.length", window.history.length);
     //console.log("historyLengthCurrent", historyLengthCurrent);
     //console.log("historyLengthInit", historyLengthInit);
-    if (navigator.standalone && 0 < historyLengthCurrent - historyLengthInit) {
+    if (navigator.standalone) {
       let div = document.createElement("DIV");
       navbarBottom.appendChild(div);
-      let a = document.createElement("A");
-      div.appendChild(a);
-      a.innerHTML = "<";
-      a.href = "Javascript:window.history.back();";
-      div.style.width = "1vw";
+      if (0 < historyLengthCurrent - historyLengthInit) {
+        let a = document.createElement("A");
+        div.appendChild(a);
+        a.innerHTML = "<";
+        a.href = "Javascript:window.history.back();";
+      } else {
+        div.innerHTML = "<";
+      }
     }
 
     for (let option of options) {
