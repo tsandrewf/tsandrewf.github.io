@@ -211,17 +211,6 @@ function generateManifest() {
   const stringManifest = JSON.stringify(myDynamicManifest);
   const blob = new Blob([stringManifest], { type: "application/json" });
   const manifestURL = URL.createObjectURL(blob);
-  console.log("manifestURL", manifestURL);
-  console.log("window.location.host", window.location.host);
-  console.log("window.location.hostname", window.location.hostname);
-  console.log("window.location.href", window.location.href);
-  console.log("window.location.origin", window.location.origin);
-  console.log("window.location.pathname", window.location.pathname);
-  console.log("window.location.search", window.location.search);
-  console.log(
-    "window.location",
-    window.location.href.replace("outlay.html", "")
-  );
   document.querySelector("#custom-manifest").setAttribute("href", manifestURL);
 }
 

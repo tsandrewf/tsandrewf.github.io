@@ -22,8 +22,8 @@ window.OutlayEntries_displayData = OutlayEntries.displayData;
 window.OutlayCategory_displayData = OutlayCategory.displayData;
 window.OutlaySummary_displayData = OutlaySummary.displayData;
 
-const historyLengthInit = window.history.length;
-let historyLengthCurrent = historyLengthInit;
+export const historyLengthInit = window.history.length;
+export let historyLengthCurrent = historyLengthInit;
 let historyLengthIncrease = false;
 //let historyLengthRem = window.history.length;
 export function historyLengthIncreaseSet() {
@@ -127,7 +127,7 @@ window.onpopstate = async function (event) {
 };*/
 
 async function window_onload(funcName) {
-  Locale.setUserLang();
+  await Locale.setUserLang();
 
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers

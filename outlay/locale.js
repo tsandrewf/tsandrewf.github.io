@@ -1987,10 +1987,6 @@ export class Locale {
   }
 
   static getNavigatorLanguage() {
-    console.log(
-      "navigator.language",
-      navigator.language || navigator.userLanguage
-    );
     // https://qna.habr.com/q/338809
     return (navigator.language || navigator.userLanguage)
       .substr(0, 2)
