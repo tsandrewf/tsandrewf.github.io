@@ -5,6 +5,10 @@ import { Setting } from "./setting.js";
 
 export let userLang, localeString;
 
+export const navbarButtonEntries = { text: "", href: "OutlayEntries" };
+export const navbarButtonCategory = { text: "", href: "OutlayCategory" };
+export const navbarButtonSummary = { text: "", href: "OutlaySummary" };
+
 export const localeStringArray = {
   ar: {
     // https://www.internationalphoneticalphabet.org/languages/language-names-in-native-language/
@@ -1980,6 +1984,32 @@ export class Locale {
       userLang = "en";
     }
     localeString = localeStringArray[userLang];
+
+    // https://unicode-table.com/ru/
+    // https://material.io/resources/icons/?style=baseline
+    // https://google.github.io/material-design-icons/
+    // https://github.com/google/material-design-icons/tree/master/iconfont
+    localeString["navbarButtonTextChecks"] =
+      '<i class="material-icons">face</i>' + "<BR>";
+    //"&#9415;<BR>" +
+    localeString.checks._capitalize();
+    localeString["navbarButtonTextCategories"] =
+      "&#9400;<BR>" + localeString.categories._capitalize();
+    localeString["navbarButtonTextTotal"] =
+      "&#9416;<BR>" + localeString.total._capitalize();
+
+    navbarButtonEntries.text =
+      '<i class="material-icons">receipt</i>' +
+      "<BR>" +
+      localeString.checks._capitalize();
+    navbarButtonCategory.text =
+      '<i class="material-icons">event_note</i>' +
+      "<BR>" +
+      localeString.categories._capitalize();
+    navbarButtonSummary.text =
+      '<i class="material-icons">account_balance_wallet</i>' +
+      "<BR>" +
+      localeString.total._capitalize();
   }
 
   static getUserLang() {

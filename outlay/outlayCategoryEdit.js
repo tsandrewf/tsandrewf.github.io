@@ -65,20 +65,7 @@ export class OutlayCategoryEdit {
       document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
         document.title;
 
-      NavbarBottom.show([
-        {
-          text: localeString.checks._capitalize(),
-          href: 'Javascript:displayData("OutlayEntries")',
-        },
-        {
-          text: localeString.categories._capitalize(),
-          href: 'Javascript:displayData("OutlayCategory")',
-        },
-        {
-          text: localeString.results._capitalize(),
-          href: 'Javascript:displayData("OutlaySummary")',
-        },
-      ]);
+      NavbarBottom.show2();
 
       {
         const divContent = document.getElementsByClassName("content")[0];

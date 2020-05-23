@@ -355,17 +355,7 @@ export class OutlayCategory {
       ],
     });
 
-    NavbarBottom.show([
-      {
-        text: localeString.checks._capitalize(),
-        href: 'Javascript:displayData("OutlayEntries")',
-      },
-      { text: localeString.categories._capitalize() },
-      {
-        text: localeString.results._capitalize(),
-        href: 'Javascript:displayData("OutlaySummary")',
-      },
-    ]);
+    NavbarBottom.show2(1);
 
     divContent = document.getElementsByClassName("content")[0];
     {
@@ -377,8 +367,6 @@ export class OutlayCategory {
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    /*const contentRem =
-      (await Setting.get(categoryHtmlKeyName)) || window.history.state;*/
     const contentRem =
       window.history.state || (await Setting.get(categoryHtmlKeyName));
 

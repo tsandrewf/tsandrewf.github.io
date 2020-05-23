@@ -34,7 +34,7 @@ export class OutlayEntries {
       }
     }
 
-    document.title = "Чеки";
+    document.title = localeString.checks._capitalize();
 
     window.OutlayEntries_outlayEntryDelete = OutlayEntries.outlayEntryDelete;
     window.OutlayEntries_outlayEntryEdit = OutlayEntries.outlayEntryEdit;
@@ -63,17 +63,12 @@ export class OutlayEntries {
       ],
     });
 
-    NavbarBottom.show([
-      { text: localeString.checks._capitalize() },
-      {
-        text: localeString.categories._capitalize(),
-        href: 'Javascript:displayData("OutlayCategory")',
-      },
-      {
-        text: localeString.results._capitalize(),
-        href: 'Javascript:displayData("OutlaySummary")',
-      },
-    ]);
+    /*NavbarBottom.show([
+      navbarButtonEntries,
+      navbarButtonCategory,
+      navbarButtonSummary,
+    ]);*/
+    NavbarBottom.show2(0);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

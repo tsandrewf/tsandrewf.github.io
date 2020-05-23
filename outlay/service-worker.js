@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202005141349";
+const CACHE_NAME = "outlay_v_202005232107";
 
 let cacheUrls = [
   // HTML
@@ -51,6 +51,8 @@ let cacheUrls = [
   "./icons/outlay32.png",
   "./icons/outlay128.png",
   "./icons/outlay256.png",
+  // Fonts
+  "./fonts/MaterialIcons-Regular.woff",
 ];
 
 self.addEventListener("message", async function (event) {

@@ -184,20 +184,7 @@ export class OutlayEntryEdit {
         .classList.add("navbar-bottom-wrap");
     }
 
-    NavbarBottom.show([
-      {
-        text: localeString.checks._capitalize(),
-        href: 'Javascript:displayData("OutlayEntries")',
-      },
-      {
-        text: localeString.categories._capitalize(),
-        href: 'Javascript:displayData("OutlayCategory")',
-      },
-      {
-        text: localeString.results._capitalize(),
-        href: 'Javascript:displayData("OutlaySummary")',
-      },
-    ]);
+    NavbarBottom.show2();
 
     let divNewString = document.createElement("DIV");
     document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);

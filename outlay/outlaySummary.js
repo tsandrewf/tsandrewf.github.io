@@ -104,17 +104,7 @@ export class OutlaySummary {
       buttons: [],
     });
 
-    NavbarBottom.show([
-      {
-        text: localeString.checks._capitalize(),
-        href: 'Javascript:displayData("OutlayEntries")',
-      },
-      {
-        text: localeString.categories._capitalize(),
-        href: 'Javascript:displayData("OutlayCategory")',
-      },
-      { text: localeString.results._capitalize() },
-    ]);
+    NavbarBottom.show2(2);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

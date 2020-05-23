@@ -22,20 +22,7 @@ export class OutlaySettings {
       buttons: [],
     });
 
-    NavbarBottom.show([
-      {
-        text: localeString.checks._capitalize(),
-        href: 'Javascript:displayData("OutlayEntries")',
-      },
-      {
-        text: localeString.categories._capitalize(),
-        href: 'Javascript:displayData("OutlayCategory")',
-      },
-      {
-        text: localeString.results._capitalize(),
-        href: 'Javascript:displayData("OutlaySummary")',
-      },
-    ]);
+    NavbarBottom.show2();
 
     document.title = localeString.settings._capitalize();
 
