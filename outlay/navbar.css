@@ -62,12 +62,12 @@
 }
 
 .navbar-bottom-div-active {
+  color: grey;
   cursor: pointer;
-  color: white;
 }
 
 .navbar-bottom-div-passive {
-  color: grey;
+  color: white;
 }
 
 @font-face {

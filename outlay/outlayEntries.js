@@ -63,11 +63,6 @@ export class OutlayEntries {
       ],
     });
 
-    /*NavbarBottom.show([
-      navbarButtonEntries,
-      navbarButtonCategory,
-      navbarButtonSummary,
-    ]);*/
     NavbarBottom.show2(0);
 
     {
@@ -235,7 +230,7 @@ export class OutlayEntries {
         " " +
         dateBegNew.getFullYear() +
         "г."
-      )._capitalizeWords();
+      )._capitalize();
       tdAppend.colSpan = 4;
     }
   }
