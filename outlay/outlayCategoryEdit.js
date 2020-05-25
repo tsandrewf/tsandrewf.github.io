@@ -65,7 +65,7 @@ export class OutlayCategoryEdit {
       document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
         document.title;
 
-      NavbarBottom.show2();
+      NavbarBottom.setActiveButton();
 
       {
         const divContent = document.getElementsByClassName("content")[0];

@@ -8,7 +8,7 @@ import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { localeString } from "./locale.js";
+import { localeString, navbarButtonSummary } from "./locale.js";
 
 window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
@@ -104,7 +104,7 @@ export class OutlaySummary {
       buttons: [],
     });
 
-    NavbarBottom.show2(2);
+    NavbarBottom.setActiveButton(navbarButtonSummary.href);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

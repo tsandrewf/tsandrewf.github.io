@@ -8,7 +8,7 @@ import { StandbyIndicator } from "./standbyIndicator.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { localeString } from "./locale.js";
+import { localeString, navbarButtonCategory } from "./locale.js";
 
 import {
   db,
@@ -355,7 +355,7 @@ export class OutlayCategory {
       ],
     });
 
-    NavbarBottom.show2(1);
+    NavbarBottom.setActiveButton(navbarButtonCategory.href);
 
     divContent = document.getElementsByClassName("content")[0];
     {

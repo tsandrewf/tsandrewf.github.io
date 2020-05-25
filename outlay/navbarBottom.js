@@ -7,10 +7,6 @@ import {
   navbarButtonSummary,
 } from "./locale.js";
 
-/*console.log("localeString", localeString);
-export const navbarButtonTextChecks =
-  "&#9415;<BR>" + localeString.checks._capitalize();*/
-
 export class NavbarBottom {
   static show(options, optionSelectedNum) {
     let navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
@@ -19,9 +15,6 @@ export class NavbarBottom {
       navbarBottom.removeChild(navbarBottom.firstChild);
     }
 
-    //console.log("window.history.length", window.history.length);
-    //console.log("historyLengthCurrent", historyLengthCurrent);
-    //console.log("historyLengthInit", historyLengthInit);
     if (navigator.standalone) {
       let div = document.createElement("DIV");
       navbarBottom.appendChild(div);
@@ -35,28 +28,41 @@ export class NavbarBottom {
       }
     }
 
-    let optionNum = 0;
-    for (let option of options) {
-      let div = document.createElement("DIV");
-      navbarBottom.appendChild(div);
-      if (optionSelectedNum !== optionNum) {
-        div.innerHTML = option.text;
-        div.onclick = function () {
-          displayData(option.href);
-        };
-        div.className = "navbar-bottom-div-active";
-      } else if (option.text) {
-        div.innerHTML = option.text;
-        div.className = "navbar-bottom-div-passive";
-      }
-      optionNum++;
+    for (let option of [
+      navbarButtonEntries,
+      navbarButtonCategory,
+      navbarButtonSummary,
+    ]) {
+      const divButton = document.createElement("DIV");
+      navbarBottom.appendChild(divButton);
+      divButton.setAttribute("funcName", option.href);
+      divButton.onclick = function () {
+        if ("navbar-bottom-div-active" === this.className) return;
+        displayData(this.getAttribute("funcName"));
+      };
+
+      const divIcon = document.createElement("DIV");
+      divButton.appendChild(divIcon);
+      const elemI = document.createElement("I");
+      divIcon.appendChild(elemI);
+      elemI.className = "material-icons";
+      elemI.innerHTML = option.icon;
+
+      const divText = document.createElement("DIV");
+      divButton.appendChild(divText);
+      divText.innerHTML = option.text;
     }
   }
 
-  static show2(optionSelectedNum) {
-    NavbarBottom.show(
-      [navbarButtonEntries, navbarButtonCategory, navbarButtonSummary],
-      optionSelectedNum
-    );
+  static setActiveButton(funcName) {
+    const navbarBottom = document
+      .getElementsByClassName("navbar-bottom")
+      .item(0);
+    for (let div of navbarBottom.children) {
+      div.className =
+        div.getAttribute("funcName") === funcName
+          ? "navbar-bottom-div-active"
+          : "navbar-bottom-div-passive";
+    }
   }
 }

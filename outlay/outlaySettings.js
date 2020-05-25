@@ -22,7 +22,7 @@ export class OutlaySettings {
       buttons: [],
     });
 
-    NavbarBottom.show2();
+    NavbarBottom.setActiveButton();
 
     document.title = localeString.settings._capitalize();
 

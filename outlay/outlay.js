@@ -13,8 +13,8 @@ import { OutlayExport } from "./outlayExport.js";
 import { OutlayRestore } from "./outlayRestore.js";
 import { OutlaySettings } from "./outlaySettings.js";
 import { getQueryVar } from "./url.js";
-//import { CACHE_NAME } from "./service-worker.js";
 import { Locale } from "./locale.js";
+import { NavbarBottom } from "./navbarBottom.js";
 
 window.onload = openDb(window_onload);
 
@@ -25,18 +25,32 @@ window.OutlaySummary_displayData = OutlaySummary.displayData;
 export const historyLengthInit = window.history.length;
 export let historyLengthCurrent = historyLengthInit;
 let historyLengthIncrease = false;
-//let historyLengthRem = window.history.length;
 export function historyLengthIncreaseSet() {
   historyLengthIncrease = true;
 }
 
 window.displayData = async function (funcName) {
-  await Setting.set(windowOnloadKeyName, funcName);
-  //history.go(historyLengthInit - window.history.length);
-  history.go(historyLengthInit - historyLengthCurrent);
+  const historyGo = historyLengthInit - historyLengthCurrent;
+  if (historyGo) {
+    await Setting.set(windowOnloadKeyName, funcName);
+    history.go(historyGo);
+  } else {
+    switch (funcName) {
+      case "OutlayCategory":
+        OutlayCategory.displayData(getQueryVar("needCategorySave"));
+        break;
+      case "OutlaySummary":
+        OutlaySummary.displayData();
+        break;
+      default:
+        OutlayEntries.displayData();
+        break;
+    }
+  }
 };
 
 window.onpopstate = async function (event) {
+  console.log("window.onpopstate", event);
   if (historyLengthIncrease) {
     historyLengthCurrent++;
     historyLengthIncrease = false;
@@ -48,7 +62,7 @@ window.onpopstate = async function (event) {
   } else {
     switch (funcName) {
       case null:
-      case "Outlay": // OutlayEntries
+      case "OutlayEntries": // OutlayEntries
       case "OutlaySummary":
         await Setting.set(windowOnloadKeyName, funcName);
         break;
@@ -77,7 +91,7 @@ window.onpopstate = async function (event) {
   }
 
   switch (funcName) {
-    case "Outlay": // OutlayEntries
+    case "OutlayEntries": // OutlayEntries
       OutlayEntries.displayData();
       break;
     case "OutlayCategory":
@@ -107,27 +121,10 @@ window.onpopstate = async function (event) {
   }
 };
 
-// https://stackoverflow.com/questions/5746598/is-it-possible-with-javascript-to-find-files-last-modified-time
-/*var getMTime = function(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("HEAD", url, true); // use HEAD - we only need the headers
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      console.log("xhr", xhr);
-      var mtime = new Date(xhr.getResponseHeader("Last-Modified"));
-      const etag = xhr.getResponseHeader("etag");
-      if (mtime.toString() === "Invalid Date") {
-        callback(url); // dont want to return a bad date
-      } else {
-        callback(url, mtime, etag);
-      }
-    }
-  };
-  xhr.send();
-};*/
-
-async function window_onload(funcName) {
+async function window_onload() {
   await Locale.setUserLang();
+
+  NavbarBottom.show();
 
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
@@ -149,52 +146,18 @@ async function window_onload(funcName) {
         navigator.serviceWorker.controller.postMessage("outlay.html_onload");
         console.log('Sended message "outlay.html_onload"');
       });
-
-    /*getMTime("./base.css", async function(url, mtime, responseEtag) {
-      if (mtime) {
-        console.log('the mtime of "' + url + '" is: ' + mtime);
-        const cache = await caches.open("outlay_v_202003191127");
-        cache.match(new Request(url)).then(function(response) {
-          console.log("response", response);
-          console.log("responseEtag", responseEtag);
-          console.log("etag", response.headers.get("etag"));
-          const lastModified = new Date(response.headers.get("last-modified"));
-          console.log("last-modified", lastModified);
-          if (mtime.getTime() === lastModified.getTime()) {
-            console.log('last-modified: File "' + url + '" is fresh');
-          } else {
-            console.log('last-modified: File "' + url + '" need to be updated');
-          }
-        });
-      }
-    });*/
   }
 
+  const funcName = await Setting.get(windowOnloadKeyName);
   if (await Setting.get(categoryHtmlKeyName)) {
     // Если страница категорий сохранена, обнуляем эту страницу
     await Setting.set(categoryHtmlKeyName, null);
   }
 
-  // https://shterkel.com/pwa.html
-  /*if (navigator.serviceWorker.controller) {
-    console.log(
-      "[PWA Builder] active service worker found, no need to register"
-    );
-  } else {
-    navigator.serviceWorker
-      .register("./service-worker.js", {
-        scope: "./"
-      })
-      .then(function(reg) {
-        console.log(
-          "Service worker has been registered for scope:" + reg.scope
-        );
-      });
-  }*/
-
-  switch (await Setting.get(windowOnloadKeyName)) {
+  //displayData(funcName);
+  switch (funcName) {
     case "OutlayCategory":
-      OutlayCategory.displayData();
+      OutlayCategory.displayData(getQueryVar("needCategorySave"));
       break;
     case "OutlaySummary":
       OutlaySummary.displayData();

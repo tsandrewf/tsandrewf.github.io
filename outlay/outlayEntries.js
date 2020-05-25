@@ -8,7 +8,7 @@ import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { windowOnloadKeyName, outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { localeString } from "./locale.js";
+import { localeString, navbarButtonEntries } from "./locale.js";
 
 let tbodyOutlayEntries;
 
@@ -28,7 +28,7 @@ export class OutlayEntries {
 
   static async displayData(dateBeg, dateEnd) {
     {
-      const funcName = "Outlay";
+      const funcName = "OutlayEntries";
       if (funcName !== (await Setting.get(windowOnloadKeyName))) {
         await Setting.set(windowOnloadKeyName, funcName);
       }
@@ -63,7 +63,7 @@ export class OutlayEntries {
       ],
     });
 
-    NavbarBottom.show2(0);
+    NavbarBottom.setActiveButton(navbarButtonEntries.href);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

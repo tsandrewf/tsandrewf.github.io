@@ -21,12 +21,14 @@
 /* Beg Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
 
 /* Для Chrome */
-body::-webkit-scrollbar {
+body::-webkit-scrollbar,
+.content::-webkit-scrollbar {
   display: none;
 }
 
 /* Для IE и Edge */
-body {
+body,
+.content {
   -ms-overflow-style: none;
 }
 /* End Убираем полосу прокрутки */

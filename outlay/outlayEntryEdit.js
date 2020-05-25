@@ -184,7 +184,7 @@ export class OutlayEntryEdit {
         .classList.add("navbar-bottom-wrap");
     }
 
-    NavbarBottom.show2();
+    NavbarBottom.setActiveButton();
 
     let divNewString = document.createElement("DIV");
     document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);

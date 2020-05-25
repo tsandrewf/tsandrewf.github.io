@@ -37,7 +37,7 @@ export class OutlayRestore {
       buttons: [],
     });
 
-    NavbarBottom.show2();
+    NavbarBottom.setActiveButton();
 
     document.title = localeString.restore._capitalize();
 

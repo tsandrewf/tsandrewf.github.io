@@ -25,6 +25,9 @@
 .tableBase tbody::-webkit-scrollbar {
   display: none;
 }
+.tableBase tbody {
+  -ms-overflow-style: none;
+}
 /* End https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp*/
 
 .tableBase tbody tr:nth-child(odd) {
