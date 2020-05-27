@@ -3,12 +3,15 @@
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { localeString } from "./locale.js";
+import { localeString, navbarButtons } from "./locale.js";
+import { Setting } from "./setting.js";
 
 let divContent;
 
 export class OutlayUtils {
   static displayData() {
+    Setting.setWindowOnload("OutlayUtils");
+
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",
@@ -23,7 +26,7 @@ export class OutlayUtils {
       buttons: [],
     });
 
-    NavbarBottom.setActiveButton();
+    NavbarBottom.setActiveButton(navbarButtons.navbarButtonUtils.href);
 
     document.title = localeString.utility._capitalize();
 

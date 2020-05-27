@@ -2,23 +2,36 @@
 
 import { userLangCodeKeyName } from "./db.js";
 import { Setting } from "./setting.js";
+import { NavbarBottom } from "./navbarBottom.js";
 
 export let userLang, localeString;
 
-export const navbarButtonEntries = {
-  text: "",
-  href: "OutlayEntries",
-  icon: "receipt",
-};
-export const navbarButtonCategory = {
-  text: "",
-  href: "OutlayCategory",
-  icon: "event_note",
-};
-export const navbarButtonSummary = {
-  text: "",
-  href: "OutlaySummary",
-  icon: "account_balance_wallet",
+export const navbarButtons = {
+  navbarButtonEntries: {
+    text: "",
+    href: "OutlayEntries",
+    icon: "receipt",
+  },
+  navbarButtonCategory: {
+    text: "",
+    href: "OutlayCategory",
+    icon: "event_note",
+  },
+  navbarButtonSummary: {
+    text: "",
+    href: "OutlaySummary",
+    icon: "account_balance_wallet",
+  },
+  navbarButtonSettings: {
+    text: "",
+    href: "OutlaySettings",
+    icon: "settings",
+  },
+  navbarButtonUtils: {
+    text: "",
+    href: "OutlayUtils",
+    icon: "build",
+  },
 };
 
 export const localeStringArray = {
@@ -2002,9 +2015,12 @@ export class Locale {
     // https://google.github.io/material-design-icons/
     // https://github.com/google/material-design-icons/tree/master/iconfont
 
-    navbarButtonEntries.text = localeString.checks._capitalize();
-    navbarButtonCategory.text = localeString.categories._capitalize();
-    navbarButtonSummary.text = localeString.total._capitalize();
+    navbarButtons.navbarButtonEntries.text = localeString.checks._capitalize();
+    navbarButtons.navbarButtonCategory.text = localeString.categories._capitalize();
+    navbarButtons.navbarButtonSummary.text = localeString.total._capitalize();
+    navbarButtons.navbarButtonSettings.text = localeString.settings._capitalize();
+    navbarButtons.navbarButtonUtils.text = localeString.utility._capitalize();
+    NavbarBottom.setButtonText();
   }
 
   static getUserLang() {

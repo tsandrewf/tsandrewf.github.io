@@ -1,7 +1,30 @@
-/* https://habr.com/ru/post/467049/ */
+.navbar-top div {
+  /* https://stackoverflow.com/questions/9249359/vertically-align-text-within-a-div */
+  /* Internet Explorer 10 */
+  display: -ms-flexbox;
+  -ms-flex-pack: center;
+  -ms-flex-align: center;
 
+  /* Firefox */
+  display: -moz-box;
+  -moz-box-pack: center;
+  -moz-box-align: center;
+
+  /* Safari, Opera, and Chrome */
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+
+  /* W3C */
+  display: box;
+  box-pack: center;
+  box-align: center;
+}
+
+/* https://habr.com/ru/post/467049/ */
 .navbar-top,
-.navbar-bottom {
+.navbar-bottom,
+.navbar-left {
   position: absolute;
   position: -webkit-sticky;
   position: sticky;
@@ -15,14 +38,18 @@
   font-family: sans-serif;
 
   display: flex;
-  flex-direction: row;
   align-items: center;
 
   padding: 0.25em;
 }
 
-.navbar-top {
-  color: white;
+.navbar-top,
+.navbar-bottom {
+  flex-direction: row;
+}
+
+.navbar-left {
+  flex-direction: column;
 }
 
 .navbar-top .buttons {
@@ -59,4 +86,38 @@
 .navbar-bottom-div-passive {
   color: white;
   cursor: pointer;
+}
+
+.navbar-left {
+  /*bottom: 0;*/
+  /*justify-content: space-evenly;*/
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.navbar-left div {
+  padding-top: 50px;
+}
+
+.navbar-left div div {
+  padding-top: 0;
+}
+
+/* https://stackoverflow.com/questions/4917664/detect-viewport-orientation-if-orientation-is-portrait-display-alert-message-ad */
+@media screen and (orientation: landscape) {
+  .navbar-left {
+    display: inline;
+  }
+  .navbar-bottom {
+    display: none;
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .navbar-left {
+    display: none;
+  }
+  .navbar-bottom {
+    display: flex;
+  }
 }

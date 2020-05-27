@@ -1,16 +1,13 @@
 "use strict";
 
 import { historyLengthInit, historyLengthCurrent } from "./outlay.js";
-import {
-  navbarButtonEntries,
-  navbarButtonCategory,
-  navbarButtonSummary,
-} from "./locale.js";
+import { navbarButtons } from "./locale.js";
+
+const navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
+const navbarLeft = document.getElementsByClassName("navbar-left").item(0);
 
 export class NavbarBottom {
   static show(options, optionSelectedNum) {
-    let navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
-
     while (navbarBottom.firstChild) {
       navbarBottom.removeChild(navbarBottom.firstChild);
     }
@@ -28,41 +25,58 @@ export class NavbarBottom {
       }
     }
 
-    for (let option of [
-      navbarButtonEntries,
-      navbarButtonCategory,
-      navbarButtonSummary,
-    ]) {
-      const divButton = document.createElement("DIV");
-      navbarBottom.appendChild(divButton);
-      divButton.setAttribute("funcName", option.href);
-      divButton.onclick = function () {
-        if ("navbar-bottom-div-active" === this.className) return;
-        displayData(this.getAttribute("funcName"));
-      };
-
-      const divIcon = document.createElement("DIV");
-      divButton.appendChild(divIcon);
-      const elemI = document.createElement("I");
-      divIcon.appendChild(elemI);
-      elemI.className = "material-icons";
-      elemI.innerHTML = option.icon;
-
-      const divText = document.createElement("DIV");
-      divButton.appendChild(divText);
-      divText.innerHTML = option.text;
+    for (let option of Object.values(navbarButtons)) {
+      NavbarBottom.addButton(navbarBottom, option);
+      NavbarBottom.addButton(navbarLeft, option);
     }
   }
 
+  static addButton(navbar, option) {
+    const divButton = document.createElement("DIV");
+    navbar.appendChild(divButton);
+    divButton.id = option.href;
+    divButton.setAttribute("funcName", option.href);
+    divButton.onclick = function () {
+      if ("navbar-bottom-div-active" === this.className) return;
+      displayData(this.getAttribute("funcName"));
+    };
+
+    const divIcon = document.createElement("DIV");
+    divButton.appendChild(divIcon);
+    const elemI = document.createElement("I");
+    divIcon.appendChild(elemI);
+    elemI.className = "material-icons";
+    elemI.innerHTML = option.icon;
+
+    const divText = document.createElement("DIV");
+    divButton.appendChild(divText);
+    //divText.innerHTML = option.text;
+    //divText.innerHTML = option.href;
+  }
+
   static setActiveButton(funcName) {
-    const navbarBottom = document
-      .getElementsByClassName("navbar-bottom")
-      .item(0);
-    for (let div of navbarBottom.children) {
+    NavbarBottom.setNavbarActiveButton(navbarBottom, funcName);
+    NavbarBottom.setNavbarActiveButton(navbarLeft, funcName);
+  }
+
+  static setNavbarActiveButton(navbar, funcName) {
+    for (let div of navbar.children) {
       div.className =
         div.getAttribute("funcName") === funcName
           ? "navbar-bottom-div-active"
           : "navbar-bottom-div-passive";
     }
+  }
+
+  static setNavbarButtonText(navbar) {
+    for (let option of Object.values(navbarButtons)) {
+      navbar.querySelector("#" + option.href).children[1].innerHTML =
+        option.text;
+    }
+  }
+
+  static setButtonText() {
+    NavbarBottom.setNavbarButtonText(navbarBottom);
+    NavbarBottom.setNavbarButtonText(navbarLeft);
   }
 }

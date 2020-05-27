@@ -1,0 +1,31 @@
+.divMain {
+  display: flex;
+  flex-direction: row;
+}
+
+/*.divMainNewString {
+  width: 100%;
+}*/
+
+/*.divMain ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 25%;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.divMain li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.divMain li a.active {
+  background-color: #4caf50;
+  color: white;
+}*/

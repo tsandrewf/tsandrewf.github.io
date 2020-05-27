@@ -6,9 +6,9 @@ import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { windowOnloadKeyName, outlayEntriesDateMinCalcKeyName } from "./db.js";
+import { outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { localeString, navbarButtonEntries } from "./locale.js";
+import { localeString, navbarButtons } from "./locale.js";
 
 let tbodyOutlayEntries;
 
@@ -27,12 +27,7 @@ export class OutlayEntries {
   }
 
   static async displayData(dateBeg, dateEnd) {
-    {
-      const funcName = "OutlayEntries";
-      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-        await Setting.set(windowOnloadKeyName, funcName);
-      }
-    }
+    Setting.setWindowOnload("OutlayEntries");
 
     document.title = localeString.checks._capitalize();
 
@@ -63,7 +58,7 @@ export class OutlayEntries {
       ],
     });
 
-    NavbarBottom.setActiveButton(navbarButtonEntries.href);
+    NavbarBottom.setActiveButton(navbarButtons.navbarButtonEntries.href);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

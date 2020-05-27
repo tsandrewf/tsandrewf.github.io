@@ -11,13 +11,13 @@ export class NavbarTop {
   }
 
   static show(options) {
-    let navbarTop = document.getElementsByClassName("navbar-top").item(0);
+    const navbarTop = document.getElementsByClassName("navbar-top").item(0);
 
     while (navbarTop.firstChild) {
       navbarTop.removeChild(navbarTop.firstChild);
     }
 
-    if (options.menu) {
+    /*if (options.menu) {
       let divMenu = document.createElement("DIV");
       navbarTop.appendChild(divMenu);
       divMenu.className = "dropdown";
@@ -58,6 +58,42 @@ export class NavbarTop {
         divButtonInnerHTML.innerHTML = button.innerHTML;
         divButtonInnerHTML.title = button.title;
       }
+    }*/
+    const divBack = document.createElement("DIV");
+    navbarTop.appendChild(divBack);
+    if (options.back) {
+      divBack.onclick = function () {
+        history.back();
+      };
+      const elemI = document.createElement("I");
+      divBack.appendChild(elemI);
+      //elemI.className = "material-icons";
+      //elemI.innerHTML = "keyboard_arrow_left";
+      //divBack.innerHTML += options.back;
+      //divBack.innerHTML += "<span>" + options.back + "</span>";
+      divBack.innerHTML = "< " + options.back;
+      divBack.style.cursor = "pointer";
+    }
+
+    const divTitle = document.createElement("DIV");
+    navbarTop.appendChild(divTitle);
+    divTitle.innerHTML = options.titleHTML;
+    divTitle.className = "navBarTopTitle";
+
+    let divButtons = document.createElement("DIV");
+    navbarTop.appendChild(divButtons);
+    divButtons.className = "buttons";
+    for (let button of options.buttons) {
+      let divButton = document.createElement("DIV");
+      divButtons.appendChild(divButton);
+      divButton.className = "button";
+      divButton.onclick = button.onclick;
+      if (button.id) divButton.id = button.id;
+
+      let divButtonInnerHTML = document.createElement("DIV");
+      divButton.appendChild(divButtonInnerHTML);
+      divButtonInnerHTML.innerHTML = button.innerHTML;
+      divButtonInnerHTML.title = button.title;
     }
   }
 }

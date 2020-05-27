@@ -3,12 +3,12 @@
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { OutlayEntry } from "./outlayEntry.js";
-import { outlaySummaryPeriodKeyName, windowOnloadKeyName } from "./db.js";
+import { outlaySummaryPeriodKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { localeString, navbarButtonSummary } from "./locale.js";
+import { localeString, navbarButtons } from "./locale.js";
 
 window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
@@ -45,12 +45,7 @@ export class OutlaySummary {
 
   static async displayData() {
     //try {
-    {
-      const funcName = "OutlaySummary";
-      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-        await Setting.set(windowOnloadKeyName, funcName);
-      }
-    }
+    Setting.setWindowOnload("OutlaySummary");
 
     window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
     document.title = localeString.results._capitalize();
@@ -104,7 +99,7 @@ export class OutlaySummary {
       buttons: [],
     });
 
-    NavbarBottom.setActiveButton(navbarButtonSummary.href);
+    NavbarBottom.setActiveButton(navbarButtons.navbarButtonSummary.href);
 
     {
       const divContent = document.getElementsByClassName("content")[0];

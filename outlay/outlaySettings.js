@@ -2,12 +2,20 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import { localeString, localeStringArray, Locale } from "./locale.js";
+import {
+  localeString,
+  localeStringArray,
+  Locale,
+  navbarButtons,
+} from "./locale.js";
+import { Setting } from "./setting.js";
 
 let divContent;
 
 export class OutlaySettings {
-  static displayData() {
+  static async displayData() {
+    Setting.setWindowOnload("OutlaySettings");
+
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",
@@ -22,7 +30,7 @@ export class OutlaySettings {
       buttons: [],
     });
 
-    NavbarBottom.setActiveButton();
+    NavbarBottom.setActiveButton(navbarButtons.navbarButtonSettings.href);
 
     document.title = localeString.settings._capitalize();
 

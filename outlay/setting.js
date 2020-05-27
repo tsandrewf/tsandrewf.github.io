@@ -1,9 +1,15 @@
 "use strict";
 
-import { db, settingObjectStoreName } from "./db.js";
+import { db, settingObjectStoreName, windowOnloadKeyName } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
 
 export class Setting {
+  static async setWindowOnload(funcName) {
+    if (funcName !== (await Setting.get(windowOnloadKeyName))) {
+      await Setting.set(windowOnloadKeyName, funcName);
+    }
+  }
+
   static async getAll(transaction) {
     try {
       if (!transaction) transaction = db.transaction(settingObjectStoreName);

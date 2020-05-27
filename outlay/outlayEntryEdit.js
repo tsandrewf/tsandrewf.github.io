@@ -148,19 +148,7 @@ export class OutlayEntryEdit {
     window.OutlayEntryEdit_categoryEdit = OutlayEntryEdit.categoryEdit;
 
     NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          {
-            innerHTML: localeString.settings._capitalize(),
-            href: "#func=OutlaySettings",
-          },
-          {
-            innerHTML: localeString.utility._capitalize(),
-            href: "#func=OutlayUtils",
-          },
-        ],
-      },
+      back: localeString.checks._capitalize(),
       titleHTML:
         localeString.check._capitalize() +
         ' <input type="date" id="iptDate" oninput="OutlayEntryEdit_dateChanged(this.value)" />',
@@ -190,8 +178,7 @@ export class OutlayEntryEdit {
     document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
     divNewString.className = "new-string";
     divNewString.innerHTML =
-      localeString.total._capitalizeWords() +
-      ': <span id="sumAll">sumAll</span>';
+      localeString.total._capitalize() + ': <span id="sumAll">sumAll</span>';
 
     const content = document.getElementsByClassName("content")[0];
 

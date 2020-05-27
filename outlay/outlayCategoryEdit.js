@@ -40,19 +40,7 @@ export class OutlayCategoryEdit {
       }
 
       NavbarTop.show({
-        menu: {
-          buttonHTML: "&#9776;",
-          content: [
-            {
-              innerHTML: localeString.settings._capitalize(),
-              href: "#func=OutlaySettings",
-            },
-            {
-              innerHTML: localeString.utility._capitalize(),
-              href: "#func=OutlayUtils",
-            },
-          ],
-        },
+        back: localeString.categories._capitalize(),
         titleHTML: localeString.category._capitalize(),
         buttons: [
           {

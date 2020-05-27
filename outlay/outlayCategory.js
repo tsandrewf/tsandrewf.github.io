@@ -8,11 +8,10 @@ import { StandbyIndicator } from "./standbyIndicator.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { localeString, navbarButtonCategory } from "./locale.js";
+import { localeString, navbarButtons } from "./locale.js";
 
 import {
   db,
-  windowOnloadKeyName,
   outlayCategoryObjectStoreName,
   settingObjectStoreName,
   outlayObjectStoreName,
@@ -291,10 +290,7 @@ export class OutlayCategory {
     if (!needCategorySave) {
       await Setting.set(categoryHtmlKeyName, null);
 
-      const funcName = "OutlayCategory";
-      if (funcName !== (await Setting.get(windowOnloadKeyName))) {
-        await Setting.set(windowOnloadKeyName, funcName);
-      }
+      Setting.setWindowOnload("OutlayCategory");
     }
 
     StandbyIndicator.show();
@@ -318,23 +314,7 @@ export class OutlayCategory {
     document.title = localeString.categories._capitalize();
 
     NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          {
-            innerHTML: localeString.moveCategory._capitalize(),
-            href: "#func=OutlayCategoryMove",
-          },
-          {
-            innerHTML: localeString.settings._capitalize(),
-            href: "#func=OutlaySettings",
-          },
-          {
-            innerHTML: localeString.utility._capitalize(),
-            href: "#func=OutlayUtils",
-          },
-        ],
-      },
+      back: needCategorySave ? localeString.check._capitalize() : null,
       titleHTML: localeString.categories._capitalize(),
       buttons: [
         {
@@ -355,7 +335,7 @@ export class OutlayCategory {
       ],
     });
 
-    NavbarBottom.setActiveButton(navbarButtonCategory.href);
+    NavbarBottom.setActiveButton(navbarButtons.navbarButtonCategory.href);
 
     divContent = document.getElementsByClassName("content")[0];
     {

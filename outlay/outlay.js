@@ -42,6 +42,12 @@ window.displayData = async function (funcName) {
       case "OutlaySummary":
         OutlaySummary.displayData();
         break;
+      case "OutlaySettings":
+        OutlaySettings.displayData();
+        break;
+      case "OutlayUtils":
+        OutlayUtils.displayData();
+        break;
       default:
         OutlayEntries.displayData();
         break;
@@ -50,7 +56,6 @@ window.displayData = async function (funcName) {
 };
 
 window.onpopstate = async function (event) {
-  console.log("window.onpopstate", event);
   if (historyLengthIncrease) {
     historyLengthCurrent++;
     historyLengthIncrease = false;
@@ -122,9 +127,11 @@ window.onpopstate = async function (event) {
 };
 
 async function window_onload() {
+  NavbarBottom.show();
+
   await Locale.setUserLang();
 
-  NavbarBottom.show();
+  //NavbarBottom.show();
 
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
@@ -154,13 +161,18 @@ async function window_onload() {
     await Setting.set(categoryHtmlKeyName, null);
   }
 
-  //displayData(funcName);
   switch (funcName) {
     case "OutlayCategory":
       OutlayCategory.displayData(getQueryVar("needCategorySave"));
       break;
     case "OutlaySummary":
       OutlaySummary.displayData();
+      break;
+    case "OutlaySettings":
+      OutlaySettings.displayData();
+      break;
+    case "OutlayUtils":
+      OutlayUtils.displayData();
       break;
     default:
       OutlayEntries.displayData();
