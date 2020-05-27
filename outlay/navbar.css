@@ -108,7 +108,7 @@
 
 /* https://stackoverflow.com/questions/4917664/detect-viewport-orientation-if-orientation-is-portrait-display-alert-message-ad */
 /*@media screen and (orientation: landscape) {*/
-@media screen and (max-aspect-ratio: 8/5) {
+@media screen and (min-aspect-ratio: 8/5) {
   .navbar-left {
     display: inline;
   }
@@ -118,7 +118,7 @@
 }
 
 /*@media screen and (orientation: portrait) {*/
-@media screen and (min-aspect-ratio: 8/5) {
+@media screen and (max-aspect-ratio: 8/5) {
   .navbar-left {
     display: none;
   }
