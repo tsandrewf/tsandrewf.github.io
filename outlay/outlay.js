@@ -29,7 +29,7 @@ function setOrientation() {
   }
 }
 
-window.onorientationchange = setOrientation;
+//window.onorientationchange = setOrientation;
 
 window.onload = openDb(window_onload);
 
@@ -194,5 +194,5 @@ async function window_onload() {
       break;
   }
 
-  setOrientation();
+  //setOrientation();
 }
