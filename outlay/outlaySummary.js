@@ -51,19 +51,6 @@ export class OutlaySummary {
     document.title = localeString.results._capitalize();
 
     NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          {
-            innerHTML: localeString.settings._capitalize(),
-            href: "#func=OutlaySettings",
-          },
-          {
-            innerHTML: localeString.utility._capitalize(),
-            href: "#func=OutlayUtils",
-          },
-        ],
-      },
       titleHTML: localeString._writeFromLeftToRight
         ? '<div style="display: flex;flex-direction: row;align-items: center;">' +
           '<div style="margin: 0 0.5em;">' +

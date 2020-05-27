@@ -111,21 +111,21 @@
 /* https://developer.mozilla.org/ru/docs/Web/CSS/@media/orientation*/
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/@media/aspect-ratio */
 /*@media screen and (orientation: landscape) {*/
-@media screen and (min-aspect-ratio: 8/7) {
+/*@media screen and (min-aspect-ratio: 8/7) {
   .navbar-left {
     display: inline;
   }
   .navbar-bottom {
     display: none;
   }
-}
+}*/
 
 /*@media screen and (orientation: portrait) {*/
-@media screen and (max-aspect-ratio: 8/7) {
+/*@media screen and (max-aspect-ratio: 8/7) {
   .navbar-left {
     display: none;
   }
   .navbar-bottom {
     display: flex;
   }
-}
+}*/

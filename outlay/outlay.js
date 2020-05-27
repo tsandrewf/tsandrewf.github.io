@@ -16,6 +16,20 @@ import { getQueryVar } from "./url.js";
 import { Locale } from "./locale.js";
 import { NavbarBottom } from "./navbarBottom.js";
 
+function setOrientation() {
+  const navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
+  const navbarLeft = document.getElementsByClassName("navbar-left").item(0);
+  if (window.matchMedia("(orientation: portrait)").matches) {
+    navbarBottom.style.display = "flex";
+    navbarLeft.style.display = "none";
+  } else {
+    navbarBottom.style.display = "none";
+    navbarLeft.style.display = "inline";
+  }
+}
+
+window.onorientationchange = setOrientation;
+
 window.onload = openDb(window_onload);
 
 window.OutlayEntries_displayData = OutlayEntries.displayData;
@@ -178,4 +192,6 @@ async function window_onload() {
       OutlayEntries.displayData();
       break;
   }
+
+  setOrientation();
 }
