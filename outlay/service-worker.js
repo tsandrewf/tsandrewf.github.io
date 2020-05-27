@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "outlay_v_202005271255";
+const CACHE_NAME = "outlay_v_202005271704";
 
 let cacheUrls = [
   // HTML
