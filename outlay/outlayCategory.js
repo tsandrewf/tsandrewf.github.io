@@ -335,7 +335,9 @@ export class OutlayCategory {
       ],
     });
 
-    NavbarBottom.setActiveButton(navbarButtons.navbarButtonCategory.href);
+    NavbarBottom.setActiveButton(
+      !needCategorySave ? navbarButtons.navbarButtonCategory.href : null
+    );
 
     divContent = document.getElementsByClassName("content")[0];
     {

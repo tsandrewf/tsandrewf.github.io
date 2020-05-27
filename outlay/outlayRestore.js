@@ -20,19 +20,7 @@ let divLog;
 export class OutlayRestore {
   static displayData() {
     NavbarTop.show({
-      menu: {
-        buttonHTML: "&#9776;",
-        content: [
-          {
-            innerHTML: localeString.settings._capitalize(),
-            href: "#func=OutlaySettings",
-          },
-          {
-            innerHTML: localeString.utility._capitalize(),
-            href: "#func=OutlayUtils",
-          },
-        ],
-      },
+      back: localeString.utility._capitalize(),
       titleHTML: localeString.restore._capitalize(),
       buttons: [],
     });

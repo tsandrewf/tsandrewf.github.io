@@ -95,6 +95,9 @@
   text-align: center;
 }
 
+.navbar-left div:first-child {
+  padding-top: 0;
+}
 .navbar-left div {
   padding-top: 50px;
 }
