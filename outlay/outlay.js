@@ -17,6 +17,7 @@ import { Locale } from "./locale.js";
 import { NavbarBottom } from "./navbarBottom.js";
 
 function setOrientation() {
+  alert("Orientation changed!");
   const navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
   const navbarLeft = document.getElementsByClassName("navbar-left").item(0);
   if (window.matchMedia("(orientation: portrait)").matches) {
