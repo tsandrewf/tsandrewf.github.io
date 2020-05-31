@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pattern 01</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .action-bar {
+        background-color: lightpink;
+
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+      }
+
+      .content {
+        background-color: lightblue;
+
+        /* https://jsfiddle.net/SivaCharan/65vKw/ */
+        overflow-y: auto;
+      }
+
+      .nav-bar {
+        background-color: lawngreen;
+      }
+
+      /* Beg Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
+      /* Для Chrome */
+      body::-webkit-scrollbar,
+      .action-bar-content::-webkit-scrollbar,
+      .nav-bar::-webkit-scrollbar,
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      /* Для IE и Edge */
+      body,
+      .action-bar-content,
+      .nav-bar,
+      .content {
+        -ms-overflow-style: none;
+      }
+      /* ToDo! Для Firefox НЕ работает*/
+      /* End Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
+
+      @media screen and (orientation: landscape) {
+        body {
+          overflow-y: none;
+        }
+
+        .nav-bar {
+          height: 100vh;
+          float: left;
+          overflow-y: auto;
+        }
+
+        .action-bar-content {
+          height: 100vh;
+          overflow-y: auto;
+        }
+      }
+
+      @media screen and (orientation: portrait) {
+        .nav-bar {
+          position: -webkit-sticky;
+          position: sticky;
+          bottom: 0;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column-reverse;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav-bar">nav-bar</div>
+    <div class="action-bar-content">
+      <div class="action-bar">action-bar</div>
+      <div class="content">
+        <p>content</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>This is "content"</p>
+        <p>content</p>
+      </div>
+    </div>
+  </body>
+</html>
