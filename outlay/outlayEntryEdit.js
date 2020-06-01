@@ -167,15 +167,15 @@ export class OutlayEntryEdit {
     });
     {
       document
-        .getElementsByClassName("navbar-top")
+        .getElementsByClassName("action-bar")
         .item(0)
-        .classList.add("navbar-bottom-wrap");
+        .classList.add("action-bar-wrap");
     }
 
     NavbarBottom.setActiveButton();
 
     let divNewString = document.createElement("DIV");
-    document.getElementsByClassName("navbar-top")[0].appendChild(divNewString);
+    document.getElementsByClassName("action-bar")[0].appendChild(divNewString);
     divNewString.className = "new-string";
     divNewString.innerHTML =
       localeString.total._capitalize() + ': <span id="sumAll">sumAll</span>';

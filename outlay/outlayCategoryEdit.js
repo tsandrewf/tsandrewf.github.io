@@ -50,7 +50,7 @@ export class OutlayCategoryEdit {
           },
         ],
       });
-      document.getElementsByClassName("navbar-top")[0].childNodes[1].innerHTML =
+      document.getElementsByClassName("action-bar")[0].childNodes[1].innerHTML =
         document.title;
 
       NavbarBottom.setActiveButton();

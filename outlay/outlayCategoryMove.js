@@ -10,7 +10,7 @@ import {
   outlayCategoryObjectStoreName,
   settingObjectStoreName,
   outlayCategorySelectedKeyName,
-  outlayEntriesDateMinCalcKeyName
+  outlayEntriesDateMinCalcKeyName,
 } from "./db.js";
 import { Setting } from "./setting.js";
 import { Category } from "./category.js";
@@ -30,21 +30,21 @@ export class OutlayCategoryMove {
         content: [
           {
             innerHTML: "Переместить категорию",
-            href: "#func=OutlayCategoryMove"
+            href: "#func=OutlayCategoryMove",
           },
           {
             innerHTML: "Чеки",
-            href: "Javascript:OutlayEntries_displayData()"
+            href: "Javascript:OutlayEntries_displayData()",
           },
           {
             innerHTML: "Итоги в разрезе категорий",
-            href: "Javascript:OutlaySummary_displayData()"
+            href: "Javascript:OutlaySummary_displayData()",
           },
           {
             innerHTML: "Утилиты",
-            href: "#func=OutlayUtils"
-          }
-        ]
+            href: "#func=OutlayUtils",
+          },
+        ],
       },
       titleHTML: "Перемещение категории",
       buttons: [
@@ -52,15 +52,15 @@ export class OutlayCategoryMove {
           onclick: OutlayCategoryMove.save,
           title: "Сохранить",
           innerHTML: "&#10004;",
-          id: "buttonSave"
-        }
-      ]
+          id: "buttonSave",
+        },
+      ],
     });
 
     NavbarBottom.show([
       { text: "Чеки", href: 'Javascript:displayData("OutlayEntries")' },
       { text: "Категории", href: 'Javascript:displayData("OutlayCategory")' },
-      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' }
+      { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
     const divContent = document.getElementsByClassName("content")[0];
@@ -90,7 +90,7 @@ export class OutlayCategoryMove {
     for (let li of Array.prototype.slice
       .call(divContent.getElementsByTagName("LI"), 0)
       .filter(
-        x =>
+        (x) =>
           !Array.prototype.slice
             .call(categorySelected.getElementsByTagName("LI"), 0)
             .includes(x)
@@ -167,8 +167,6 @@ export class OutlayCategoryMove {
           .querySelector("li > span:nth-child(2)")
           .innerHTML.trim() +
         '"';
-
-      document.getElementById("buttonSave").className = "button";
     }
   }
 
@@ -201,7 +199,7 @@ export class OutlayCategoryMove {
         [
           outlayCategoryObjectStoreName,
           outlayObjectStoreName,
-          settingObjectStoreName
+          settingObjectStoreName,
         ],
         "readwrite"
       );
@@ -216,11 +214,11 @@ export class OutlayCategoryMove {
       category.parentId = Number(categorySelectedParent.firstChild.id);
       await Category.set(category, transaction);
 
-      transaction.onerror = function(event) {
+      transaction.onerror = function (event) {
         alert("ОШИБКА: " + event.target.error);
       };
 
-      transaction.oncomplete = function() {
+      transaction.oncomplete = function () {
         history.back();
       };
     } catch (error) {

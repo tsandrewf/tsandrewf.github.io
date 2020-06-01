@@ -3,8 +3,7 @@
 import { historyLengthInit, historyLengthCurrent } from "./outlay.js";
 import { navbarButtons } from "./locale.js";
 
-const navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
-const navbarLeft = document.getElementsByClassName("navbar-left").item(0);
+const navbarBottom = document.getElementsByClassName("nav-bar").item(0);
 
 export class NavbarBottom {
   static show(options, optionSelectedNum) {
@@ -27,7 +26,6 @@ export class NavbarBottom {
 
     for (let option of Object.values(navbarButtons)) {
       NavbarBottom.addButton(navbarBottom, option);
-      NavbarBottom.addButton(navbarLeft, option);
     }
   }
 
@@ -37,7 +35,7 @@ export class NavbarBottom {
     divButton.id = option.href;
     divButton.setAttribute("funcName", option.href);
     divButton.onclick = function () {
-      if ("navbar-bottom-div-active" === this.className) return;
+      if ("navbar-button-active" === this.className) return;
       displayData(this.getAttribute("funcName"));
     };
 
@@ -56,15 +54,14 @@ export class NavbarBottom {
 
   static setActiveButton(funcName) {
     NavbarBottom.setNavbarActiveButton(navbarBottom, funcName);
-    NavbarBottom.setNavbarActiveButton(navbarLeft, funcName);
   }
 
   static setNavbarActiveButton(navbar, funcName) {
     for (let div of navbar.children) {
       div.className =
         div.getAttribute("funcName") === funcName
-          ? "navbar-bottom-div-active"
-          : "navbar-bottom-div-passive";
+          ? "navbar-button-active"
+          : "navbar-button-passive";
     }
   }
 
@@ -77,6 +74,5 @@ export class NavbarBottom {
 
   static setButtonText() {
     NavbarBottom.setNavbarButtonText(navbarBottom);
-    NavbarBottom.setNavbarButtonText(navbarLeft);
   }
 }

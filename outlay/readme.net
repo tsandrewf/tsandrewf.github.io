@@ -1,2 +1,0 @@
-outlayCategory.html:10 GET http://127.0.0.1:5500/outlayCategory.js net::ERR_NETWORK_CHANGED
-outlayCategory.html:9 GET http://127.0.0.1:5500/date.js net::ERR_NETWORK_CHANGED

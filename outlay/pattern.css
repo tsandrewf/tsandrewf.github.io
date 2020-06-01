@@ -1,0 +1,152 @@
+.action-bar,
+.nav-bar {
+  background-color: blue;
+  color: white;
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.action-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+
+  top: 0;
+  justify-content: space-between;
+}
+
+.action-bar-wrap {
+  flex-wrap: wrap; /* Допускается перенос на новую строку */
+}
+
+.action-bar .action-bar-back {
+  cursor: pointer;
+}
+
+.action-bar .action-bar-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.action-bar .action-bar-buttons > div {
+  background-color: white;
+  color: blue;
+  border-radius: 50%;
+  height: 2em;
+  width: 2em;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.action-bar div {
+  /* https://stackoverflow.com/questions/9249359/vertically-align-text-within-a-div */
+  /* Internet Explorer 10 */
+  display: -ms-flexbox;
+  -ms-flex-pack: center;
+  -ms-flex-align: center;
+
+  /* Firefox */
+  display: -moz-box;
+  -moz-box-pack: center;
+  -moz-box-align: center;
+
+  /* Safari, Opera, and Chrome */
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+
+  /* W3C */
+  display: box;
+  box-pack: center;
+  box-align: center;
+}
+
+.action-bar > div:first-child {
+  cursor: pointer;
+}
+
+.new-string {
+  width: 100%;
+}
+
+.content {
+  background-color: lightblue;
+
+  /* https://jsfiddle.net/SivaCharan/65vKw/ */
+  overflow-y: auto;
+}
+
+.nav-bar {
+  text-align: center;
+  justify-content: space-around;
+}
+
+.nav-bar > div {
+  margin: 10px;
+  cursor: pointer;
+}
+
+.nav-bar > .navbar-button-active {
+  color: grey;
+}
+
+.nav-bar > .navbar-button-passive {
+  color: white;
+  cursor: pointer;
+}
+
+/* Beg Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
+/* Для Chrome */
+body::-webkit-scrollbar,
+.action-bar-content::-webkit-scrollbar,
+.nav-bar::-webkit-scrollbar,
+.content::-webkit-scrollbar {
+  display: none;
+}
+/* Для IE и Edge */
+body,
+.action-bar-content,
+.nav-bar,
+.content {
+  -ms-overflow-style: none;
+}
+/* ToDo! Для Firefox НЕ работает*/
+/* End Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
+
+@media screen and (orientation: landscape) {
+  body {
+    overflow-y: none;
+  }
+
+  .nav-bar {
+    height: 100vh;
+    float: left;
+    overflow-y: auto;
+  }
+
+  .action-bar-content {
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .nav-bar {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+
+    display: flex;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
