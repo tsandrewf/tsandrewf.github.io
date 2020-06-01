@@ -93,11 +93,11 @@ body {
 }
 
 .nav-bar > .navbar-button-active {
-  color: grey;
+  color: white;
 }
 
 .nav-bar > .navbar-button-passive {
-  color: white;
+  color: grey;
   cursor: pointer;
 }
 
@@ -131,6 +131,12 @@ body,
     overflow-y: auto;
   }
 
+  .nav-bar > .navbar-button-active {
+    border-right: solid white;
+    padding-right: 5px;
+    margin-right: 5px;
+  }
+
   .action-bar-content {
     height: 100vh;
     overflow-y: auto;
@@ -147,6 +153,12 @@ body,
     display: flex;
 
     overflow-x: auto;
+  }
+
+  .nav-bar > .navbar-button-active {
+    border-top: solid white;
+    padding-top: 5px;
+    margin-top: 5px;
   }
 
   body {
