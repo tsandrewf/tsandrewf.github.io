@@ -119,7 +119,8 @@ body,
 /* ToDo! Для Firefox НЕ работает*/
 /* End Убираем полосу прокрутки (https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp) */
 
-@media screen and (orientation: landscape) {
+/*@media screen and (orientation: landscape) {*/
+@media screen and (min-aspect-ratio: 8/7) {
   body {
     overflow-y: none;
   }
@@ -136,7 +137,8 @@ body,
   }
 }
 
-@media screen and (orientation: portrait) {
+/*@media screen and (orientation: portrait) {*/
+@media screen and (max-aspect-ratio: 8/7) {
   .nav-bar {
     position: -webkit-sticky;
     position: sticky;
