@@ -84,7 +84,7 @@ body {
 
 .nav-bar {
   text-align: center;
-  justify-content: space-around;
+  /*justify-content: space-around;*/
 }
 
 .nav-bar > div {
@@ -145,6 +145,8 @@ body,
     bottom: 0;
 
     display: flex;
+
+    overflow-x: auto;
   }
 
   body {
