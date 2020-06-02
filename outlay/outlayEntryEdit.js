@@ -9,6 +9,7 @@ import { Setting } from "./setting.js";
 import { retValKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 let outlayTBody;
 let entryId;
@@ -259,6 +260,8 @@ export class OutlayEntryEdit {
         .getElementsByTagName("INPUT")[0]
         .focus();
     }
+
+    setContentHeight();
   }
 
   /*Number.prototype._toForm = function() {

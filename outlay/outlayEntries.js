@@ -9,6 +9,7 @@ import { OutlayUtils } from "./outlayUtils.js";
 import { outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 let tbodyOutlayEntries;
 
@@ -77,6 +78,8 @@ export class OutlayEntries {
       tableOutlayEntries.appendChild(tbodyOutlayEntries);
     }
     OutlayEntries.addEntries(dateBeg, dateEnd);
+
+    setContentHeight();
   }
 
   static async addEntries(dateBeg, dateEnd) {

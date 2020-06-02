@@ -68,45 +68,6 @@ window.displayData = async function (funcName) {
         break;
     }
   }
-  /*console.log(
-    "action-bar height",
-    document
-      .getElementsByClassName("action-bar")
-      .item(0)
-      .getBoundingClientRect().height
-  );
-  console.log(
-    "nav-bar height",
-    document.getElementsByClassName("nav-bar").item(0).getBoundingClientRect()
-      .height
-  );
-  console.log(
-    "content height",
-    document.getElementsByClassName("content").item(0).getBoundingClientRect()
-      .height
-  );*/
-  //document.getElementsByClassName("content").item(0).style.height = "400px";
-  /*document.getElementsByClassName("content").item(0).style.height =
-    500 -
-    document.getElementsByClassName("nav-bar").item(0).getBoundingClientRect()
-      .height +
-    "px";*/
-  /*document.getElementsByClassName("content").item(0).style.height =
-    "calc(100vh - 130px)";*/
-  /*document.getElementsByClassName("content").item(0).style.height =
-    "calc(100vh - " +
-    (document
-      .getElementsByClassName("action-bar")
-      .item(0)
-      .getBoundingClientRect().height +
-      document.getElementsByClassName("nav-bar").item(0).getBoundingClientRect()
-        .height) +
-    "px)";
-  console.log(
-    "content height",
-    document.getElementsByClassName("content").item(0).getBoundingClientRect()
-      .height
-  );*/
 };
 
 window.onpopstate = async function (event) {
@@ -232,6 +193,4 @@ async function window_onload() {
       OutlayEntries.displayData();
       break;
   }
-
-  //setOrientation();
 }

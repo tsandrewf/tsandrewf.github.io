@@ -5,6 +5,7 @@ import { NavbarBottom } from "./navbarBottom.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { Setting } from "./setting.js";
+import { setContentHeight } from "./pattern.js";
 
 let divContent;
 
@@ -79,6 +80,8 @@ export class OutlayUtils {
       divBackup.appendChild(divText);
       divText.innerHTML = localeString.restore._capitalize();
     }
+
+    setContentHeight();
   }
 
   static export() {

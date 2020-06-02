@@ -14,6 +14,7 @@ import {
 } from "./db.js";
 import { Setting } from "./setting.js";
 import { Category } from "./category.js";
+import { setContentHeight } from "./pattern.js";
 
 let categorySelectedId;
 let categorySelected;
@@ -100,6 +101,8 @@ export class OutlayCategoryMove {
     }
 
     OutlayCategoryMove.navbarTopRefresh();
+
+    setContentHeight();
   }
 
   static categoryParentSelect() {

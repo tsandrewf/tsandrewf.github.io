@@ -4,6 +4,7 @@ import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
 import { localeString } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 let id;
 let parentId;
@@ -76,6 +77,8 @@ export class OutlayCategoryEdit {
     } catch (error) {
       alert(error);
     }
+
+    setContentHeight();
   }
 
   static async categoryTree(category) {

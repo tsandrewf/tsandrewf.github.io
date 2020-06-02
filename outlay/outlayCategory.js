@@ -9,6 +9,7 @@ import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 import {
   db,
@@ -435,6 +436,8 @@ export class OutlayCategory {
     //} catch (error) {
     //  alert(error.stack);
     //} finally {
+    setContentHeight();
+
     StandbyIndicator.hide();
     //}
   }

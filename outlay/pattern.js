@@ -20,6 +20,10 @@ export function setContentHeight() {
   if (100 > navBarHeight) {
     minusHeght += navBarHeight;
   }
+  /*console.log("actionBarHeight", actionBarHeight);
+  console.log("navBarHeight", navBarHeight);
+  console.log("minusHeght", minusHeght);
+  console.log("------------------------------");*/
 
   document.getElementsByClassName("content").item(0).style.height =
     "calc(100vh - " + minusHeght + "px)";

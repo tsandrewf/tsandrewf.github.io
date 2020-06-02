@@ -9,6 +9,7 @@ import {
   navbarButtons,
 } from "./locale.js";
 import { Setting } from "./setting.js";
+import { setContentHeight } from "./pattern.js";
 
 let divContent;
 
@@ -84,5 +85,7 @@ export class OutlaySettings {
         }
       }
     }
+
+    setContentHeight();
   }
 }

@@ -9,6 +9,7 @@ import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { localeString, navbarButtons } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
@@ -130,6 +131,8 @@ export class OutlaySummary {
     await OutlaySummary.summariesRefresh();
 
     await OutlaySummary.summaryContentRefresh(0);
+
+    setContentHeight();
     //} catch (error) {
     //  alert(error);
     //}

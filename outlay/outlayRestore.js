@@ -13,6 +13,7 @@ import { ObjectStore } from "./objectStore.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { throwErrorIfNotNull } from "./base.js";
 import { localeString } from "./locale.js";
+import { setContentHeight } from "./pattern.js";
 
 let divContent;
 let divLog;
@@ -114,6 +115,8 @@ export class OutlayRestore {
     divLog = document.createElement("DIV");
     divContent.appendChild(divLog);
     divLog.className = "log";
+
+    setContentHeight();
   }
 
   // https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server

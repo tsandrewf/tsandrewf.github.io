@@ -1,7 +1,6 @@
 "use strict";
 
 import { historyLengthIncreaseSet } from "./outlay.js";
-import { setContentHeight } from "./pattern.js";
 
 export class NavbarTop {
   static hrefOnClick() {
@@ -46,7 +45,5 @@ export class NavbarTop {
       divButtonInnerHTML.innerHTML = button.innerHTML;
       divButtonInnerHTML.title = button.title;
     }
-
-    setContentHeight();
   }
 }
