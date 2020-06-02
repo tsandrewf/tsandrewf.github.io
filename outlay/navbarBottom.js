@@ -11,7 +11,7 @@ export class NavbarBottom {
       navbarBottom.removeChild(navbarBottom.firstChild);
     }
 
-    if (navigator.standalone) {
+    /*if (navigator.standalone) {
       let div = document.createElement("DIV");
       navbarBottom.appendChild(div);
       if (0 < historyLengthCurrent - historyLengthInit) {
@@ -22,7 +22,7 @@ export class NavbarBottom {
       } else {
         div.innerHTML = "<";
       }
-    }
+    }*/
 
     for (let option of Object.values(navbarButtons)) {
       NavbarBottom.addButton(navbarBottom, option);
