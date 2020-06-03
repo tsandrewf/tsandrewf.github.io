@@ -48,14 +48,12 @@ export class OutlayUtils {
       const divBackup = document.createElement("DIV");
       divUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.export;
-      divBackup.className = "utilItem";
 
       const divIcon = document.createElement("DIV");
       divBackup.appendChild(divIcon);
       // Special characters
       // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
       divIcon.innerHTML = "&#128190;";
-      divIcon.className = "utilIcon";
 
       const divText = document.createElement("DIV");
       divBackup.appendChild(divText);
@@ -67,14 +65,12 @@ export class OutlayUtils {
       const divBackup = document.createElement("DIV");
       divUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.restore;
-      divBackup.className = "utilItem";
 
       const divIcon = document.createElement("DIV");
       divBackup.appendChild(divIcon);
       // Special characters
       // https://vsthemes.ru/posts/3239-simvoly-smajliki-emoji.html
       divIcon.innerHTML = "&#128295;";
-      divIcon.className = "utilIcon";
 
       const divText = document.createElement("DIV");
       divBackup.appendChild(divText);
