@@ -38,11 +38,15 @@ export class OutlayRestore {
       }
     }
 
+    const divRestore = document.createElement("DIV");
+    divContent.appendChild(divRestore);
+    divRestore.className = "restore";
+
     {
       let spanFilePrefix;
       {
         spanFilePrefix = document.createElement("SPAN");
-        divContent.appendChild(spanFilePrefix);
+        divRestore.appendChild(spanFilePrefix);
         spanFilePrefix.innerHTML =
           localeString.restoreDatabaseFromFile._capitalize() + ' "';
         spanFilePrefix.className = "log";
@@ -50,19 +54,19 @@ export class OutlayRestore {
       }
 
       const inputFile = document.createElement("INPUT");
-      divContent.appendChild(inputFile);
+      divRestore.appendChild(inputFile);
 
       const aFile = document.createElement("A");
-      divContent.appendChild(aFile);
+      divRestore.appendChild(aFile);
       aFile.className = "log";
 
       const spanFileDescription = document.createElement("SPAN");
-      divContent.appendChild(spanFileDescription);
+      divRestore.appendChild(spanFileDescription);
       spanFileDescription.className = "log";
 
       const button = document.createElement("BUTTON");
       {
-        divContent.appendChild(button);
+        divRestore.appendChild(button);
         button.className = "logButton";
         button.style.width =
           (2 <= localeString.yes.length ? localeString.yes.length : 2) + "em";
@@ -113,7 +117,7 @@ export class OutlayRestore {
     }
 
     divLog = document.createElement("DIV");
-    divContent.appendChild(divLog);
+    divRestore.appendChild(divLog);
     divLog.className = "log";
 
     setContentHeight();
