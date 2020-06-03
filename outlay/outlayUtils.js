@@ -29,8 +29,6 @@ export class OutlayUtils {
 
     NavbarBottom.setActiveButton(navbarButtons.navbarButtonUtils.href);
 
-    document.title = localeString.utility._capitalize();
-
     {
       divContent = document.getElementsByClassName("content")[0];
 

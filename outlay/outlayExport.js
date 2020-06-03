@@ -41,8 +41,6 @@ export class OutlayExport {
       { text: "Итоги", href: 'Javascript:displayData("OutlaySummary")' },
     ]);
 
-    document.title = "Архивирование и восстановление";
-
     const divContent = document.getElementsByClassName("content")[0];
 
     {

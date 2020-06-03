@@ -30,8 +30,6 @@ export class OutlayEntries {
   static async displayData(dateBeg, dateEnd) {
     Setting.setWindowOnload("OutlayEntries");
 
-    document.title = localeString.checks._capitalize();
-
     window.OutlayEntries_outlayEntryDelete = OutlayEntries.outlayEntryDelete;
     window.OutlayEntries_outlayEntryEdit = OutlayEntries.outlayEntryEdit;
 

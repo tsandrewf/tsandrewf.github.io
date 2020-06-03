@@ -23,8 +23,6 @@ let categorySelectedParentInit;
 
 export class OutlayCategoryMove {
   static async displayData() {
-    document.title = "Перемещение категории расходов";
-
     NavbarTop.show({
       menu: {
         buttonHTML: "&#9776;",

@@ -312,8 +312,6 @@ export class OutlayCategory {
       }
     }
 
-    document.title = localeString.categories._capitalize();
-
     NavbarTop.show({
       back: needCategorySave ? localeString.check._capitalize() : null,
       titleHTML: localeString.categories._capitalize(),

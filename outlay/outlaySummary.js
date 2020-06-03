@@ -49,7 +49,6 @@ export class OutlaySummary {
     Setting.setWindowOnload("OutlaySummary");
 
     window.OutlaySummary_dateChanged = OutlaySummary.dateChanged;
-    document.title = localeString.results._capitalize();
 
     NavbarTop.show({
       titleHTML: localeString._writeFromLeftToRight

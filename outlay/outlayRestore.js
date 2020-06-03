@@ -28,8 +28,6 @@ export class OutlayRestore {
 
     NavbarBottom.setActiveButton();
 
-    document.title = localeString.restore._capitalize();
-
     {
       divContent = document.getElementsByClassName("content")[0];
 

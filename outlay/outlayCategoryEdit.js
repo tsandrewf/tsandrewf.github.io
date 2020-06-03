@@ -15,6 +15,7 @@ export class OutlayCategoryEdit {
       id = options.id;
       parentId = options.parentId;
 
+      let document_title = null;
       let displayDataCategory = null;
       if (!options.id && !options.parentId) {
         throw new Error(
@@ -31,11 +32,11 @@ export class OutlayCategoryEdit {
             '"parentId"'
         );
       } else if (options.id) {
-        document.title = localeString.categoryEdit._capitalize();
+        document_title = localeString.categoryEdit._capitalize();
         window.OutlayCategorySave = OutlayCategoryEdit.saveEdit;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryEdit;
       } else if (options.parentId) {
-        document.title = localeString.newCategory._capitalize();
+        document_title = localeString.newCategory._capitalize();
         window.OutlayCategorySave = OutlayCategoryEdit.saveNew;
         displayDataCategory = OutlayCategoryEdit.displayDataCategoryNew;
       }
@@ -51,8 +52,9 @@ export class OutlayCategoryEdit {
           },
         ],
       });
-      document.getElementsByClassName("action-bar")[0].childNodes[1].innerHTML =
-        document.title;
+      document.getElementsByClassName(
+        "action-bar"
+      )[0].childNodes[1].innerHTML = document_title;
 
       NavbarBottom.setActiveButton();
 
