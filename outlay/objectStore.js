@@ -122,7 +122,7 @@ export class ObjectStore {
         const request = transaction.objectStore(objectStoreName).put(record);
 
         request.onsuccess = function () {
-          resolve();
+          resolve(request.result);
         };
 
         request.onerror = function () {

@@ -5,9 +5,14 @@ import { NavbarBottom } from "./navbarBottom.js";
 import { Category } from "./category.js";
 import { localeString } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
+import { paramRefresh } from "./needRefresh.js";
+import { compressed, expanded } from "./outlayCategory.js";
+import { OutlayCategory } from "./outlayCategory.js";
 
 let id;
 let parentId;
+
+const divOutlayCategoryEdit = document.getElementById("outlayCategoryEdit");
 
 export class OutlayCategoryEdit {
   static displayData(options) {
@@ -58,15 +63,19 @@ export class OutlayCategoryEdit {
 
       NavbarBottom.setActiveButton();
 
+      setContentHeight();
+
+      for (let div of document.querySelectorAll(".content > div")) {
+        div.style.display = "none";
+      }
+
+      while (divOutlayCategoryEdit.firstChild) {
+        divOutlayCategoryEdit.removeChild(divOutlayCategoryEdit.firstChild);
+      }
+
       {
-        const divContent = document.getElementsByClassName("content")[0];
-
-        while (divContent.firstChild) {
-          divContent.removeChild(divContent.firstChild);
-        }
-
         const ul = document.createElement("UL");
-        divContent.appendChild(ul);
+        divOutlayCategoryEdit.appendChild(ul);
         ul.style = "padding-left: 0;";
         ul.className = "upperCategory";
         const li = document.createElement("LI");
@@ -80,7 +89,7 @@ export class OutlayCategoryEdit {
       alert(error);
     }
 
-    setContentHeight();
+    divOutlayCategoryEdit.style.display = "block";
   }
 
   static async categoryTree(category) {
@@ -90,7 +99,7 @@ export class OutlayCategoryEdit {
       category = await Category.get(category.parentId);
     }
 
-    let parentUl = document.getElementsByTagName("UL")[0];
+    let parentUl = divOutlayCategoryEdit.querySelector("UL");
     for (let category of upperCategoryArray.reverse()) {
       let ul = document.createElement("UL");
       parentUl.appendChild(ul);
@@ -136,27 +145,76 @@ export class OutlayCategoryEdit {
   }
 
   static async saveNew() {
-    try {
-      let categoryName = document.getElementById("categoryName").value.trim();
-      if (!categoryName) {
-        alert(localeString.categoryNameNotSet._capitalize());
-        return;
-      }
-
-      await Category.set({
-        name: categoryName,
-        parentId: parentId,
-        expanded: false,
-      });
-
-      if (0 !== parentId) {
-        await Category.setExpanded(parentId, true);
-      }
-
-      window.history.back();
-    } catch (error) {
-      alert(error);
+    //try {
+    let categoryName = document.getElementById("categoryName").value.trim();
+    if (!categoryName) {
+      alert(localeString.categoryNameNotSet._capitalize());
+      return;
     }
+
+    const categoryNewId = await Category.set({
+      name: categoryName,
+      parentId: parentId,
+      expanded: false,
+    });
+
+    if (0 !== parentId) {
+      await Category.setExpanded(parentId, true);
+    }
+
+    const selectedCategory = document.querySelector(
+      "#outlayCategory .selectedCategory"
+    );
+    // :scope
+    // https://stackoverflow.com/questions/3680876/using-queryselectorall-to-retrieve-direct-children
+    {
+      const ulNew = document.createElement("UL");
+      ulNew.setAttribute("expanded", false);
+
+      {
+        let li = document.createElement("LI");
+        ulNew.appendChild(li);
+        li.id = categoryNewId;
+        let spanName = document.createElement("SPAN");
+        spanName.onclick = OutlayCategory.liNameOnClick;
+        let spanExpand = document.createElement("SPAN");
+        spanExpand.onclick = OutlayCategory.leafChange;
+        li.appendChild(spanExpand);
+        li.appendChild(spanName);
+        spanExpand.innerHTML = compressed;
+
+        spanName.innerHTML = " " + categoryName;
+        spanName.innerHTML += " ";
+        let aItemCategorySave = document.createElement("A");
+        li.appendChild(aItemCategorySave);
+        aItemCategorySave.innerHTML = "&#10004;";
+        aItemCategorySave.href =
+          "JavaScript:OutlayCategory_itemCategorySave(" + categoryNewId + ")";
+      }
+
+      let categoryInserted = false;
+      for (let ul of selectedCategory.parentElement.querySelectorAll(
+        ":scope > ul"
+      )) {
+        if (
+          categoryName <
+          ul.querySelector("li > span:nth-child(2)").innerHTML.trim()
+        ) {
+          selectedCategory.parentElement.insertBefore(ulNew, ul);
+          categoryInserted = true;
+
+          break;
+        }
+      }
+      if (!categoryInserted) {
+        selectedCategory.parentElement.appendChild(ulNew);
+      }
+    }
+
+    window.history.back();
+    //} catch (error) {
+    //  alert(error);
+    //}
   }
 
   static async saveEdit() {
@@ -174,6 +232,19 @@ export class OutlayCategoryEdit {
 
     category.name = categoryName;
     await Category.set(category);
+
+    document.querySelector("#outlayCategory .selectedCategory").innerText =
+      " " + category.name + " ";
+
+    if (!paramRefresh.outlaySummary.needRefresh) {
+      for (let td of document.querySelectorAll(
+        '#outlaySummary > table > tbody > tr[categoryid="' +
+          id +
+          '"] > #tdCategoryName'
+      )) {
+        td.innerText = category.name;
+      }
+    }
 
     window.history.back();
   }

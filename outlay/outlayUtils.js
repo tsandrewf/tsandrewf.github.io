@@ -7,7 +7,7 @@ import { localeString, navbarButtons } from "./locale.js";
 import { Setting } from "./setting.js";
 import { setContentHeight } from "./pattern.js";
 
-let divContent;
+const divOutlayUtils = document.getElementById("outlayUtils");
 
 export class OutlayUtils {
   static displayData() {
@@ -29,22 +29,24 @@ export class OutlayUtils {
 
     NavbarBottom.setActiveButton(navbarButtons.navbarButtonUtils.href);
 
-    {
-      divContent = document.getElementsByClassName("content")[0];
+    setContentHeight();
 
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
+    }
+
+    {
+      while (divOutlayUtils.firstChild) {
+        divOutlayUtils.removeChild(divOutlayUtils.firstChild);
       }
     }
 
-    const divUtils = document.createElement("DIV");
-    divContent.appendChild(divUtils);
-    divUtils.className = "utils";
+    divOutlayUtils.className = "utils";
 
     {
       // Backup
       const divBackup = document.createElement("DIV");
-      divUtils.appendChild(divBackup);
+      divOutlayUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.export;
 
       const divIcon = document.createElement("DIV");
@@ -61,7 +63,7 @@ export class OutlayUtils {
     {
       // Restore
       const divBackup = document.createElement("DIV");
-      divUtils.appendChild(divBackup);
+      divOutlayUtils.appendChild(divBackup);
       divBackup.onclick = OutlayUtils.restore;
 
       const divIcon = document.createElement("DIV");
@@ -75,7 +77,7 @@ export class OutlayUtils {
       divText.innerHTML = localeString.restore._capitalize();
     }
 
-    setContentHeight();
+    divOutlayUtils.style.display = "flex";
   }
 
   static export() {

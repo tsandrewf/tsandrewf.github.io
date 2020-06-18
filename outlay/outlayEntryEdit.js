@@ -2,7 +2,7 @@
 
 import { NavbarTop } from "./navbarTop.js";
 import { NavbarBottom } from "./navbarBottom.js";
-import { outlayDateSelectedKeyName } from "./db.js";
+import { outlayDateSelectedKeyName, outlaySummaryPeriodKeyName } from "./db.js";
 import { Category } from "./category.js";
 import { OutlayEntry } from "./outlayEntry.js";
 import { Setting } from "./setting.js";
@@ -10,9 +10,14 @@ import { retValKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
+import { paramRefresh } from "./needRefresh.js";
+import { OutlayEntries, tbodyOutlayEntries } from "./outlayEntries.js";
 
 let outlayTBody;
 let entryId;
+let outlayEntryRem;
+
+const divOutlayEntryEdit = document.getElementById("outlayEntryEdit");
 
 export class OutlayEntryEdit {
   static inputSum_onkeydown() {
@@ -35,10 +40,7 @@ export class OutlayEntryEdit {
   static sumAllRefresh() {
     let sumAll = 0;
     for (let row of outlayTBody.rows) {
-      let sum = row
-        .querySelector("#colSum")
-        .querySelector("INPUT")
-        .value.trim();
+      const sum = row.querySelector("#colSum > INPUT").value.trim();
       if (sum && !Number.isNaN(sum)) {
         sumAll += parseFloat(sum);
       }
@@ -126,11 +128,11 @@ export class OutlayEntryEdit {
       {
         url: "OutlayEntryEdit",
         window_scrollY: window.scrollY,
-        content: content.innerHTML,
+        content: divOutlayEntryEdit.innerHTML,
         date: document.getElementById("iptDate").value,
         rowNum: rowNum,
         sums: Array.prototype.slice
-          .call(content.getElementsByTagName("INPUT"))
+          .call(divOutlayEntryEdit.getElementsByTagName("INPUT"))
           .flatMap((x) => [x.value]),
       },
       window.title
@@ -181,59 +183,77 @@ export class OutlayEntryEdit {
     divNewString.innerHTML =
       localeString.total._capitalize() + ': <span id="sumAll">sumAll</span>';
 
-    const content = document.getElementsByClassName("content")[0];
+    setContentHeight();
+
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
+    }
 
     if (window.history.state) {
-      content.innerHTML = window.history.state.content;
+      divOutlayEntryEdit.innerHTML = window.history.state.content;
       document.getElementById("iptDate").value = window.history.state.date;
-      const inputArray = content.getElementsByTagName("INPUT");
+      const inputArray = divOutlayEntryEdit.getElementsByTagName("INPUT");
       for (let i = 0; i < inputArray.length; i++) {
         inputArray[i].value = window.history.state.sums[i];
       }
 
-      outlayTBody = document.getElementsByTagName("TBODY")[0];
+      outlayTBody = divOutlayEntryEdit.querySelector("TBODY");
       OutlayEntryEdit.sumAllRefresh();
       entryId = Number(
-        content.getElementsByTagName("TABLE")[0].getAttribute("entryId")
+        divOutlayEntryEdit
+          .getElementsByTagName("TABLE")[0]
+          .getAttribute("entryId")
       );
       if (window.history.state.rowNum) {
         const categoryId = await Setting.get(retValKeyName);
         if (categoryId) {
-          const tdCategory = content.getElementsByTagName("TBODY")[0].rows[
-            window.history.state.rowNum - 1
-          ].cells["colCategory"];
+          const tdCategory = divOutlayEntryEdit.getElementsByTagName("TBODY")[0]
+            .rows[window.history.state.rowNum - 1].cells["colCategory"];
           tdCategory.setAttribute("categoryid", categoryId);
           const aCategory = tdCategory.getElementsByTagName("A")[0];
           aCategory.innerHTML = (await Category.get(categoryId)).name;
         }
       }
 
+      divOutlayEntryEdit.style.display = "block";
+
       return;
     }
 
     {
-      const divContent = document.getElementsByClassName("content")[0];
-
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
+      while (divOutlayEntryEdit.firstChild) {
+        divOutlayEntryEdit.removeChild(divOutlayEntryEdit.firstChild);
       }
     }
 
     const table = document.createElement("TABLE");
-    content.appendChild(table);
+    divOutlayEntryEdit.appendChild(table);
     table.className = "tableBase tableOutlayEntryEdit";
     table.setAttribute("entryId", entryId);
     outlayTBody = document.createElement("TBODY");
     table.appendChild(outlayTBody);
 
-    let outlayEntry = entryId
+    /*let outlayEntry = entryId
       ? await OutlayEntry.get(entryId)
       : {
           date: new Date(await Setting.get(outlayDateSelectedKeyName)),
           sumAll: 0,
           categories: [null],
           sums: [null],
-        };
+        };*/
+    let outlayEntry;
+    if (entryId) {
+      outlayEntryRem = await OutlayEntry.get(entryId);
+      outlayEntry = outlayEntryRem;
+    } else {
+      outlayEntryRem = null;
+      outlayEntry = {
+        date: new Date(await Setting.get(outlayDateSelectedKeyName)),
+        sumAll: 0,
+        categories: [null],
+        sums: [null],
+      };
+    }
 
     if (!isNaN(outlayEntry.date)) {
       document.getElementById("iptDate").value = outlayEntry.date._toForm();
@@ -261,14 +281,21 @@ export class OutlayEntryEdit {
         .focus();
     }
 
-    setContentHeight();
+    divOutlayEntryEdit.style.display = "block";
   }
 
-  /*Number.prototype._toForm = function() {
-  return 10 > this ? "0" + this : this.toString();
-};*/
-
-  //window.save = save;
+  static ifSingleEntryInMonth(trEntry) {
+    {
+      const trPrev = trEntry.previousSibling;
+      if (
+        !trPrev.getAttribute("outlayentryid") &&
+        trEntry.nextSibling &&
+        !trEntry.nextSibling.getAttribute("outlayentryid")
+      ) {
+        tbodyOutlayEntries.removeChild(trPrev);
+      }
+    }
+  }
 
   static async save() {
     try {
@@ -298,9 +325,7 @@ export class OutlayEntryEdit {
         let categoryId = Number(
           item.querySelector("#colCategory").getAttribute("categoryId")
         );
-        let sum = Number(
-          item.querySelector("#colSum").querySelector("INPUT").value
-        );
+        let sum = Number(item.querySelector("#colSum > INPUT").value);
 
         if (sum) {
           outlayEntry.sumAll += sum;
@@ -310,6 +335,108 @@ export class OutlayEntryEdit {
       }
 
       await OutlayEntry.set(outlayEntry);
+
+      if (!paramRefresh.outlaySummary.needRefresh) {
+        let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+
+        paramRefresh.outlaySummary.needRefresh =
+          ((!datePeriod.dateBeg || datePeriod.dateBeg <= outlayEntry.date) &&
+            (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntry.date)) ||
+          (outlayEntryRem &&
+            (!datePeriod.dateBeg ||
+              datePeriod.dateBeg <= outlayEntryRem.date) &&
+            (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntryRem.date));
+      }
+
+      {
+        // Refresh outlayEntries
+        let trEntry;
+        if (outlayEntryRem) {
+          // Edited Entry -> find entry row
+          trEntry = tbodyOutlayEntries.querySelector(
+            'tr[outlayentryid="' + outlayEntryRem.id + '"]'
+          );
+          // Fix entry row
+          // Date
+          trEntry.querySelector("td:nth-child(1)").innerHTML =
+            outlayEntry.date && outlayEntry.date instanceof Date
+              ? outlayEntry.date._toStringBrief()
+              : localeString.notSet._capitalize();
+          // Category. ToDo!
+          // Sum
+          trEntry.querySelector(
+            "td:nth-child(3) > a"
+          ).innerHTML = outlayEntry.sumAll.toFixed(2);
+        } else {
+          // New Entry. Create new entry row
+          trEntry = await OutlayEntries.trEntryAppend(outlayEntry);
+        }
+
+        if (
+          // If New Entry or Entry date was changed
+          !outlayEntryRem ||
+          outlayEntryRem.date.valueOf() !== outlayEntry.date.valueOf()
+        ) {
+          if (
+            // If Entry was edited and Entry month was changed
+            outlayEntryRem &&
+            outlayEntryRem.date.getMonth() !== outlayEntry.date.getMonth()
+          )
+            // Delete month title, if this entry is single in month
+            OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
+
+          let trInserted = false;
+          for (let tr of tbodyOutlayEntries.querySelectorAll(
+            "tr[outlayentryid]"
+          )) {
+            const entryDate = (
+              await OutlayEntry.get(Number(tr.getAttribute("outlayentryid")))
+            ).date;
+
+            const entry = await OutlayEntry.get(
+              Number(tr.getAttribute("outlayentryid"))
+            );
+
+            if (
+              outlayEntry.date.valueOf() > entry.date.valueOf() ||
+              (outlayEntry.date.valueOf() === entry.date.valueOf() &&
+                outlayEntry.id > entry.id)
+            ) {
+              if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
+                tbodyOutlayEntries.insertBefore(trEntry, tr);
+              } else {
+                tbodyOutlayEntries.insertBefore(trEntry, tr.previousSibling);
+
+                {
+                  const trPrev = trEntry.previousSibling;
+                  if (
+                    !trPrev ||
+                    !trPrev.getAttribute("outlayentryid") ||
+                    (
+                      await OutlayEntry.get(
+                        Number(trPrev.getAttribute("outlayentryid"))
+                      )
+                    ).date.getMonth() !== outlayEntry.date.getMonth()
+                  ) {
+                    tbodyOutlayEntries.insertBefore(
+                      OutlayEntries.getTrMonth(outlayEntry.date),
+                      trEntry
+                    );
+                  }
+                }
+              }
+
+              trInserted = true;
+              break;
+            }
+          }
+
+          if (!trInserted) {
+            //OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
+          }
+          //paramRefresh.outlayEntries.needRefresh = true;
+        }
+      }
 
       history.back();
     } catch (error) {

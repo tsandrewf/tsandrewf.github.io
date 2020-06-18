@@ -2,6 +2,7 @@
 
 import { historyLengthInit, historyLengthCurrent } from "./outlay.js";
 import { navbarButtons } from "./locale.js";
+import { paramRefresh } from "./needRefresh.js";
 
 const navbarBottom = document.getElementsByClassName("nav-bar").item(0);
 
@@ -36,6 +37,17 @@ export class NavbarBottom {
     divButton.setAttribute("funcName", option.href);
     divButton.onclick = function () {
       if ("navbar-button-active" === this.className) return;
+
+      for (let div of document.querySelectorAll(
+        ".action-bar-content > .content > div"
+      )) {
+        if ("none" != div.style.display) {
+          paramRefresh[div.id].scrollTop = document.querySelector(
+            ".action-bar-content > .content"
+          ).scrollTop;
+        }
+      }
+
       displayData(this.getAttribute("funcName"));
     };
 

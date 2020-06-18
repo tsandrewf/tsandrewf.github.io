@@ -8,6 +8,7 @@ import {
   outlayCategoryObjectStoreName,
   outlayObjectStoreName,
   db_objectStoreNames,
+  windowOnloadKeyName,
 } from "./db.js";
 import { ObjectStore } from "./objectStore.js";
 import { OutlayEntry } from "./outlayEntry.js";
@@ -15,7 +16,9 @@ import { throwErrorIfNotNull } from "./base.js";
 import { localeString } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
 
-let divContent;
+import { Setting } from "./setting.js";
+
+const divOutlayRestore = document.getElementById("outlayRestore");
 let divLog;
 
 export class OutlayRestore {
@@ -28,23 +31,23 @@ export class OutlayRestore {
 
     NavbarBottom.setActiveButton();
 
-    {
-      divContent = document.getElementsByClassName("content")[0];
+    setContentHeight();
 
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
-      }
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
     }
 
-    const divRestore = document.createElement("DIV");
-    divContent.appendChild(divRestore);
-    divRestore.className = "restore";
+    {
+      while (divOutlayRestore.firstChild) {
+        divOutlayRestore.removeChild(divOutlayRestore.firstChild);
+      }
+    }
 
     {
       let spanFilePrefix;
       {
         spanFilePrefix = document.createElement("SPAN");
-        divRestore.appendChild(spanFilePrefix);
+        divOutlayRestore.appendChild(spanFilePrefix);
         spanFilePrefix.innerHTML =
           localeString.restoreDatabaseFromFile._capitalize() + ' "';
         spanFilePrefix.className = "log";
@@ -52,19 +55,19 @@ export class OutlayRestore {
       }
 
       const inputFile = document.createElement("INPUT");
-      divRestore.appendChild(inputFile);
+      divOutlayRestore.appendChild(inputFile);
 
       const aFile = document.createElement("A");
-      divRestore.appendChild(aFile);
+      divOutlayRestore.appendChild(aFile);
       aFile.className = "log";
 
       const spanFileDescription = document.createElement("SPAN");
-      divRestore.appendChild(spanFileDescription);
+      divOutlayRestore.appendChild(spanFileDescription);
       spanFileDescription.className = "log";
 
       const button = document.createElement("BUTTON");
       {
-        divRestore.appendChild(button);
+        divOutlayRestore.appendChild(button);
         button.className = "logButton";
         button.style.width =
           (2 <= localeString.yes.length ? localeString.yes.length : 2) + "em";
@@ -115,10 +118,10 @@ export class OutlayRestore {
     }
 
     divLog = document.createElement("DIV");
-    divRestore.appendChild(divLog);
+    divOutlayRestore.appendChild(divLog);
     divLog.className = "log";
 
-    setContentHeight();
+    divOutlayRestore.style.display = "block";
   }
 
   // https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
@@ -138,7 +141,7 @@ export class OutlayRestore {
     document.body.removeChild(element);
   }
 
-  static restore() {
+  static async restore() {
     if (!window.confirm(localeString.confirmRestore._capitalize())) return;
 
     const inputFile = document.getElementById("inputFile");
@@ -215,10 +218,11 @@ export class OutlayRestore {
         };
 
         transaction.oncomplete = function () {
-          const div = document.createElement("DIV");
-          divLog.appendChild(div);
-          div.innerText = localeString.databaseRestored._capitalize();
+          console.log("oncomplete");
         };
+
+        // It's needed to remember "windowOnloadKeyName" and restore at the end of process
+        const funcName = await Setting.get(windowOnloadKeyName, transaction);
 
         OutlayRestore.divLogClear();
         {
@@ -364,7 +368,16 @@ export class OutlayRestore {
             }
           }
         }
+
         //throw new Error("It''s OK!");
+        // Restore "windowOnloadKeyName" at the end of process
+        await Setting.set(windowOnloadKeyName, funcName, transaction);
+
+        {
+          const div = document.createElement("DIV");
+          divLog.appendChild(div);
+          div.innerText = localeString.databaseRestored._capitalize();
+        }
       } catch (error) {
         transaction._abortIfActive();
         OutlayRestore.divLogError(error);

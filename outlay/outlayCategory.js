@@ -10,6 +10,7 @@ import { OutlayUtils } from "./outlayUtils.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
+import { paramRefresh } from "./needRefresh.js";
 
 import {
   db,
@@ -26,10 +27,10 @@ window.OutlayUtils_displayData = function () {
 };
 
 let needCategorySave;
-let divContent;
+const divOutlayCategory = document.getElementById("outlayCategory");
 
 export const expanded = String.fromCharCode(9650);
-const compressed = String.fromCharCode(9660);
+export const compressed = String.fromCharCode(9660);
 
 let categorySelected;
 
@@ -64,7 +65,7 @@ export class OutlayCategory {
   }
 
   static categorySelectedMark(categoryId) {
-    for (let liCategory of divContent.getElementsByClassName(
+    for (let liCategory of divOutlayCategory.getElementsByClassName(
       "selectedCategory"
     )) {
       liCategory.classList.remove("selectedCategory");
@@ -90,8 +91,8 @@ export class OutlayCategory {
   static async itemCategorySave(categoryId) {
     await Setting.set(retValKeyName, categoryId);
     await Setting.set(categoryHtmlKeyName, {
-      content: divContent.innerHTML,
-      divContent_scrollTop: divContent.scrollTop,
+      content: divOutlayCategory.innerHTML,
+      scrollTop: divOutlayCategory.parentElement.scrollTop,
     });
 
     history.back();
@@ -218,8 +219,8 @@ export class OutlayCategory {
         OutlayCategory.categorySelectedMark(categorySelNewId);
 
         await Setting.set(categoryHtmlKeyName, {
-          content: divContent.innerHTML,
-          divContent_scrollTop: divContent.scrollTop,
+          content: divOutlayCategory.innerHTML,
+          scrollTop: divOutlayCategory.parentElement.scrollTop,
         });
       }
 
@@ -239,12 +240,12 @@ export class OutlayCategory {
     }
   }
 
-  static leafChange(elem) {
+  static leafChange() {
     if (StandbyIndicator.isShowing()) return;
 
-    let li = elem.parentElement;
-    OutlayCategory.liOnClick(li);
-    switch (elem.innerHTML) {
+    const li = event.target.parentElement;
+    OutlayCategory.liNameOnClick();
+    switch (event.target.innerHTML) {
       case expanded:
         OutlayCategory.liCompress(li);
         break;
@@ -252,7 +253,7 @@ export class OutlayCategory {
         OutlayCategory.liExpand(li);
         break;
       default:
-        console.log("I don't know: " + elem.innerText);
+        console.log("I don't know: " + event.target.innerText);
         break;
     }
   }
@@ -275,8 +276,9 @@ export class OutlayCategory {
     }
   }
 
-  static async liOnClick(liCategory) {
+  static async liNameOnClick() {
     if (StandbyIndicator.isShowing()) return;
+    const liCategory = event.target.parentElement;
 
     if (liCategory === categorySelected) return;
 
@@ -287,14 +289,12 @@ export class OutlayCategory {
 
   static async displayData(options) {
     needCategorySave = options;
-    //try {
+
     if (!needCategorySave) {
       await Setting.set(categoryHtmlKeyName, null);
 
       Setting.setWindowOnload("OutlayCategory");
     }
-
-    StandbyIndicator.show();
 
     await Setting.set(retValKeyName, null);
 
@@ -338,111 +338,40 @@ export class OutlayCategory {
       !needCategorySave ? navbarButtons.navbarButtonCategory.href : null
     );
 
-    divContent = document.getElementsByClassName("content")[0];
-    {
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
-      }
+    setContentHeight();
+
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
     }
 
     let categorySelectedId = await Setting.get(outlayCategorySelectedKeyName);
     if (!categorySelectedId) categorySelectedId = 0;
 
-    const contentRem =
-      window.history.state || (await Setting.get(categoryHtmlKeyName));
-
-    if (contentRem && contentRem.content) {
-      divContent.innerHTML = contentRem.content;
-      divContent.scrollTop = contentRem.divContent_scrollTop;
-
-      const categorySel = await Category.get(categorySelectedId);
-      const liCategory = document.getElementById(categorySelectedId);
-      const categoryName = liCategory.childNodes[1].innerHTML.trim();
-
-      if (categorySel && categorySel.name !== categoryName) {
-        liCategory.childNodes[1].innerHTML = " " + categorySel.name;
-        const ulCategory = liCategory.parentElement;
-        const parentNode = ulCategory.parentElement;
-        parentNode.removeChild(ulCategory);
-        let ulCategoryChilds = Array.from(parentNode.childNodes).filter(
-          (node) => "UL" === node.tagName
-        );
-        {
-          let categoryRestored = false;
-          for (let node of ulCategoryChilds) {
-            if (
-              " " + categorySel.name <
-              node.firstChild.childNodes[1].innerHTML
-            ) {
-              parentNode.insertBefore(ulCategory, node);
-              categoryRestored = true;
-              break;
-            }
-          }
-          if (!categoryRestored) {
-            parentNode.appendChild(ulCategory);
-          }
-        }
-      } else {
-        const categoryChildren = await Category.getChildren(categorySelectedId);
-        let ulCategoryChilds = Array.from(liCategory.childNodes).filter(
-          (node) => "UL" === node.tagName
-        );
-        if (categoryChildren.length !== ulCategoryChilds.length) {
-          for (let i = 0; i < categoryChildren.length; i++) {
-            const category = categoryChildren[i];
-            if (!ulCategoryChilds[i]) {
-              liCategory.appendChild(
-                OutlayCategory.getNodeCategoryNew(category)
-              );
-              OutlayCategory.liExpand(liCategory);
-            } else if (ulCategoryChilds[i].firstChild.id != category.id) {
-              liCategory.insertBefore(
-                OutlayCategory.getNodeCategoryNew(category),
-                ulCategoryChilds[i]
-              );
-              OutlayCategory.liExpand(liCategory);
-              break;
-            }
-          }
+    if (paramRefresh.outlayCategory.needRefresh) {
+      // Beg refresh
+      StandbyIndicator.show();
+      {
+        while (divOutlayCategory.firstChild) {
+          divOutlayCategory.removeChild(divOutlayCategory.firstChild);
         }
       }
-    } else {
-      divContent.appendChild(
+      divOutlayCategory.appendChild(
         await OutlayCategory.displayTree(
           null,
           db.transaction(outlayCategoryObjectStoreName)
         )
       );
+
+      OutlayCategory.categorySelectedMark(categorySelectedId);
+
+      StandbyIndicator.hide();
+      // End refresh
     }
 
-    OutlayCategory.categorySelectedMark(categorySelectedId);
-
-    if (window.history.state) {
-      divContent.scrollTop = contentRem.divContent_scrollTop;
-      window.history.replaceState(null, window.title);
-    } else if (contentRem) {
-      divContent.scrollTop = contentRem.divContent_scrollTop;
-    }
-
-    for (let li of document.body
-      .getElementsByClassName("content")[0]
-      .getElementsByTagName("LI")) {
-      li.childNodes[0].onclick = OutlayCategory.leaf_expand_onclick;
-      li.childNodes[1].onclick = OutlayCategory.leaf_name_onclick;
-    }
-    //} catch (error) {
-    //  alert(error.stack);
-    //} finally {
-    setContentHeight();
-
-    StandbyIndicator.hide();
-    //}
-  }
-
-  static leaf_name_onclick() {
-    OutlayCategory.liOnClick(this.parentElement);
-    return false;
+    divOutlayCategory.style.display = "block";
+    divOutlayCategory.parentElement.scrollTop =
+      paramRefresh[divOutlayCategory.id].scrollTop;
+    paramRefresh.outlayCategory.needRefresh = false;
   }
 
   static leaf_expand_onclick() {
@@ -465,12 +394,15 @@ export class OutlayCategory {
       const liRoot = document.createElement("LI");
       liRoot.id = "0";
       ulRoot.appendChild(liRoot);
-      const spanExpanded = document.createElement("SPAN");
-      spanExpanded.innerHTML = expanded;
-      liRoot.appendChild(spanExpanded);
+      const spanExpand = document.createElement("SPAN");
+      spanExpand.innerHTML = expanded;
+      spanExpand.onclick = OutlayCategory.leafChange;
+
+      liRoot.appendChild(spanExpand);
       const spanCategoryName = document.createElement("SPAN");
       spanCategoryName.innerHTML = localeString.root._capitalize();
-      spanCategoryName.onclick = OutlayCategory.leaf_name_onclick;
+      spanCategoryName.onclick = OutlayCategory.liNameOnClick;
+
       liRoot.appendChild(spanCategoryName);
 
       node = liRoot;
@@ -498,7 +430,9 @@ export class OutlayCategory {
       ul.appendChild(li);
       li.id = category.id;
       let spanName = document.createElement("SPAN");
+      spanName.onclick = OutlayCategory.liNameOnClick;
       let spanExpand = document.createElement("SPAN");
+      spanExpand.onclick = OutlayCategory.leafChange;
       li.appendChild(spanExpand);
       li.appendChild(spanName);
       spanExpand.innerHTML =
@@ -534,11 +468,13 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        divContent_scrollTop: divContent.scrollTop,
-        content: divContent.innerHTML,
+        //scrollTop: divOutlayCategory.parentElement.scrollTop,
       },
       window.title
     );
+
+    paramRefresh[divOutlayCategory.id].scrollTop =
+      divOutlayCategory.parentElement.scrollTop;
 
     historyLengthIncreaseSet();
     location.href = "#func=OutlayCategoryEdit&id=" + categorySelected.id;
@@ -550,11 +486,13 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        divContent_scrollTop: divContent.scrollTop,
-        content: divContent.innerHTML,
+        //scrollTop: divOutlayCategory.parentElement.scrollTop,
       },
       window.title
     );
+
+    paramRefresh[divOutlayCategory.id].scrollTop =
+      divOutlayCategory.parentElement.scrollTop;
 
     historyLengthIncreaseSet();
     location.href = "#func=OutlayCategoryEdit&parentId=" + categorySelected.id;

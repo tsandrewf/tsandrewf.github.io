@@ -10,8 +10,11 @@ import { outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
+import { outlaySummaryPeriodKeyName } from "./db.js";
+import { paramRefresh } from "./needRefresh.js";
 
-let tbodyOutlayEntries;
+export let tbodyOutlayEntries;
+const divOutlayEntries = document.getElementById("outlayEntries");
 
 window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
@@ -22,6 +25,8 @@ window.OutlayUtils_displayData = function () {
 export class OutlayEntries {
   static outlayEntryEdit(entryId) {
     historyLengthIncreaseSet();
+    paramRefresh.outlayEntries.scrollTop =
+      divOutlayEntries.parentElement.scrollTop;
     location.href =
       "#func=OutlayEntryEdit&entryId=" +
       ("number" === (typeof entryId).toLowerCase() ? entryId : "");
@@ -59,25 +64,47 @@ export class OutlayEntries {
 
     NavbarBottom.setActiveButton(navbarButtons.navbarButtonEntries.href);
 
-    {
-      const divContent = document.getElementsByClassName("content")[0];
-
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
-      }
-    }
-
-    tbodyOutlayEntries = document.createElement("TBODY");
-    {
-      const divContent = document.getElementsByClassName("content")[0];
-      const tableOutlayEntries = document.createElement("TABLE");
-      divContent.appendChild(tableOutlayEntries);
-      tableOutlayEntries.className = "tableBase tableOutlayEntries";
-      tableOutlayEntries.appendChild(tbodyOutlayEntries);
-    }
-    OutlayEntries.addEntries(dateBeg, dateEnd);
-
     setContentHeight();
+
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
+    }
+
+    if (paramRefresh.outlayEntries.needRefresh) {
+      {
+        while (divOutlayEntries.firstChild) {
+          divOutlayEntries.removeChild(divOutlayEntries.firstChild);
+        }
+      }
+
+      tbodyOutlayEntries = document.createElement("TBODY");
+      {
+        const tableOutlayEntries = document.createElement("TABLE");
+        divOutlayEntries.appendChild(tableOutlayEntries);
+        tableOutlayEntries.className = "tableBase tableOutlayEntries";
+        tableOutlayEntries.appendChild(tbodyOutlayEntries);
+      }
+      OutlayEntries.addEntries(dateBeg, dateEnd);
+
+      paramRefresh.outlayEntries.needRefresh = false;
+    }
+
+    divOutlayEntries.style.display = "block";
+    divOutlayEntries.parentElement.scrollTop =
+      paramRefresh[divOutlayEntries.id].scrollTop;
+  }
+
+  static getTrMonth(date) {
+    const tr = document.createElement("TR");
+    tr.style.backgroundColor = "grey";
+    tr.style.color = "white";
+    const td = document.createElement("TD");
+    tr.appendChild(td);
+    td.innerHTML = date._getMonthString() + " " + date.getFullYear();
+    td.innerHTML = td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
+    td.colSpan = 4;
+
+    return tr;
   }
 
   static async addEntries(dateBeg, dateEnd) {
@@ -88,7 +115,7 @@ export class OutlayEntries {
       row.style.color = "white";
       let td = document.createElement("TD");
       row.appendChild(td);
-      td.innerHTML = date._getMonthString() + " " + date.getFullYear() + "г.";
+      td.innerHTML = date._getMonthString() + " " + date.getFullYear();
       td.innerHTML =
         td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
       td.colSpan = 4;
@@ -150,28 +177,10 @@ export class OutlayEntries {
         monthNumRem = monthNum;
       }
 
-      // Создаем строку таблицы и добавляем ее
-      let row = document.createElement("TR");
-      tbodyOutlayEntries.appendChild(row);
+      tbodyOutlayEntries.appendChild(
+        await OutlayEntries.trEntryAppend(outlayEntry)
+      );
 
-      // Создаем ячейки в вышесозданной строке и добавляем тх
-      let tdDate = document.createElement("TD");
-      let tdCategory = document.createElement("TD");
-      let tdSum = document.createElement("TD");
-      let tdDel = document.createElement("TD");
-
-      row.appendChild(tdDate);
-      row.appendChild(tdCategory);
-      row.appendChild(tdSum);
-      row.appendChild(tdDel);
-
-      // Наполняем ячейки
-      tdDate.innerHTML =
-        outlayEntry.date && outlayEntry.date instanceof Date
-          ? outlayEntry.date._toStringBrief()
-          : localeString.notSet._capitalize();
-
-      let category;
       if (outlayEntriesDateMinCalc >= outlayEntry.date) {
         const categoryIdNew = await OutlayEntry.getCategoryIdTop(outlayEntry);
 
@@ -180,22 +189,6 @@ export class OutlayEntries {
           OutlayEntry.set(outlayEntry);
         }
       }
-      category = await Category.get(outlayEntry.categoryId);
-
-      tdCategory.innerHTML = category ? category.name : "";
-      tdSum.innerHTML =
-        /*'<a href="#func=OutlayEntryEdit&entryId=' +
-        outlayEntry.id +
-        '">' +*/
-        '<a href="Javascript:OutlayEntries_outlayEntryEdit(' +
-        outlayEntry.id +
-        ')">' +
-        (outlayEntry.sumAll ? outlayEntry.sumAll.toFixed(2) : "НЕ задана") +
-        "</a>";
-      tdDel.innerHTML =
-        '<a href="Javascript:OutlayEntries_outlayEntryDelete(' +
-        outlayEntry.id +
-        ')">&#10006</a>';
     }
 
     if (outlayEntriesDateMinCalc >= dateBeg) {
@@ -224,11 +217,50 @@ export class OutlayEntries {
         " " +
         dateBegNew._getMonthString() +
         " " +
-        dateBegNew.getFullYear() +
-        "г."
+        dateBegNew.getFullYear()
       )._capitalize();
       tdAppend.colSpan = 4;
     }
+  }
+
+  static async trEntryAppend(outlayEntry) {
+    // Создаем строку таблицы и добавляем ее
+    const row = document.createElement("TR");
+    tbodyOutlayEntries.appendChild(row);
+    row.setAttribute("outlayentryid", outlayEntry.id);
+
+    // Создаем ячейки в вышесозданной строке и добавляем тх
+    let tdDate = document.createElement("TD");
+    let tdCategory = document.createElement("TD");
+    let tdSum = document.createElement("TD");
+    let tdDel = document.createElement("TD");
+
+    row.appendChild(tdDate);
+    row.appendChild(tdCategory);
+    row.appendChild(tdSum);
+    row.appendChild(tdDel);
+
+    // Наполняем ячейки
+    tdDate.innerHTML =
+      outlayEntry.date && outlayEntry.date instanceof Date
+        ? outlayEntry.date._toStringBrief()
+        : localeString.notSet._capitalize();
+
+    const category = await Category.get(outlayEntry.categoryId);
+
+    tdCategory.innerHTML = category ? category.name : "";
+    tdSum.innerHTML =
+      '<a href="Javascript:OutlayEntries_outlayEntryEdit(' +
+      outlayEntry.id +
+      ')">' +
+      (outlayEntry.sumAll ? outlayEntry.sumAll.toFixed(2) : "НЕ задана") +
+      "</a>";
+    tdDel.innerHTML =
+      '<a href="Javascript:OutlayEntries_outlayEntryDelete(' +
+      outlayEntry.id +
+      ')">&#10006</a>';
+
+    return row;
   }
 
   static async outlayEntryDelete(key) {
@@ -237,8 +269,33 @@ export class OutlayEntries {
     }
 
     try {
+      const datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+      const outlayEntry = await OutlayEntry.get(key);
+
       await OutlayEntry.delete(key);
-      OutlayEntries.displayData();
+
+      paramRefresh.outlaySummary.needRefresh =
+        (!datePeriod.dateBeg || datePeriod.dateBeg <= outlayEntry.date) &&
+        (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntry.date);
+
+      {
+        // Delete row (trToDelete) from DOM
+        const trToDelete = tbodyOutlayEntries.querySelector(
+          'tr[outlayentryid="' + key + '"]'
+        );
+        if (
+          // Is row to delete a single row for the month?
+          trToDelete.previousSibling &&
+          !trToDelete.previousSibling.getAttribute("outlayentryid") &&
+          (!trToDelete.nextSibling ||
+            !trToDelete.nextSibling.getAttribute("outlayentryid"))
+        ) {
+          // Delete Month's title
+          tbodyOutlayEntries.removeChild(trToDelete.previousSibling);
+        }
+        // Delete row
+        tbodyOutlayEntries.removeChild(trToDelete);
+      }
     } catch (error) {
       alert(error);
     }

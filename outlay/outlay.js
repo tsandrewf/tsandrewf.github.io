@@ -84,6 +84,7 @@ window.onpopstate = async function (event) {
       case null:
       case "OutlayEntries": // OutlayEntries
       case "OutlaySummary":
+      case "OutlayUtils":
         await Setting.set(windowOnloadKeyName, funcName);
         break;
       case "OutlayCategory":

@@ -11,7 +11,7 @@ import {
 import { Setting } from "./setting.js";
 import { setContentHeight } from "./pattern.js";
 
-let divContent;
+const divOutlaySettings = document.getElementById("outlaySettings");
 
 export class OutlaySettings {
   static async displayData() {
@@ -33,17 +33,21 @@ export class OutlaySettings {
 
     NavbarBottom.setActiveButton(navbarButtons.navbarButtonSettings.href);
 
-    {
-      divContent = document.getElementsByClassName("content")[0];
+    setContentHeight();
 
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
+    }
+
+    {
+      while (divOutlaySettings.firstChild) {
+        divOutlaySettings.removeChild(divOutlaySettings.firstChild);
       }
     }
 
     {
       const tableOutlaySettings = document.createElement("TABLE");
-      divContent.appendChild(tableOutlaySettings);
+      divOutlaySettings.appendChild(tableOutlaySettings);
       tableOutlaySettings.className = "tableOutlaySettings";
       const tbodyOutlaySettings = document.createElement("TBODY");
       tableOutlaySettings.appendChild(tbodyOutlaySettings);
@@ -84,6 +88,6 @@ export class OutlaySettings {
       }
     }
 
-    setContentHeight();
+    divOutlaySettings.style.display = "block";
   }
 }

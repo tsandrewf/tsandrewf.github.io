@@ -10,6 +10,7 @@ import { StandbyIndicator } from "./standbyIndicator.js";
 import { OutlayUtils } from "./outlayUtils.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
+import { paramRefresh } from "./needRefresh.js";
 
 window.OutlayUtils_displayData = function () {
   window.history.pushState(null, "title");
@@ -18,7 +19,7 @@ window.OutlayUtils_displayData = function () {
 };
 
 let summaries;
-let summaryContent;
+const divOutlaySummary = document.getElementById("outlaySummary");
 
 export class OutlaySummary {
   static getPeriod() {
@@ -88,15 +89,11 @@ export class OutlaySummary {
 
     NavbarBottom.setActiveButton(navbarButtons.navbarButtonSummary.href);
 
-    {
-      const divContent = document.getElementsByClassName("content")[0];
+    setContentHeight();
 
-      while (divContent.firstChild) {
-        divContent.removeChild(divContent.firstChild);
-      }
+    for (let div of document.querySelectorAll(".content > div")) {
+      div.style.display = "none";
     }
-
-    summaryContent = document.getElementsByClassName("content")[0];
 
     let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
 
@@ -127,11 +124,14 @@ export class OutlaySummary {
       : null;
     await Setting.set(outlaySummaryPeriodKeyName, datePeriod);
 
-    await OutlaySummary.summariesRefresh();
+    if (paramRefresh.outlaySummary.needRefresh) {
+      await OutlaySummary.summariesRefresh();
+      await OutlaySummary.summaryContentRefresh(0);
+    }
 
-    await OutlaySummary.summaryContentRefresh(0);
-
-    setContentHeight();
+    divOutlaySummary.style.display = "block";
+    divOutlaySummary.parentElement.scrollTop =
+      paramRefresh[divOutlaySummary.id].scrollTop;
     //} catch (error) {
     //  alert(error);
     //}
@@ -179,6 +179,8 @@ export class OutlaySummary {
     }
 
     StandbyIndicator.hide();
+
+    paramRefresh.outlaySummary.needRefresh = false;
   }
 
   static trOnclick() {
@@ -195,7 +197,7 @@ export class OutlaySummary {
     }
 
     let parentUl = document.createElement("UL");
-    summaryContent.appendChild(parentUl);
+    divOutlaySummary.appendChild(parentUl);
     parentUl.style = "padding-left: 0;";
     let li = document.createElement("LI");
     parentUl.appendChild(li);
@@ -250,14 +252,14 @@ export class OutlaySummary {
         : null;
     }
 
-    while (summaryContent.firstChild) {
-      summaryContent.removeChild(summaryContent.firstChild);
+    while (divOutlaySummary.firstChild) {
+      divOutlaySummary.removeChild(divOutlaySummary.firstChild);
     }
 
     await OutlaySummary.categoryTree(await Category.get(categoryId));
 
     let table = document.createElement("TABLE");
-    summaryContent.appendChild(table);
+    divOutlaySummary.appendChild(table);
     table.className = "tableBase";
     let tbody = document.createElement("TBODY");
     table.appendChild(tbody);
