@@ -1,6 +1,7 @@
 "use strict";
 
 import { historyLengthIncreaseSet } from "./outlay.js";
+import { paramRefresh } from "./needRefresh.js";
 
 export class NavbarTop {
   static hrefOnClick() {

@@ -468,7 +468,6 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        //scrollTop: divOutlayCategory.parentElement.scrollTop,
       },
       window.title
     );
@@ -486,7 +485,6 @@ export class OutlayCategory {
     window.history.replaceState(
       {
         url: "OutlayCategory",
-        //scrollTop: divOutlayCategory.parentElement.scrollTop,
       },
       window.title
     );

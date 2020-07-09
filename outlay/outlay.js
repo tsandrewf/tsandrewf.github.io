@@ -15,6 +15,7 @@ import { OutlaySettings } from "./outlaySettings.js";
 import { getQueryVar } from "./url.js";
 import { Locale } from "./locale.js";
 import { NavbarBottom } from "./navbarBottom.js";
+import { paramRefresh } from "./needRefresh.js";
 
 function setOrientation() {
   alert("Orientation changed!");
@@ -75,6 +76,17 @@ window.onpopstate = async function (event) {
     historyLengthCurrent++;
     historyLengthIncrease = false;
   } else historyLengthCurrent--;
+
+  {
+    // Save ScrollY for outlayCategory
+    const divOutlayCategory = document.querySelector(
+      ".content > #outlayCategory"
+    );
+    if ("none" !== divOutlayCategory.style.display) {
+      paramRefresh[divOutlayCategory.id].scrollTop =
+        divOutlayCategory.parentElement.scrollTop;
+    }
+  }
 
   let funcName = getQueryVar("func");
   if (!funcName) {
