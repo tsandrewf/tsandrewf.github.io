@@ -56,6 +56,11 @@ body,
   cursor: pointer;
 }
 
+.category li > span:nth-child(2),
+a {
+  margin-left: 0.25em;
+}
+
 #colMenu {
   width: 10vw;
 }

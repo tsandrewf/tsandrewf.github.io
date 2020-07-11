@@ -298,149 +298,162 @@ export class OutlayEntryEdit {
   }
 
   static async save() {
-    try {
-      const dateString = document.getElementById("iptDate").value;
-      if (!dateString) {
-        throw Error(localeString.checkDateNotSet._capitalize());
+    //try {
+    const dateString = document.getElementById("iptDate").value;
+    if (!dateString) {
+      throw Error(localeString.checkDateNotSet._capitalize());
+    }
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      throw Error(
+        localeString.invalidDate._capitalize() + ' "' + dateString + '"'
+      );
+    }
+
+    let outlayEntry = {
+      date: date,
+      sumAll: 0,
+      categoryId: null,
+      categories: [],
+      sums: [],
+    };
+    if (entryId) {
+      outlayEntry.id = entryId;
+    }
+
+    for (let item of outlayTBody.getElementsByTagName("TR")) {
+      let categoryId = Number(
+        item.querySelector("#colCategory").getAttribute("categoryId")
+      );
+      let sum = Number(item.querySelector("#colSum > INPUT").value);
+
+      if (sum) {
+        outlayEntry.sumAll += sum;
+        outlayEntry.categories.push(categoryId);
+        outlayEntry.sums.push(sum);
       }
-      const date = new Date(dateString);
-      if (isNaN(date)) {
-        throw Error(
-          localeString.invalidDate._capitalize() + ' "' + dateString + '"'
+    }
+
+    await OutlayEntry.set(outlayEntry);
+
+    if (!paramRefresh.outlaySummary.needRefresh) {
+      const datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
+
+      paramRefresh.outlaySummary.needRefresh =
+        ((!datePeriod.dateBeg || datePeriod.dateBeg <= outlayEntry.date) &&
+          (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntry.date)) ||
+        (outlayEntryRem &&
+          (!datePeriod.dateBeg || datePeriod.dateBeg <= outlayEntryRem.date) &&
+          (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntryRem.date));
+    }
+
+    {
+      // Refresh outlayEntries
+      let trEntry;
+      if (outlayEntryRem) {
+        // Edited Entry -> find entry row
+        trEntry = tbodyOutlayEntries.querySelector(
+          'tr[outlayentryid="' + outlayEntryRem.id + '"]'
         );
+        // Fix entry row
+        // Date
+        trEntry.querySelector("td:nth-child(1)").innerHTML =
+          outlayEntry.date && outlayEntry.date instanceof Date
+            ? outlayEntry.date._toStringBrief()
+            : localeString.notSet._capitalize();
+        // Category
+        trEntry.querySelector(
+          "td:nth-child(2)"
+        ).innerHTML = outlayEntry.categoryId
+          ? (await Category.get(outlayEntry.categoryId)).name
+          : "";
+        // Sum
+        trEntry.querySelector(
+          "td:nth-child(3) > a"
+        ).innerHTML = outlayEntry.sumAll.toFixed(2);
+      } else {
+        // New Entry. Create new entry row
+        trEntry = await OutlayEntries.trEntryAppend(outlayEntry);
       }
 
-      let outlayEntry = {
-        date: date,
-        sumAll: 0,
-        categoryId: null,
-        categories: [],
-        sums: [],
-      };
-      if (entryId) {
-        outlayEntry.id = entryId;
-      }
-
-      for (let item of outlayTBody.getElementsByTagName("TR")) {
-        let categoryId = Number(
-          item.querySelector("#colCategory").getAttribute("categoryId")
-        );
-        let sum = Number(item.querySelector("#colSum > INPUT").value);
-
-        if (sum) {
-          outlayEntry.sumAll += sum;
-          outlayEntry.categories.push(categoryId);
-          outlayEntry.sums.push(sum);
-        }
-      }
-
-      await OutlayEntry.set(outlayEntry);
-
-      if (!paramRefresh.outlaySummary.needRefresh) {
-        let datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
-
-        paramRefresh.outlaySummary.needRefresh =
-          ((!datePeriod.dateBeg || datePeriod.dateBeg <= outlayEntry.date) &&
-            (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntry.date)) ||
-          (outlayEntryRem &&
-            (!datePeriod.dateBeg ||
-              datePeriod.dateBeg <= outlayEntryRem.date) &&
-            (!datePeriod.dateEnd || datePeriod.dateEnd >= outlayEntryRem.date));
-      }
-
-      {
-        // Refresh outlayEntries
-        let trEntry;
-        if (outlayEntryRem) {
-          // Edited Entry -> find entry row
-          trEntry = tbodyOutlayEntries.querySelector(
-            'tr[outlayentryid="' + outlayEntryRem.id + '"]'
-          );
-          // Fix entry row
-          // Date
-          trEntry.querySelector("td:nth-child(1)").innerHTML =
-            outlayEntry.date && outlayEntry.date instanceof Date
-              ? outlayEntry.date._toStringBrief()
-              : localeString.notSet._capitalize();
-          // Category. ToDo!
-          // Sum
-          trEntry.querySelector(
-            "td:nth-child(3) > a"
-          ).innerHTML = outlayEntry.sumAll.toFixed(2);
-        } else {
-          // New Entry. Create new entry row
-          trEntry = await OutlayEntries.trEntryAppend(outlayEntry);
-        }
-
+      if (
+        // If New Entry or Entry date was changed
+        !outlayEntryRem ||
+        outlayEntryRem.date.valueOf() !== outlayEntry.date.valueOf()
+      ) {
         if (
-          // If New Entry or Entry date was changed
-          !outlayEntryRem ||
-          outlayEntryRem.date.valueOf() !== outlayEntry.date.valueOf()
-        ) {
+          // If Entry was edited and Entry month was changed
+          outlayEntryRem &&
+          outlayEntryRem.date.getMonth() !== outlayEntry.date.getMonth()
+        )
+          // Delete month title, if this entry is single in month
+          OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
+
+        let trInserted = false;
+        for (let tr of tbodyOutlayEntries.querySelectorAll(
+          "tr[outlayentryid]"
+        )) {
+          const entryDate = (
+            await OutlayEntry.get(Number(tr.getAttribute("outlayentryid")))
+          ).date;
+
+          let entry = await OutlayEntry.get(
+            Number(tr.getAttribute("outlayentryid"))
+          );
+          if (outlayEntryRem && outlayEntryRem.id === entry.id) {
+            entry.date = outlayEntryRem.date;
+          }
+
           if (
-            // If Entry was edited and Entry month was changed
-            outlayEntryRem &&
-            outlayEntryRem.date.getMonth() !== outlayEntry.date.getMonth()
-          )
-            // Delete month title, if this entry is single in month
-            OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
+            outlayEntry.date.valueOf() > entry.date.valueOf() ||
+            (outlayEntry.date.valueOf() === entry.date.valueOf() &&
+              outlayEntry.id >= entry.id)
+          ) {
+            if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
+              tbodyOutlayEntries.insertBefore(trEntry, tr);
+            } else {
+              tbodyOutlayEntries.insertBefore(
+                trEntry,
+                tr.previousSibling ? tr.previousSibling : tr
+              );
 
-          let trInserted = false;
-          for (let tr of tbodyOutlayEntries.querySelectorAll(
-            "tr[outlayentryid]"
-          )) {
-            const entryDate = (
-              await OutlayEntry.get(Number(tr.getAttribute("outlayentryid")))
-            ).date;
-
-            const entry = await OutlayEntry.get(
-              Number(tr.getAttribute("outlayentryid"))
-            );
-
-            if (
-              outlayEntry.date.valueOf() > entry.date.valueOf() ||
-              (outlayEntry.date.valueOf() === entry.date.valueOf() &&
-                outlayEntry.id > entry.id)
-            ) {
-              if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
-                tbodyOutlayEntries.insertBefore(trEntry, tr);
-              } else {
-                tbodyOutlayEntries.insertBefore(trEntry, tr.previousSibling);
-
-                {
-                  const trPrev = trEntry.previousSibling;
-                  if (
-                    !trPrev ||
-                    !trPrev.getAttribute("outlayentryid") ||
+              {
+                const trPrev = trEntry.previousSibling;
+                if (
+                  !trPrev ||
+                  (!trPrev.getAttribute("outlayentryid") &&
+                    trPrev.firstChild.innerHTML !==
+                      OutlayEntries.getTrMonth(outlayEntry.date).firstChild
+                        .innerHTML) ||
+                  (trPrev.getAttribute("outlayentryid") &&
                     (
                       await OutlayEntry.get(
                         Number(trPrev.getAttribute("outlayentryid"))
                       )
-                    ).date.getMonth() !== outlayEntry.date.getMonth()
-                  ) {
-                    tbodyOutlayEntries.insertBefore(
-                      OutlayEntries.getTrMonth(outlayEntry.date),
-                      trEntry
-                    );
-                  }
+                    ).date.getMonth() !== outlayEntry.date.getMonth())
+                ) {
+                  tbodyOutlayEntries.insertBefore(
+                    OutlayEntries.getTrMonth(outlayEntry.date),
+                    trEntry
+                  );
                 }
               }
-
-              trInserted = true;
-              break;
             }
-          }
 
-          if (!trInserted) {
-            //OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
+            trInserted = true;
+            break;
           }
-          //paramRefresh.outlayEntries.needRefresh = true;
+        }
+
+        if (!trInserted) {
+          tbodyOutlayEntries.removeChild(trEntry);
         }
       }
-
-      history.back();
-    } catch (error) {
-      alert(error);
     }
+
+    history.back();
+    //} catch (error) {
+    //  alert(error);
+    //}
   }
 }

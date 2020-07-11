@@ -17,6 +17,8 @@ import { Locale } from "./locale.js";
 import { NavbarBottom } from "./navbarBottom.js";
 import { paramRefresh } from "./needRefresh.js";
 
+export let liCategoryPattern;
+
 function setOrientation() {
   alert("Orientation changed!");
   const navbarBottom = document.getElementsByClassName("navbar-bottom").item(0);
@@ -155,6 +157,18 @@ window.onpopstate = async function (event) {
 };
 
 async function window_onload() {
+  {
+    liCategoryPattern = document.createElement("LI");
+    //liCategoryPattern.id = category.id;
+    const spanName = document.createElement("SPAN");
+    const spanExpand = document.createElement("SPAN");
+    liCategoryPattern.appendChild(spanExpand);
+    liCategoryPattern.appendChild(spanName);
+    const aItemCategorySave = document.createElement("A");
+    liCategoryPattern.appendChild(aItemCategorySave);
+    aItemCategorySave.innerHTML = "&#10004;";
+  }
+
   NavbarBottom.show();
 
   await Locale.setUserLang();

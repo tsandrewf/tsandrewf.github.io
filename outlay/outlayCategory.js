@@ -7,7 +7,7 @@ import { Setting } from "./setting.js";
 import { StandbyIndicator } from "./standbyIndicator.js";
 import { retValKeyName, categoryHtmlKeyName } from "./db.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { historyLengthIncreaseSet } from "./outlay.js";
+import { historyLengthIncreaseSet, liCategoryPattern } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
 import { paramRefresh } from "./needRefresh.js";
@@ -36,32 +36,37 @@ let categorySelected;
 
 export class OutlayCategory {
   static getNodeCategoryNew(category) {
-    let ul = document.createElement("UL");
-    if ("false" === category.expanded) {
-      ul.style.display = "none";
-    }
-    ul.setAttribute("expanded", category.expanded);
-
-    let li = document.createElement("LI");
-    ul.appendChild(li);
-    li.id = category.id;
-    let spanName = document.createElement("SPAN");
-    let spanExpand = document.createElement("SPAN");
+    /*const li = document.createElement("LI");
+    const spanName = document.createElement("SPAN");
+    spanName.onclick = OutlayCategory.liNameOnClick;
+    const spanExpand = document.createElement("SPAN");
+    spanExpand.onclick = OutlayCategory.leafChange;
     li.appendChild(spanExpand);
     li.appendChild(spanName);
-    spanExpand.innerHTML = "false" == category.expanded ? expanded : compressed;
+    const aItemCategorySave = document.createElement("A");
+    li.appendChild(aItemCategorySave);
+    aItemCategorySave.innerHTML = "&#10004;";
+    aItemCategorySave.onclick = OutlayCategory.itemCategorySave;*/
 
-    spanName.innerHTML = " " + category.name;
-    if (needCategorySave) {
-      spanName.innerHTML += " ";
-      let aItemCategorySave = document.createElement("A");
-      li.appendChild(aItemCategorySave);
-      aItemCategorySave.innerHTML = "&#10004;";
-      aItemCategorySave.href =
-        "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
-    }
+    //spanExpand.innerHTML = category.expanded ? expanded : compressed;
+    //spanName.innerHTML = " " + category.name + " ";
 
-    return ul;
+    const li = liCategoryPattern.cloneNode(true);
+
+    let child = li.firstChild;
+    child.innerHTML = category.expanded ? expanded : compressed;
+    child.onclick = OutlayCategory.leafChange;
+
+    child = child.nextSibling;
+    child.innerHTML = category.name;
+    child.onclick = OutlayCategory.liNameOnClick;
+
+    child = child.nextSibling;
+    child.onclick = OutlayCategory.itemCategorySave;
+
+    li.id = category.id;
+
+    return li;
   }
 
   static categorySelectedMark(categoryId) {
@@ -88,8 +93,8 @@ export class OutlayCategory {
       .classList.add("selectedCategory");
   }
 
-  static async itemCategorySave(categoryId) {
-    await Setting.set(retValKeyName, categoryId);
+  static async itemCategorySave() {
+    await Setting.set(retValKeyName, Number(this.parentElement.id));
     await Setting.set(categoryHtmlKeyName, {
       content: divOutlayCategory.innerHTML,
       scrollTop: divOutlayCategory.parentElement.scrollTop,
@@ -298,8 +303,6 @@ export class OutlayCategory {
 
     await Setting.set(retValKeyName, null);
 
-    window.OutlayCategory_itemCategorySave = OutlayCategory.itemCategorySave;
-
     {
       let hideSaveCSS = document.getElementById("hideSaveCSS");
       if (!needCategorySave && !hideSaveCSS) {
@@ -355,6 +358,8 @@ export class OutlayCategory {
           divOutlayCategory.removeChild(divOutlayCategory.firstChild);
         }
       }
+
+      const timeBeg = Date.now();
       divOutlayCategory.appendChild(
         await OutlayCategory.displayTree(
           null,
@@ -363,6 +368,7 @@ export class OutlayCategory {
       );
 
       OutlayCategory.categorySelectedMark(categorySelectedId);
+      console.log(Date.now() - timeBeg);
 
       StandbyIndicator.hide();
       // End refresh
@@ -426,28 +432,9 @@ export class OutlayCategory {
         }
         ul.setAttribute("expanded", category.expanded);
       }
-      let li = document.createElement("LI");
-      ul.appendChild(li);
-      li.id = category.id;
-      let spanName = document.createElement("SPAN");
-      spanName.onclick = OutlayCategory.liNameOnClick;
-      let spanExpand = document.createElement("SPAN");
-      spanExpand.onclick = OutlayCategory.leafChange;
-      li.appendChild(spanExpand);
-      li.appendChild(spanName);
-      spanExpand.innerHTML =
-        "false" ==
-        spanExpand.parentElement.parentElement.getAttribute("expanded")
-          ? compressed
-          : expanded;
 
-      spanName.innerHTML = " " + category.name;
-      spanName.innerHTML += " ";
-      let aItemCategorySave = document.createElement("A");
-      li.appendChild(aItemCategorySave);
-      aItemCategorySave.innerHTML = "&#10004;";
-      aItemCategorySave.href =
-        "JavaScript:OutlayCategory_itemCategorySave(" + category.id + ")";
+      const li = OutlayCategory.getNodeCategoryNew(category);
+      ul.appendChild(li);
 
       await OutlayCategory.displayTree(li, transaction, expandedAll);
     }
