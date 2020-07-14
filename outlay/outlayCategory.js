@@ -36,21 +36,6 @@ let categorySelected;
 
 export class OutlayCategory {
   static getNodeCategoryNew(category) {
-    /*const li = document.createElement("LI");
-    const spanName = document.createElement("SPAN");
-    spanName.onclick = OutlayCategory.liNameOnClick;
-    const spanExpand = document.createElement("SPAN");
-    spanExpand.onclick = OutlayCategory.leafChange;
-    li.appendChild(spanExpand);
-    li.appendChild(spanName);
-    const aItemCategorySave = document.createElement("A");
-    li.appendChild(aItemCategorySave);
-    aItemCategorySave.innerHTML = "&#10004;";
-    aItemCategorySave.onclick = OutlayCategory.itemCategorySave;*/
-
-    //spanExpand.innerHTML = category.expanded ? expanded : compressed;
-    //spanName.innerHTML = " " + category.name + " ";
-
     const li = liCategoryPattern.cloneNode(true);
 
     let child = li.firstChild;

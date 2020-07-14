@@ -171,26 +171,13 @@ export class OutlayCategoryEdit {
       const ulNew = document.createElement("UL");
       ulNew.setAttribute("expanded", false);
 
-      {
-        let li = document.createElement("LI");
-        ulNew.appendChild(li);
-        li.id = categoryNewId;
-        let spanName = document.createElement("SPAN");
-        spanName.onclick = OutlayCategory.liNameOnClick;
-        let spanExpand = document.createElement("SPAN");
-        spanExpand.onclick = OutlayCategory.leafChange;
-        li.appendChild(spanExpand);
-        li.appendChild(spanName);
-        spanExpand.innerHTML = compressed;
-
-        spanName.innerHTML = " " + categoryName;
-        spanName.innerHTML += " ";
-        let aItemCategorySave = document.createElement("A");
-        li.appendChild(aItemCategorySave);
-        aItemCategorySave.innerHTML = "&#10004;";
-        aItemCategorySave.href =
-          "JavaScript:OutlayCategory_itemCategorySave(" + categoryNewId + ")";
-      }
+      ulNew.appendChild(
+        OutlayCategory.getNodeCategoryNew({
+          id: categoryNewId,
+          name: categoryName,
+          expanded: false,
+        })
+      );
 
       let categoryInserted = false;
       for (let ul of selectedCategory.parentElement.querySelectorAll(
