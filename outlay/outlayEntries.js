@@ -6,11 +6,15 @@ import { OutlayEntry } from "./outlayEntry.js";
 import { Category } from "./category.js";
 import { Setting } from "./setting.js";
 import { OutlayUtils } from "./outlayUtils.js";
-import { outlayEntriesDateMinCalcKeyName } from "./db.js";
 import { historyLengthIncreaseSet } from "./outlay.js";
 import { localeString, navbarButtons } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
-import { outlaySummaryPeriodKeyName } from "./db.js";
+import {
+  outlayEntriesDateMinCalcKeyName,
+  outlaySummaryPeriodKeyName,
+  outlayObjectStoreName,
+  db,
+} from "./db.js";
 import { paramRefresh } from "./needRefresh.js";
 
 export let tbodyOutlayEntries;
@@ -84,7 +88,7 @@ export class OutlayEntries {
         tableOutlayEntries.className = "tableBase tableOutlayEntries";
         tableOutlayEntries.appendChild(tbodyOutlayEntries);
       }
-      OutlayEntries.addEntries(dateBeg, dateEnd);
+      OutlayEntries.addEntries(null, 3);
 
       paramRefresh.outlayEntries.needRefresh = false;
     }
@@ -107,120 +111,89 @@ export class OutlayEntries {
     return tr;
   }
 
-  static async addEntries(dateBeg, dateEnd) {
-    function appendRowNewMonth(date) {
-      let row = document.createElement("TR");
-      tbodyOutlayEntries.appendChild(row);
-      row.style.backgroundColor = "grey";
-      row.style.color = "white";
-      let td = document.createElement("TD");
-      row.appendChild(td);
-      td.innerHTML = date._getMonthString() + " " + date.getFullYear();
-      td.innerHTML =
-        td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
-      td.colSpan = 4;
-    }
-
-    let monthNumRem = null;
-
-    {
-      let entryYoungest = await OutlayEntry.getEntryYoungest();
-
-      if (!dateBeg) {
-        dateBeg = (entryYoungest ? entryYoungest.date : new Date())
-          ._getMonthBeg()
-          ._prevDay()
-          ._getMonthBeg()
-          ._prevDay()
-          ._getMonthBeg();
-      }
-
-      if (tbodyOutlayEntries.rows.length) {
-        let row = tbodyOutlayEntries.rows[tbodyOutlayEntries.rows.length - 1];
-        row.onclick = null;
-        row.style.cursor = null;
-        let td = row.getElementsByTagName("TD")[0];
-
-        td.innerHTML = td.innerHTML
-          .replace(new RegExp(localeString.add, "gi"), "")
-          .trim();
-
-        td.innerHTML =
-          td.innerHTML.charAt(0).toUpperCase() + td.innerHTML.slice(1);
-      } else if (entryYoungest) {
-        appendRowNewMonth(entryYoungest.date);
-
-        monthNumRem = entryYoungest.date.getMonth();
-      }
-    }
-
-    //try {
-    let outlayEntries = await OutlayEntry.getEntries({
-      dateBeg: dateBeg,
-      dateEnd: dateEnd,
-    });
-
+  static async addEntries(dateBeg, monthCountMax) {
     const outlayEntriesDateMinCalc = await Setting.get(
       outlayEntriesDateMinCalcKeyName
     );
 
-    for (let i = outlayEntries.length - 1; i >= 0; i--) {
-      let outlayEntry = outlayEntries[i];
-      if (null === monthNumRem) {
-        monthNumRem = outlayEntry.date.getMonth();
-      }
+    await new Promise(function (resolve, reject) {
+      let request = db
+        .transaction(outlayObjectStoreName)
+        .objectStore(outlayObjectStoreName)
+        .index("date_idx")
+        .openCursor(
+          !dateBeg ? null : IDBKeyRange.upperBound(dateBeg, true),
+          "prev"
+        );
+      let lastEntryMonth = -1;
+      let monthCount = 0;
 
-      let monthNum = outlayEntry.date.getMonth();
-      if (monthNumRem !== monthNum) {
-        appendRowNewMonth(outlayEntry.date);
+      request.onsuccess = function (event) {
+        const cursor = event.target.result;
 
-        monthNumRem = monthNum;
-      }
-
-      tbodyOutlayEntries.appendChild(
-        await OutlayEntries.trEntryAppend(outlayEntry)
-      );
-
-      if (outlayEntriesDateMinCalc >= outlayEntry.date) {
-        const categoryIdNew = await OutlayEntry.getCategoryIdTop(outlayEntry);
-
-        if (categoryIdNew !== outlayEntry.categoryId) {
-          outlayEntry.categoryId = categoryIdNew;
-          OutlayEntry.set(outlayEntry);
+        if (cursor) {
+          const entryMonth = cursor.value.date.getMonth();
+          if (entryMonth !== lastEntryMonth) {
+            monthCount++;
+            if (monthCountMax < monthCount) {
+              tbodyOutlayEntries.appendChild(
+                OutlayEntries.getMonthTitleTr(cursor.value.date, true)
+              );
+              resolve();
+              return;
+            }
+            tbodyOutlayEntries.appendChild(
+              OutlayEntries.getMonthTitleTr(cursor.value.date)
+            );
+            lastEntryMonth = entryMonth;
+          }
+          OutlayEntries.trEntryAppend(cursor.value);
+          cursor.continue();
+        } else {
+          resolve();
         }
-      }
-    }
+      };
+
+      request.onerror = function () {
+        reject(request.error);
+      };
+    });
 
     if (outlayEntriesDateMinCalc >= dateBeg) {
       await Setting.set(outlayEntriesDateMinCalcKeyName, dateBeg._prevDay());
     }
+  }
 
-    let entryOlder = await OutlayEntry.getEntryOlder(dateBeg);
-    if (entryOlder) {
-      let dateEndNew = entryOlder.date._getMonthEnd();
-      let dateBegNew = dateEndNew._getMonthBeg();
+  static getMonthTitleTr(date, appendNewMonth) {
+    console.log("date", date);
+    const row = document.createElement("TR");
+    row.style.backgroundColor = "grey";
+    row.style.color = "white";
 
-      // Создаем строку таблицы и добавляем ее
-      let row = document.createElement("TR");
-      tbodyOutlayEntries.appendChild(row);
-      row.style.backgroundColor = "grey";
-      row.style.color = "white";
+    if (appendNewMonth) {
       row.onclick = function () {
-        OutlayEntries.addEntries(dateBegNew, dateEndNew);
+        row.setAttribute("date", date._getMonthEnd().valueOf());
+        tbodyOutlayEntries.removeChild(this);
+        OutlayEntries.addEntries(new Date(Number(row.getAttribute("date"))), 1);
       };
       row.style.cursor = "pointer";
-
-      let tdAppend = document.createElement("TD");
-      row.appendChild(tdAppend);
-      tdAppend.innerHTML = (
-        localeString.add +
-        " " +
-        dateBegNew._getMonthString() +
-        " " +
-        dateBegNew.getFullYear()
-      )._capitalize();
-      tdAppend.colSpan = 4;
     }
+
+    let tdAppend = document.createElement("TD");
+    row.appendChild(tdAppend);
+    tdAppend.innerHTML = (
+      (appendNewMonth ? localeString.add + " " : "") +
+      date._getMonthString() +
+      " " +
+      date.getFullYear()
+    )._capitalize();
+    tdAppend.colSpan = 4;
+
+    console.log("row", row);
+    console.log("date", row.getAttribute("date"));
+    console.log("date", new Date(Number(row.getAttribute("date"))));
+
+    return row;
   }
 
   static async trEntryAppend(outlayEntry) {

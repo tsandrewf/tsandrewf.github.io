@@ -334,7 +334,7 @@ export class OutlayEntryEdit {
       }
     }
 
-    await OutlayEntry.set(outlayEntry);
+    outlayEntry.id = await OutlayEntry.set(outlayEntry);
 
     if (!paramRefresh.outlaySummary.needRefresh) {
       const datePeriod = await Setting.get(outlaySummaryPeriodKeyName);
@@ -351,7 +351,7 @@ export class OutlayEntryEdit {
       // Refresh outlayEntries
       let trEntry;
       if (outlayEntryRem) {
-        // Edited Entry -> find entry row
+        // If edited Entry -> find entry row
         trEntry = tbodyOutlayEntries.querySelector(
           'tr[outlayentryid="' + outlayEntryRem.id + '"]'
         );
@@ -389,17 +389,22 @@ export class OutlayEntryEdit {
           // Delete month title, if this entry is single in month
           OutlayEntryEdit.ifSingleEntryInMonth(trEntry);
 
+        let entry = null;
         let trInserted = false;
+        let monthNum = -1;
+        let monthCount = 0;
         for (let tr of tbodyOutlayEntries.querySelectorAll(
           "tr[outlayentryid]"
         )) {
-          const entryDate = (
-            await OutlayEntry.get(Number(tr.getAttribute("outlayentryid")))
-          ).date;
-
-          let entry = await OutlayEntry.get(
+          entry = await OutlayEntry.get(
             Number(tr.getAttribute("outlayentryid"))
           );
+
+          if (entry.date.getMonth() !== monthNum) {
+            monthCount++;
+            monthNum = entry.date.getMonth();
+          }
+
           if (outlayEntryRem && outlayEntryRem.id === entry.id) {
             entry.date = outlayEntryRem.date;
           }
@@ -407,7 +412,7 @@ export class OutlayEntryEdit {
           if (
             outlayEntry.date.valueOf() > entry.date.valueOf() ||
             (outlayEntry.date.valueOf() === entry.date.valueOf() &&
-              outlayEntry.id >= entry.id)
+              outlayEntry.id > entry.id)
           ) {
             if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
               tbodyOutlayEntries.insertBefore(trEntry, tr);
@@ -445,8 +450,44 @@ export class OutlayEntryEdit {
           }
         }
 
+        console.log("trInserted", trInserted);
         if (!trInserted) {
-          tbodyOutlayEntries.removeChild(trEntry);
+          console.log("outlayEntry", outlayEntry);
+          console.log("entry", entry);
+          if (!entry) {
+            tbodyOutlayEntries.appendChild(
+              OutlayEntries.getTrMonth(outlayEntry.date)
+            );
+            tbodyOutlayEntries.appendChild(trEntry);
+          } else if (
+            outlayEntry.date._getMonthString() === entry.date._getMonthString()
+          ) {
+            const trLast = tbodyOutlayEntries.querySelector(
+              'tr[outlayentryid="' + entry.id + '"]'
+            ).nextSibling;
+            if (trLast) {
+              tbodyOutlayEntries.insertBefore(trEntry, trLast);
+            } else {
+              tbodyOutlayEntries.appendChild(trEntry);
+            }
+          } else if (3 > monthCount) {
+            tbodyOutlayEntries.appendChild(
+              OutlayEntries.getTrMonth(outlayEntry.date)
+            );
+            tbodyOutlayEntries.appendChild(trEntry);
+          } else {
+            const trLast = tbodyOutlayEntries.querySelector(
+              'tr[outlayentryid="' + entry.id + '"]'
+            ).nextSibling;
+            if (
+              trLast &&
+              trLast.getAttribute("date") &&
+              Number(trLast.getAttribute("date")) < outlayEntry.date.valueOf()
+            ) {
+              trLast.setAttribute("date", outlayEntry.date.valueOf());
+            }
+            tbodyOutlayEntries.removeChild(trEntry);
+          }
         }
       }
     }
