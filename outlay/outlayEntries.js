@@ -165,7 +165,6 @@ export class OutlayEntries {
   }
 
   static getMonthTitleTr(date, appendNewMonth) {
-    console.log("date", date);
     const row = document.createElement("TR");
     row.style.backgroundColor = "grey";
     row.style.color = "white";
@@ -188,10 +187,6 @@ export class OutlayEntries {
       date.getFullYear()
     )._capitalize();
     tdAppend.colSpan = 4;
-
-    console.log("row", row);
-    console.log("date", row.getAttribute("date"));
-    console.log("date", new Date(Number(row.getAttribute("date"))));
 
     return row;
   }

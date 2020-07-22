@@ -396,64 +396,62 @@ export class OutlayEntryEdit {
         for (let tr of tbodyOutlayEntries.querySelectorAll(
           "tr[outlayentryid]"
         )) {
-          entry = await OutlayEntry.get(
-            Number(tr.getAttribute("outlayentryid"))
-          );
+          const entryId = Number(tr.getAttribute("outlayentryid"));
+          if (outlayEntry.id !== entryId) {
+            entry = await OutlayEntry.get(entryId);
 
-          if (entry.date.getMonth() !== monthNum) {
-            monthCount++;
-            monthNum = entry.date.getMonth();
-          }
-
-          if (outlayEntryRem && outlayEntryRem.id === entry.id) {
-            entry.date = outlayEntryRem.date;
-          }
-
-          if (
-            outlayEntry.date.valueOf() > entry.date.valueOf() ||
-            (outlayEntry.date.valueOf() === entry.date.valueOf() &&
-              outlayEntry.id > entry.id)
-          ) {
-            if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
-              tbodyOutlayEntries.insertBefore(trEntry, tr);
-            } else {
-              tbodyOutlayEntries.insertBefore(
-                trEntry,
-                tr.previousSibling ? tr.previousSibling : tr
-              );
-
-              {
-                const trPrev = trEntry.previousSibling;
-                if (
-                  !trPrev ||
-                  (!trPrev.getAttribute("outlayentryid") &&
-                    trPrev.firstChild.innerHTML !==
-                      OutlayEntries.getTrMonth(outlayEntry.date).firstChild
-                        .innerHTML) ||
-                  (trPrev.getAttribute("outlayentryid") &&
-                    (
-                      await OutlayEntry.get(
-                        Number(trPrev.getAttribute("outlayentryid"))
-                      )
-                    ).date.getMonth() !== outlayEntry.date.getMonth())
-                ) {
-                  tbodyOutlayEntries.insertBefore(
-                    OutlayEntries.getTrMonth(outlayEntry.date),
-                    trEntry
-                  );
-                }
-              }
+            if (entry.date.getMonth() !== monthNum) {
+              monthCount++;
+              monthNum = entry.date.getMonth();
             }
 
-            trInserted = true;
-            break;
+            if (outlayEntryRem && outlayEntryRem.id === entry.id) {
+              entry.date = outlayEntryRem.date;
+            }
+
+            if (
+              outlayEntry.date.valueOf() > entry.date.valueOf() ||
+              (outlayEntry.date.valueOf() === entry.date.valueOf() &&
+                outlayEntry.id > entry.id)
+            ) {
+              if (outlayEntry.date.getMonth() === entry.date.getMonth()) {
+                tbodyOutlayEntries.insertBefore(trEntry, tr);
+              } else {
+                tbodyOutlayEntries.insertBefore(
+                  trEntry,
+                  tr.previousSibling ? tr.previousSibling : tr
+                );
+
+                {
+                  const trPrev = trEntry.previousSibling;
+                  if (
+                    !trPrev ||
+                    (!trPrev.getAttribute("outlayentryid") &&
+                      trPrev.firstChild.innerHTML !==
+                        OutlayEntries.getTrMonth(outlayEntry.date).firstChild
+                          .innerHTML) ||
+                    (trPrev.getAttribute("outlayentryid") &&
+                      (
+                        await OutlayEntry.get(
+                          Number(trPrev.getAttribute("outlayentryid"))
+                        )
+                      ).date.getMonth() !== outlayEntry.date.getMonth())
+                  ) {
+                    tbodyOutlayEntries.insertBefore(
+                      OutlayEntries.getTrMonth(outlayEntry.date),
+                      trEntry
+                    );
+                  }
+                }
+              }
+
+              trInserted = true;
+              break;
+            }
           }
         }
 
-        console.log("trInserted", trInserted);
         if (!trInserted) {
-          console.log("outlayEntry", outlayEntry);
-          console.log("entry", entry);
           if (!entry) {
             tbodyOutlayEntries.appendChild(
               OutlayEntries.getTrMonth(outlayEntry.date)
