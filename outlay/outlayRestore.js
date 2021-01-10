@@ -15,8 +15,8 @@ import { OutlayEntry } from "./outlayEntry.js";
 import { throwErrorIfNotNull } from "./base.js";
 import { localeString } from "./locale.js";
 import { setContentHeight } from "./pattern.js";
-
 import { Setting } from "./setting.js";
+import { paramRefresh } from "./needRefresh.js";
 
 const divOutlayRestore = document.getElementById("outlayRestore");
 let divLog;
@@ -257,7 +257,7 @@ export class OutlayRestore {
           const objectStore = new ObjectStore(objectStoreName);
 
           {
-            // Проверка таблицы из архива
+            // Table check
             const liObjectStore = document.createElement("LI");
             ulObjectStore.appendChild(liObjectStore);
             liObjectStore.innerHTML =
@@ -378,6 +378,8 @@ export class OutlayRestore {
           divLog.appendChild(div);
           div.innerText = localeString.databaseRestored._capitalize();
         }
+
+        paramRefresh.outlayEntries.needRefresh = true;
       } catch (error) {
         transaction._abortIfActive();
         OutlayRestore.divLogError(error);
