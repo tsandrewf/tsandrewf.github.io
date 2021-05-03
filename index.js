@@ -1,7 +1,7 @@
 "use strict";
 
-window.openOulay = openOulay;
+window.openProg = openProg;
 
-function openOulay() {
-  location.href = "outlay/outlay.html";
+function openProg(url) {
+  location.href = url;
 }
