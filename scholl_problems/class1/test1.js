@@ -25,7 +25,7 @@ function RefreshSummary() {
   const logCorrectCount = document.querySelectorAll("#log > .decisionCorrect")
     .length;
   if (0 == logChildCount) {
-    elemSummary.innerHTML = "Решение примеров пока не начато";
+    elemSummary.innerHTML = "Решение пока не начато";
   } else if (1 == logChildCount) {
     if (1 == logCorrectCount) {
       elemSummary.innerHTML = "Решен 1 пример";
