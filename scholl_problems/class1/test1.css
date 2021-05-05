@@ -1,3 +1,8 @@
+.title > p {
+  margin: 0;
+  font-size: x-large;
+}
+
 .testLine {
   display: flex;
   flex-direction: row;
@@ -60,15 +65,17 @@
   width: 1.5em;
 }
 
-#history {
+#log {
   display: flex;
   flex-direction: column;
 }
 
-#history > div {
+#log > div {
   font-size: medium;
 }
 
-#history > div:hover {
+.decisionNotCorrect {
+  background-color: red;
+  color: white;
   cursor: pointer;
 }

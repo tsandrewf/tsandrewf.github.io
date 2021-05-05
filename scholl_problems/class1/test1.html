@@ -11,7 +11,10 @@
     <script src="test1.js" type="module"></script>
 </head>
 <body>
-    <h3>Сложение и вычитание в пределах 100</h3>
+    <div class="title">
+        <p>Сложение и вычитание в пределах 100</p>
+        <p id="summary"></p>
+    </div>
     <hr>
     <div class="testLine">
         <div>
@@ -25,7 +28,7 @@
                     --><span id="answerDigit1" onclick="SelectAnswerDigit(event)" class="answerDigit oneDigit"></span>
                 </div>
             </div>
-            <div id="history"></div>
+            <div id="log"></div>
         </div>
         <!--div class="material-icons nextQuestion" onclick="CalcTest();">play_arrow</div-->
         <div class="keyboard">

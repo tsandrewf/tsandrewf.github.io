@@ -1,14 +1,53 @@
 "use strict";
 
 const classAnswerDigitSelected = "answerDigitSelected";
-let elemHistoryRecordRetry;
+let elemLogRecordRetry;
 
 window.onload = function () {
   CalcTest();
+  RefreshSummary();
 };
 
+function sklonenie(amount) {
+  return (11 <= amount && 19 >= amount) ||
+    0 == amount % 10 ||
+    (5 <= amount % 10 && 9 >= amount % 10)
+    ? "примеров"
+    : 1 == amount % 10
+    ? "пример"
+    : "примера";
+}
+
+function RefreshSummary() {
+  const elemLog = document.getElementById("log");
+  const logChildCount = elemLog.childElementCount;
+  const elemSummary = document.getElementById("summary");
+  const logCorrectCount = document.querySelectorAll("#log > .decisionCorrect")
+    .length;
+  if (0 == logChildCount) {
+    elemSummary.innerHTML = "Решение примеров пока не начато";
+  } else if (1 == logChildCount) {
+    if (1 == logCorrectCount) {
+      elemSummary.innerHTML = "Решен 1 пример";
+    } else {
+      elemSummary.innerHTML = "Не решен 1 пример";
+    }
+  } else if (logCorrectCount == logChildCount) {
+    elemSummary.innerHTML =
+      "Решены все " + logChildCount + " " + sklonenie(logChildCount);
+  } else {
+    elemSummary.innerHTML =
+      "Решено " +
+      logCorrectCount +
+      " " +
+      sklonenie(logCorrectCount) +
+      " из " +
+      logChildCount;
+  }
+}
+
 function Retry() {
-  elemHistoryRecordRetry = this;
+  elemLogRecordRetry = this;
   document.getElementById("operand1").innerText = this.innerText.substring(
     0,
     2
@@ -53,29 +92,38 @@ window.OperationCommit = function () {
     correctAnswer += Number(elemOperand2.innerText);
   else correctAnswer -= Number(elemOperand2.innerText);
 
-  const elemHistory = document.getElementById("history");
-  if (answer != correctAnswer) {
-    if (!elemHistoryRecordRetry) {
-      const elemHistoryRecord = document.createElement("div");
-      elemHistoryRecord.innerHTML =
-        elemOperand1.innerHTML +
-        elemOperation.innerHTML +
-        elemOperand2.innerHTML +
-        "&ne;" +
-        answer;
-      elemHistoryRecord.onclick = Retry;
-      elemHistory.appendChild(elemHistoryRecord);
-    } else {
-      elemHistoryRecordRetry.innerHTML =
-        elemHistoryRecordRetry.innerHTML.substring(0, 6) + answer;
-      elemHistoryRecordRetry = null;
-    }
-  } else if (elemHistoryRecordRetry) {
-    elemHistory.removeChild(elemHistoryRecordRetry);
-    elemHistoryRecordRetry = null;
+  const elemLog = document.getElementById("log");
+  const logRecordHTML =
+    elemOperand1.innerHTML +
+    elemOperation.innerHTML +
+    elemOperand2.innerHTML +
+    (answer == correctAnswer ? "=" : "&ne;") +
+    answer;
+  const logRecordClass =
+    answer == correctAnswer ? "decisionCorrect" : "decisionNotCorrect";
+
+  if (!elemLogRecordRetry) {
+    const elemLogRecord = document.createElement("div");
+    elemLogRecord.innerHTML = logRecordHTML;
+    elemLogRecord.className = logRecordClass;
+
+    if (answer != correctAnswer) elemLogRecord.onclick = Retry;
+
+    if (elemLog.firstChild)
+      elemLog.insertBefore(elemLogRecord, elemLog.firstChild);
+    else elemLog.appendChild(elemLogRecord);
+  } else {
+    elemLogRecordRetry.innerHTML = logRecordHTML;
+    elemLogRecordRetry.className = logRecordClass;
+
+    if (answer == correctAnswer && elemLogRecordRetry.onclick)
+      elemLogRecordRetry.onclick = null;
+
+    elemLogRecordRetry = null;
   }
 
   CalcTest();
+  RefreshSummary();
 };
 
 window.CalcTest = function () {
