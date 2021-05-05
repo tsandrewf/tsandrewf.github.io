@@ -1,6 +1,7 @@
 .testLine {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
   margin: 0;
   font-size: xx-large;
   font-weight: bolder;
@@ -48,7 +49,7 @@
 
 .keyboard {
   text-align: center;
-  margin-left: 1.5em;
+  /*margin-left: 1.5em;*/
 }
 
 .keyboard tr td {
