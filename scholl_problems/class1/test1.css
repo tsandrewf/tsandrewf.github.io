@@ -1,0 +1,73 @@
+.testLine {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+.testLine > div:nth-child(1) > div:nth-child(1) {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+  color: white;
+}
+
+/*#dashboard div {
+  background-color: black;
+  color: white;
+}*/
+
+.twoDigit {
+  width: 1em;
+  text-align: center;
+}
+
+.oneDigit {
+  width: 0.6em;
+  text-align: center;
+}
+
+.answerDigit {
+  /*border-bottom: solid;*/
+  text-align: center;
+  display: inline-block;
+}
+
+.answerDigit:hover {
+  cursor: pointer;
+}
+
+.answerDigitSelected {
+  background-color: gray;
+}
+
+.nextQuestion {
+  cursor: pointer;
+}
+
+.keyboard {
+  text-align: center;
+  margin-left: 1.5em;
+}
+
+.keyboard tr td {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border-radius: 100%;
+  width: 1.5em;
+}
+
+#history {
+  display: flex;
+  flex-direction: column;
+}
+
+#history > div {
+  font-size: medium;
+}
+
+#history > div:hover {
+  cursor: pointer;
+}
