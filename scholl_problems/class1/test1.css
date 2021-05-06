@@ -11,15 +11,15 @@ body {
 }
 
 #operand1 {
-  margin-left: 0.25em;
-  margin-right: 0.25em;
+  margin-left: 0.1em;
 }
 
+#operand1,
 #operation,
 #operand2,
 #equals,
 #answerDigit1 {
-  margin-right: 0.25em;
+  margin-right: 0.1em;
 }
 
 #summary {
@@ -35,8 +35,8 @@ body {
   border-radius: 10%;
   color: white;
   /*padding: 0.1em 0.5em 0.1em 0.5em;*/
-  width: 2em;
-  height: 3em;
+  /*width: 2em;*/
+  /*height: 3em;*/
 }
 
 #start > div:nth-child(1),
