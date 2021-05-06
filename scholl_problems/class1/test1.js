@@ -56,7 +56,7 @@ window.Stop = function () {
 
   const ellapsedTime = Math.trunc((dateLastDecision - dateTestBeg) / 1000);
   const ellapsedTimeSec = ellapsedTime % 60;
-  const ellapsedTimeMin = Math.trunc(ellapsedTimeSec / 60);
+  const ellapsedTimeMin = Math.trunc(ellapsedTime / 60);
   document.getElementById("summaryText").innerHTML +=
     " за" +
     (0 < ellapsedTimeMin ? " " + ellapsedTimeMin + " мин." : "") +
