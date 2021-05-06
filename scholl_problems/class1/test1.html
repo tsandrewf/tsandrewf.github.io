@@ -13,7 +13,11 @@
 <body>
     <div class="title">
         <p>Сложение и вычитание в пределах 100</p>
-        <p id="summary"></p>
+        <div id=summary>
+            <fieldset id="start" onclick="Start();" class="enabled"><div>&#9658;</div><div>старт</div></fieldset>
+            <div id="summaryText"></div>
+            <fieldset id="stop" onclick="Stop();" disabled class="disabled"><div>&#9632;</div><div>стоп</div></fieldset>
+        </div>
     </div>
     <hr>
     <div class="testLine">
@@ -30,8 +34,7 @@
             </div>
             <div id="log"></div>
         </div>
-        <!--div class="material-icons nextQuestion" onclick="CalcTest();">play_arrow</div-->
-        <div class="keyboard">
+        <fieldset id="keyboard" disabled>
             <table>
                 <tr>
                     <td onclick="onKeyboardClick(event);">1</td><td onclick="onKeyboardClick(event);">2</td><td onclick="onKeyboardClick(event);">3</td>
@@ -46,7 +49,7 @@
                     <td onclick="onKeyboardClick(event);">0</td><td colspan="2" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">=</td>
                 </tr>
             </table>
-        </div>
+        </fieldset>
     </div>
 </body>
 </html>

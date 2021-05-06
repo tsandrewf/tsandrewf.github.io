@@ -2,10 +2,66 @@
 
 const classAnswerDigitSelected = "answerDigitSelected";
 let elemLogRecordRetry;
+let dateTestBeg;
+let dateLastDecision;
 
 window.onload = function () {
-  CalcTest();
   RefreshSummary();
+};
+
+window.Start = function () {
+  {
+    // Erase Log
+    const elemLog = document.getElementById("log");
+    while (elemLog.firstChild) {
+      elemLog.removeChild(elemLog.firstChild);
+    }
+  }
+
+  CalcTest();
+  document.getElementById("summaryText").innerHTML = "Тест начат";
+  dateTestBeg = Date.now();
+
+  document.getElementById("start").disabled = true;
+  document.getElementById("start").className = "disabled";
+
+  document.getElementById("stop").disabled = false;
+  document.getElementById("stop").className = "enabled";
+
+  document.getElementById("keyboard").disabled = false;
+};
+
+window.Stop = function () {
+  document.getElementById("operand1").innerHTML = null;
+  document.getElementById("operation").innerHTML = null;
+  document.getElementById("operand2").innerHTML = null;
+  document.getElementById("answerDigit2").innerHTML = null;
+  document.getElementById("answerDigit1").innerHTML = null;
+
+  dateTestBeg = null;
+
+  document.getElementById("start").disabled = false;
+  document.getElementById("start").className = "enabled";
+
+  document.getElementById("stop").disabled = true;
+  document.getElementById("stop").className = "disabled";
+
+  document.getElementById("keyboard").disabled = true;
+
+  if (!dateLastDecision) {
+    document.getElementById("summaryText").innerHTML = "Тест пока не начат";
+
+    return;
+  }
+
+  const ellapsedTime = Math.trunc((dateLastDecision - dateTestBeg) / 1000);
+  const ellapsedTimeSec = ellapsedTime % 60;
+  const ellapsedTimeMin = Math.trunc(ellapsedTime / 60);
+  document.getElementById("summaryText").innerHTML +=
+    " за" +
+    (0 < ellapsedTimeMin ? " " + ellapsedTimeMin + " мин." : "") +
+    (0 < ellapsedTimeSec ? " " + ellapsedTimeSec + " сек." : "");
+  dateLastDecision = null;
 };
 
 function sklonenie(amount) {
@@ -21,11 +77,11 @@ function sklonenie(amount) {
 function RefreshSummary() {
   const elemLog = document.getElementById("log");
   const logChildCount = elemLog.childElementCount;
-  const elemSummary = document.getElementById("summary");
+  const elemSummary = document.getElementById("summaryText");
   const logCorrectCount = document.querySelectorAll("#log > .decisionCorrect")
     .length;
   if (0 == logChildCount) {
-    elemSummary.innerHTML = "Решение пока не начато";
+    elemSummary.innerHTML = "Тест пока не начат";
   } else if (1 == logChildCount) {
     if (1 == logCorrectCount) {
       elemSummary.innerHTML = "Решен 1 пример";
@@ -74,6 +130,10 @@ function Retry() {
 }
 
 window.OperationCommit = function () {
+  if (document.getElementById("keyboard").disabled) return;
+
+  dateLastDecision = Date.now();
+
   const answerDigit1text = document.getElementById("answerDigit1").innerHTML;
   const answerDigit2text = document.getElementById("answerDigit2").innerHTML;
 
@@ -176,6 +236,8 @@ window.SelectAnswerDigit = function (event) {
 };
 
 window.onKeyboardClick = function (event) {
+  if (document.getElementById("keyboard").disabled) return;
+
   const answerDigit = document.getElementsByClassName(
     classAnswerDigitSelected
   )[0];

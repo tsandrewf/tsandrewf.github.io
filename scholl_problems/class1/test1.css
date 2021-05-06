@@ -1,3 +1,52 @@
+body {
+  font-family: Arial;
+}
+
+.disabled {
+  background-color: gray;
+}
+
+.enabled {
+  background-color: green;
+}
+
+#operand1 {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+#operation,
+#operand2,
+#equals,
+#answerDigit1 {
+  margin-right: 0.25em;
+}
+
+#summary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#start,
+#stop {
+  text-align: center;
+  border-radius: 10%;
+  /*background-color: green;*/
+  color: white;
+}
+
+#start > div:nth-child(1),
+#stop > div:nth-child(1) {
+  font-size: xx-large;
+}
+
+#start:hover,
+#stop:hover {
+  cursor: pointer;
+}
+
 .title > p {
   margin: 0;
   font-size: large;
@@ -52,12 +101,11 @@
   cursor: pointer;
 }
 
-.keyboard {
+#keyboard {
   text-align: center;
-  /*margin-left: 1.5em;*/
 }
 
-.keyboard tr td {
+#keyboard tr td {
   cursor: pointer;
   background-color: blue;
   color: white;
