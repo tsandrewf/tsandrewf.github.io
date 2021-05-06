@@ -38,8 +38,6 @@ window.Stop = function () {
   document.getElementById("answerDigit2").innerHTML = null;
   document.getElementById("answerDigit1").innerHTML = null;
 
-  dateTestBeg = null;
-
   document.getElementById("start").disabled = false;
   document.getElementById("start").className = "enabled";
 
@@ -49,19 +47,23 @@ window.Stop = function () {
   document.getElementById("keyboard").disabled = true;
 
   if (!dateLastDecision) {
+    dateTestBeg = null;
     document.getElementById("summaryText").innerHTML = "Тест пока не начат";
 
     return;
   }
 
   const ellapsedTime = Math.trunc((dateLastDecision - dateTestBeg) / 1000);
-  const ellapsedTimeSec = ellapsedTime % 60;
-  const ellapsedTimeMin = Math.trunc(ellapsedTime / 60);
+  const ellapsedTimeSeconds = ellapsedTime % 60;
+  const ellapsedTimeMinutes = Math.trunc(ellapsedTime / 60);
+
   document.getElementById("summaryText").innerHTML +=
     " за" +
-    (0 < ellapsedTimeMin ? " " + ellapsedTimeMin + " мин." : "") +
-    (0 < ellapsedTimeSec ? " " + ellapsedTimeSec + " сек." : "");
+    (0 < ellapsedTimeMinutes ? " " + ellapsedTimeMinutes + " мин." : "") +
+    (0 < ellapsedTimeSeconds ? " " + ellapsedTimeSeconds + " сек." : "");
   dateLastDecision = null;
+
+  dateTestBeg = null;
 };
 
 function sklonenie(amount) {
