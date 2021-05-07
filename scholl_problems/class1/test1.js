@@ -10,7 +10,7 @@ window.onload = function () {
 };
 
 function Start() {
-  alert("Start2()");
+  alert("Start()");
 }
 
 window.Start = function () {
