@@ -9,10 +9,6 @@ window.onload = function () {
   RefreshSummary();
 };
 
-function Start() {
-  alert("Start()");
-}
-
 window.Start = function () {
   {
     // Erase Log
