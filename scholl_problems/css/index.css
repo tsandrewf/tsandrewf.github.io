@@ -82,7 +82,8 @@ body {
 
   body {
     grid-template-columns: none;
-    grid-template-rows: 1fr auto;
+    /*grid-template-rows: 1fr auto;*/
+    grid-template-rows: 1fr 10vh;
   }
 }
 /* End Landscape */
