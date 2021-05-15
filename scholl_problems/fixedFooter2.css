@@ -1,0 +1,64 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  /* Растягиваем body по высоте html */
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  background: yellow;
+}
+
+#content {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: 0;
+}
+
+/* Beg navbar */
+.navbar {
+  font-weight: bolder;
+  background-color: blue;
+  color: white;
+
+  display: flex;
+  flex-direction: row;
+
+  float: left;
+  overflow-y: auto;
+
+  width: auto;
+  height: auto;
+
+  /*grid-column: 1;
+    grid-row: 1;*/
+}
+
+.navbar > div {
+  text-align: center;
+  margin: 10px;
+
+  padding-top: 5px;
+  margin-top: 5px;
+
+  padding-right: 5px;
+  margin-right: 5px;
+}
+
+.navbar > .navbar-button-active {
+  color: white;
+  border-right: none;
+  border-top: solid white;
+}
+
+.navbar > .navbar-button-passive {
+  color: grey;
+  cursor: pointer;
+}
+/* End navbar */
