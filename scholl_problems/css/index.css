@@ -33,7 +33,8 @@ body {
   float: left;
   overflow-y: auto;
 
-  width: 10vh;
+  /*width: 10vw;*/
+  width: auto;
   height: auto;
 
   grid-column: 1;
@@ -71,7 +72,8 @@ body {
     overflow-x: auto;
 
     width: auto;
-    height: 10vh;
+    /*height: 10vh;*/
+    height: auto;
 
     grid-column: 1;
     grid-row: 2;
