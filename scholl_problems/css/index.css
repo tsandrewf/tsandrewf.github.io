@@ -24,7 +24,7 @@ body {
 
 /* Beg navbar */
 .navbar {
-  font-weight: bold;
+  font-weight: bolder;
   background-color: blue;
   color: white;
 
