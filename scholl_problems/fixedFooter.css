@@ -1,0 +1,24 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: #fff;
+  /* Растягиваем body по высоте html */
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  background: blue;
+}
+
+main {
+  background: red;
+}
+
+footer {
+  background: black;
+}
