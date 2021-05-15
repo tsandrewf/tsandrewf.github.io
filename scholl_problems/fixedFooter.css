@@ -15,12 +15,11 @@ header {
   background: blue;
 }
 
-main {
-  background: red;
-}
-
-footer {
-  background: black;
+#content {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: 0;
 }
 
 /* Beg navbar */
@@ -55,8 +54,8 @@ footer {
 
 .navbar > .navbar-button-active {
   color: white;
-  border-top: none;
-  border-right: solid white;
+  border-right: none;
+  border-top: solid white;
 }
 
 .navbar > .navbar-button-passive {
