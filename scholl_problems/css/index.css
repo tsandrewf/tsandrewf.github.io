@@ -24,6 +24,7 @@ body {
 
 /* Beg navbar */
 .navbar {
+  font-weight: bold;
   background-color: blue;
   color: white;
 
@@ -33,7 +34,6 @@ body {
   float: left;
   overflow-y: auto;
 
-  /*width: 10vw;*/
   width: auto;
   height: auto;
 
@@ -70,10 +70,6 @@ body {
     flex-direction: row;
 
     overflow-x: auto;
-
-    width: auto;
-    /*height: 10vh;*/
-    height: auto;
 
     grid-column: 1;
     grid-row: 2;
