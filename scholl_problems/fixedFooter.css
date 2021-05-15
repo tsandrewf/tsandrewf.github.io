@@ -22,3 +22,45 @@ main {
 footer {
   background: black;
 }
+
+/* Beg navbar */
+.navbar {
+  font-weight: bolder;
+  background-color: blue;
+  color: white;
+
+  display: flex;
+  flex-direction: row;
+
+  float: left;
+  overflow-y: auto;
+
+  width: auto;
+  height: auto;
+
+  /*grid-column: 1;
+    grid-row: 1;*/
+}
+
+.navbar > div {
+  text-align: center;
+  margin: 10px;
+
+  padding-top: 5px;
+  margin-top: 5px;
+
+  padding-right: 5px;
+  margin-right: 5px;
+}
+
+.navbar > .navbar-button-active {
+  color: white;
+  border-top: none;
+  border-right: solid white;
+}
+
+.navbar > .navbar-button-passive {
+  color: grey;
+  cursor: pointer;
+}
+/* End navbar */
