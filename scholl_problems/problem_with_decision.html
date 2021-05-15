@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача с решением</title>
+
+    <link href="css/problem_with_decision.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/problem_with_decision.js"></script>
+</head>
+<body>
+    <header>
+        <div id="title"></div>
+        <div class="action-bar">
+            <!-- https://unicode-table.com/ru/sets/ -->
+            <div class="action-button" onclick="ProblemSelect('first')" title="Первая задача">&#9668;&#9668;</div>
+            <div class="action-button" onclick="ProblemSelect('prev')" title="Предыдущая задача">&#9668;</div>
+            <div class="action-button" onclick="ProblemSelect('next')" title="Следующая задача">&#9658;</div>
+            <div class="action-button" onclick="ProblemSelect('last')" title="Последняя задача">&#9658;&#9658;</div>
+        </div>
+    </header>
+    <iframe id="problem"></iframe>
+</body>
+</html>

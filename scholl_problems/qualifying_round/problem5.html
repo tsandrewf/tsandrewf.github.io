@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 5</title>
+
+    <link href="./problem.css" rel="stylesheet" type="text/css" />
+
+    <!-- https://jsbin.com/?html,output -->
+    <!-- https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols -->
+    <!-- https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style type="text/css">
+table tr td {
+    text-align: center;
+    width: 20px;
+}
+.except {
+    text-decoration: line-through;
+}
+    </style>
+</head>
+<body>
+    <div class="problemNextPrev">
+        <a href="problem4.html">Пред. задача</a>
+        <a href="problem6.html">След. задача</a>
+    </div>
+    <div><span class="problemTitle">Задача 5.</span> \(S\) - произведение всех натуральных чисел меньших 310, не делящихся ни на 3, ни на 5. Найдите остаток от деления \(S\) на 10.</div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Пусть \(f(x)\) - функция, вычисляющая остаток от деления числа \(x\) на 10.
+        <br>Эта функция обладает таким свойством: остаток от деления произведения двух чисел на 10 равен остатку от деления на 10 произведений остатков от деления на 10 этих чисел по отдельности.
+        <br>\(f(x \times y)=f(f(x) \times f(y))\)
+        <br>Например, остаток от деления на 10 произведения чисел 37 и 576 равен остатку от деления на 10 произведения чисел 7 и 6 = 2
+        <br>\(f(37 \times 576)=f(7 \times 6)=f(42)=2\)
+        <br>Разобьем множество 300 натуральных чисел от 1 до 300 на 20 множеств по 15 чисел в каждом: 1...15, 16...30, 31...45, 46...60, ..., 271...285, 286...300.
+        <table>
+            <tr>
+                <th></th><th colspan="4">\(j=0\)</th><th colspan="3"></th><th colspan="4">\(j\)</th><th colspan="3"></th><th colspan="4">\(j=27\)</th>
+            </tr>
+            <tr>
+                <th>\(i\)</th><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th><th>&bull;</th><th>&bull;</th><th>&bull;</th><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th><td>&bull;</td><td>&bull;</td><td>&bull;</td><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th><th>\(x\)</th><th>\(f(x_{i-1} \times x_i)\)</th>
+            </tr>
+            <tr>
+                <td>1</td><td>1</td><td>1</td><td>16</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j)1</td><td>1</td><td>(j+1)6</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td></td><td>271</td></td><td>1</td><td>286</td></td><td>6</td>
+            </tr>
+            <tr>
+                <td>2</td><td>2</td><td>2</td><td>17</td><td>2</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j)2</td><td>2</td><td>(j+1)7</td><td>2</td><td>&bull;</td><td>&bull;</td><td>&bull;</td></td><td>272</td></td><td>2</td><td>287</td></td><td>2</td>
+            </tr>
+            <tr>
+                <td>3</td><td class="except">3</td><td></td><td class="except">18</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j)3</td><td></td><td class="except">(j+1)8</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">273</td><td></td><td class="except">288</td><td></td>
+            </tr>
+            <tr>
+                <td>4</td><td>4</td><td>8</td><td>19</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j)4</td><td>8</td><td>(j+1)9</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td></td><td>274</td></td><td>8</td><td>289</td></td><td>8</td>
+            </tr>
+            <tr>
+                <td>5</td><td class="except">5</td><td></td><td class="except">20</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j)5</td><td></td><td class="except">(j+2)0</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">275</td><td></td><td class="except">290</td>
+            </tr>
+            <tr>
+                <td>6</td><td class="except">6</td><td></td><td class="except">21</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j)6</td><td></td><td class="except">(j+2)1</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">276</td><td></td><td class="except">291</td>
+            </tr>
+            <tr>
+                <td>7</td><td>7</td><td>6</td><td>22</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j)7</td><td>6</td><td>(j+2)2</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>277</td><td>6</td><td>292</td><td>6</td>
+            </tr>
+            <tr>
+                <td>8</td><td>8</td><td>8</td><td>23</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j)8</td><td>8</td><td>(j+2)3</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>278</td><td>8</td><td>293</td><td>8</td>
+            </tr>
+            <tr>
+                <td>9</td><td class="except">9</td><td></td><td class="except">24</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j)9</td><td></td><td class="except">(j+2)4</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">279</td><td></td><td class="except">294</td><td></td>
+            </tr>
+            <tr>
+                <td>10</td><td class="except">10</td><td></td><td class="except">25</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j+1)0</td><td></td><td class="except">(j+2)5</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">280</td><td></td><td class="except">295</td><td></td>
+            </tr>
+            <tr>
+                <td>11</td><td>11</td><td>8</td><td>26</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j+1)1</td><td>8</td><td>(j+2)6</td><td>8</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>281</td><td>8</td><td>296</td><td>8</td>
+            </tr>
+            <tr>
+                <td>12</td><td class="except">12</td><td></td><td class="except">27</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j+1)2</td><td></td><td class="except">(j+2)7</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">282</td><td></td><td class="except">297</td><td></td>
+            </tr>
+            <tr>
+                <td>13</td><td>13</td><td>4</td><td>28</td><td>4</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j+1)3</td><td>4</td><td>(j+2)8</td><td>4</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>283</td><td>4</td><td>298</td><td>4</td>
+            </tr>
+            <tr>
+                <td>14</td><td>14</td><td>6</td><td>29</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>(j+1)4</td><td>6</td><td>(j+2)9</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>284</td><td>6</td><td>299</td><td>6</td>
+            </tr>
+            <tr>
+                <td>15</td><td class="except">15</td><td></td><td class="except">30</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">(j+1)5</td><td></td><td class="except">(j+3)0</td><td></td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td class="except">285</td><td></td><td class="except">300</td><td></td>
+            </tr>
+        </table>
+        Остаток от деления на 10 произведений чисел каждого из этих множеств равен 6.
+        <br>Остаток от деления на 10 любого количества произведений числа 6 на самого себя (6) равно 6 независимо от количества таких операций, так как остаток от деления 36 на 10 снова 6.
+        <br>Таким образом остаток от деления на 10 произведения всех натуральных чисел от 1 до 300 за исключеним чесел, делящихся на 3, и чисел, делящихся на 5, равен 6.
+        <br>Нам осталось найти остаток от деления на 10 произведения чисел 6, 301, 302, <span class="except">303</span>, 304, <span class="except">305</span>, <span class="except">306</span>, 307, 308, <span class="except">309</span>. Здесь исключены числа, делящиеся на 3 (303, 306 и 309), число 305, делящееся на 5.
+        <br>\(f(6, 301, 302, 304, 307, 308)=\)
+        <br>\(f(6, 1, 2, 4, 7, 8)=\) <span class="answerTitle">8</span>
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">8</span></div>
+    <div>
+        <a href="problem4.html">Пред. задача</a>
+        <a href="problem6.html">След. задача</a>
+    </div>
+</body>
+</html>

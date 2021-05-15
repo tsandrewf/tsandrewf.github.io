@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 6</title>
+
+    <link href="./problem.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+table tr td {
+    text-align: center;
+}
+table tr td {
+    background:red;
+    color:white;
+    width: 40px;
+	height: 40px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+}
+table tr td:nth-child(1) {
+    background:white;
+    color:black;
+}
+.ballBlue {
+    background:blue;
+}
+    </style>
+</head>
+<body>
+    <div><span class="problemTitle">Задача 6.</span> В ряд лежит 2021 шар: красные и синие. Аня имеет в запасе неограниченное количество шаров каждого цвета. Она составляет новый ряд, в который для каждой тройки соседних шаров из исходного ряда ставит шар того цвета, который встречается в этой тройке чаще всего. (Например, из ряда ККСС Аня получила бы ряд КС). Затем с полученным рядом из 2019 шаров Аня проделывает те же действия, пока не останется один шар. Какое наименьшее количество синих шаров должно быть в исходной строке, чтобы оставшийся шар оказался синим?</div>
+    <div>
+        <span class="decisionTitle">Решение.</span> Расположим 2 синих шара практически в центре ряда в позициях 1009 и 1010, а в остальные 2019 позиций ряда поместим красные шары. Теперь Аня начинает последовательные действия. На каждом шагу 2 синих шара смещаются на одну позицию влево.
+        <table>
+            <tr>
+                <th></th><th colspan="17">Ряд</th>
+            </tr>
+            <tr>
+                <th>Шаг</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>&bull;</td><td>1007</td><td>1008</td><td class="ballBlue">1009</td><td class="ballBlue">1010</td><td>1011</td><td>&bull;</td><td>2017</td><td>2018</td><td>2019</td><td>2020</td><td>2021</td>
+            </tr>
+            <tr>
+                <td>1</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>&bull;</td><td>1007</td><td class="ballBlue">1008</td><td class="ballBlue">1009</td><td>1010</td><td>1011</td><td>&bull;</td><td>2017</td><td>2018</td><td>2019
+            </tr>
+            <tr>
+                <td>2</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>&bull;</td><td class="ballBlue">1007</td><td class="ballBlue">1008</td><td>1009</td><td>1010</td><td>1011</td><td>&bull;</td><td>2017</td>
+            </tr>
+            <tr>
+                <td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td>
+            </tr>
+            <tr>
+                <td>1007</td><td>1</td><td>2</td><td class="ballBlue">3</td><td class="ballBlue">4</td><td>5</td><td>6</td><td>7</td>
+            </tr>
+            <tr>
+                <td>1008</td><td>1</td><td class="ballBlue">2</td><td class="ballBlue">3</td><td>4</td><td>5</td>
+            </tr>
+            <tr>
+                <td>1009</td><td class="ballBlue">1</td><td class="ballBlue">2</td><td>3</td>
+            </tr>
+            <tr>
+                <td>1010</td><td class="ballBlue">1</td>
+            </tr>
+        </table>
+        Таким образом доказано, для решения поставленной задачи достаточно <span class="answerTitle">2</span>-х синих шаров.
+        <br>1-го синего шара недостаточно, так как где бы он ни был расположен, он исчезнет уже на 1-м шаге.
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">2</span></div>
+</body>
+</html>

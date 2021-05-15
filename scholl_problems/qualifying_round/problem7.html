@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 7</title>
+
+    <link href="./problem.css" rel="stylesheet" type="text/css" />
+
+    <!-- https://jsbin.com/?html,output -->
+    <!-- https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols -->
+    <!-- https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style type="text/css">
+table tr td { text-align: center;}
+table tr:nth-child(1), tr:nth-child(even) {
+  background-color: #ccffff;
+}
+table tr:nth-child(2) th {
+  width: 20px;
+}
+.cardOne {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <div><span class="problemTitle">Задача 7.</span> Числа от 1 до 2020 записали на карточки и положили в ряд в порядке возрастания. За один ход Вася "переворачивает" группу нескольких последовательных карточек. (То есть из группы последовательных карточек с числами 4, 6, 2 он получает последовательность 2, 6, 4). Он проделывает этот ход с карточками первыми \(k\) карточками для всех \(k\) от 1 до 2020. После всех ходов Вася хочет узнать, где лежит карточка с числом 1. Помогите Васе.</div>
+    <div>
+        <span class="decisionTitle">Решение.</span> Посмотрим на первые, например, 6 ходов Васи.
+        <table>
+            <tr>
+                <th rowspan="2">Ход<br>(\(k\))</th><th colspan="11">Позиция</th>
+            </tr>
+            <tr>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>&bull;</th><th>&bull;</th><th>&bull;</th><th>2019</th><th>2020</th>
+            </tr>
+            <tr>
+                <td>1</td><td class="cardOne">1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+            <tr>
+                <td>2</td><td>2</td><td class="cardOne">1</td><td>3</td><td>4</td><td>5</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+            <tr>
+                <td>3</td><td>3</td><td class="cardOne">1</td><td>2</td><td>4</td><td>5</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+            <tr>
+                <td>4</td><td>4</td><td>2</td><td class="cardOne">1</td><td>3</td><td>5</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+            <tr>
+                <td>5</td><td>5</td><td>3</td><td class="cardOne">1</td><td>2</td><td>4</td><td>6</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+            <tr>
+                <td>6</td><td>6</td><td>4</td><td>2</td><td class="cardOne">1</td><td>3</td><td>5</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>2019</td><td>2020</td>
+            </tr>
+        </table>
+        После каждого нечетного хода карточка с числом <span class="cardOne">1</span> остается на прежнем месте. После каждого четного хода карточка с чилом <span class="cardOne">1</span> перемещается вправо на одну позицию. Следовательно, после \(k\) ходов карточка с числом <span class="cardOne">1</span> будет занимать позицию равную целой части от \(({k \over 2} + 1)\). При \(k = 2020\) карточка с числом <span class="cardOne">1</span> займет позицию <span class="answerTitle">1011</span>.
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">1011</span></div>
+</body>
+</html>

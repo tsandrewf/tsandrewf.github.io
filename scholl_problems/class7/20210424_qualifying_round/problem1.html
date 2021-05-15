@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 1</title>
+
+    <link href="../../css/problem.css" rel="stylesheet" type="text/css" />
+
+    <!-- https://jsbin.com/?html,output -->
+    <!-- https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols -->
+    <!-- https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style type="text/css">
+table tr td { text-align: center;}
+table tr td:nth-child(2) { text-align: left;}
+table tr:nth-child(1), tr:nth-child(even) {
+  background-color: #ccffff;
+}
+table tr:nth-child(14) td{
+    text-align: center;
+    font-weight: bold;
+}
+    </style>
+<body>
+    <div><span class="problemTitle">Задача 1.</span> На доске написаны два числа. Каждые шесть минут Андрей стирает их и записывает новые два числа. Первое из них равно разнице между первоначальными числами (из двух возможных разниц выбирается положительная). Второе равно сумме первоначальных чисел. Андрей проделывает эту операцию с новыми числами с той же скоростью, пока его не остановят. Боря написал на доске числа 3 и 7. Через час Андрей написал на доске очередные два числа. Назовите наибольшее из них.</div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        <table>
+            <tr>
+                <th rowspan="2">\(n\)</th><th rowspan="2">Мальчик</th><th rowspan="2">\(t\)<br>(мин.)</th><th colspan="2">Значение числа</th><th colspan="2">Формула числа</th>
+            </tr>
+            <tr>
+                <th>1-го</th><th>2-го</th><th>1-го</th><th>2-го</th>
+            </tr>
+            <tr>
+                <td></td><td>Боря</td><td>0</td><td>3</td><td>7</td><td>\(x\)</td><td>\(y\)</td>
+            </tr>
+            <tr>
+                <td>1</td><td>Андрей</td><td>6</td><td>4</td><td>10</td><td>\(y - x\)</td><td>\(y + x\)</td>
+            </tr>
+            <tr>
+                <td>2</td><td>Андрей</td><td>12</td><td>6</td><td>14</td><td>\(2x\)</td><td>\(2y\)</td>
+            </tr>
+            <tr>
+                <td>3</td><td>Андрей</td><td>18</td><td>8</td><td>20</td><td>\(2(y - x)\)</td><td>\(2(y + x)\)</td>
+            </tr>
+            <tr>
+                <td>4</td><td>Андрей</td><td>24</td><td>12</td><td>28</td><td>\(4x\)</td><td>\(4y\)</td>
+            </tr>
+            <tr>
+                <td>5</td><td>Андрей</td><td>30</td><td>16</td><td>40</td><td>\(4(y - x)\)</td><td>\(4(y + x)\)</td>
+            </tr>
+            <tr>
+                <td>6</td><td>Андрей</td><td>36</td><td>24</td><td>56</td><td>\(8x\)</td><td>\(8y\)</td>
+            </tr>
+            <tr>
+                <td>7</td><td>Андрей</td><td>42</td><td>32</td><td>80</td><td>\(8(y - x)\)</td><td>\(8(y + x)\)</td>
+            </tr>
+            <tr>
+                <td>8</td><td>Андрей</td><td>48</td><td>48</td><td>112</td><td>\(16x\)</td><td>\(16y\)</td>
+            </tr>
+            <tr>
+                <td>9</td><td>Андрей</td><td>54</td><td>64</td><td>160</td><td>\(16(y - x)\)</td><td>\(16(y + x)\)</td>
+            </tr>
+            <tr>
+                <td>10</td><td>Андрей</td><td>60</td><td>86</td><td><span class="answerTitle" title="Ответ">224</span></td><td>\(32x\)</td><td>\(32y\)</td>
+            </tr>
+            <tr>
+                <td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td><td>&bull;</td>
+            </tr>
+            <tr>
+                <td colspan="5">Если \(n={t \over 6}\) <b>не</b>четное число, то:</td><td>\(2^{{n+1} \over 2}(y - x)\)</td><td>\(2^{{n+1} \over 2}(y + x)\)</td>
+            </tr>
+            <tr>
+                <td colspan="5">Если \(n={t \over 6}\) четное число, то:</td><td>\(2^{n \over 2}x\)</td><td>\(2^{n \over 2}y\)</td>
+            </tr>
+        </table>
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">224</span></div>
+</body>
+</html>

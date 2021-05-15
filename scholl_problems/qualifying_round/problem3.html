@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 3</title>
+
+    <link href="./problem.css" rel="stylesheet" type="text/css" />
+
+    <!-- https://jsbin.com/?html,output -->
+    <!-- https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols -->
+    <!-- https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div><span class="problemTitle">Задача 3.</span> Лёша, Витя и Гена решили побегать. Пока Витя пробегает 5 метров, Лёша пробегает 3 метра, пока Витя пробегает 3 метра, Гена пробегает 5 метров. Оказалось, что Витя и Гена суммарно пробежали 400 метров. Сколько метров пробежал Лёша?</div>
+    <div>
+        <span class="decisionTitle">Решение.</span> Лёша пробежал \(x\) метров, Витя  пробежал \(y\) метров, Гена пробежал \(z\) метров.
+        <br>\({5 \over y} = {3 \over x} \Rightarrow y = {5 \over 3}x\)
+        <br>\({3 \over y} = {5 \over z} \Rightarrow z = {5 \over 3}y \Rightarrow z = {5 \over 3}{5 \over 3}x\)
+        <br>\(400м = y + z = {5 \over 3}x + {5 \over 3}{5 \over 3}x \Rightarrow x = 90м\)
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">90</span></div>
+</body>
+</html>

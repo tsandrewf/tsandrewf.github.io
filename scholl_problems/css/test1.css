@@ -1,0 +1,138 @@
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+.disabled {
+  background-color: gray;
+}
+
+.enabled {
+  background-color: green;
+}
+
+#operand1 {
+  margin-left: 0.1em;
+}
+
+#operand1,
+#operation,
+#operand2,
+#equals,
+#answerDigit1 {
+  margin-right: 0.1em;
+}
+
+#summary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#start,
+#stop {
+  text-align: center;
+  border-radius: 10%;
+  color: white;
+  /*padding: 0.1em 0.5em 0.1em 0.5em;*/
+  /*width: 2em;*/
+  /*height: 3em;*/
+}
+
+#start > div:nth-child(1),
+#stop > div:nth-child(1) {
+  font-size: xx-large;
+}
+
+#start:hover,
+#stop:hover {
+  cursor: pointer;
+}
+
+.title > p {
+  margin: 0;
+  font-size: large;
+}
+
+.testLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin: 0;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+.testLine > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+}
+
+.testLine > div:nth-child(1) > div:nth-child(1) {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+  color: white;
+}
+
+.testLine > div:nth-child(1) > div:nth-child(2) {
+  overflow-x: hidden; /* прокрутка по горизонтали */
+  overflow-y: auto; /* прокрутка по вертикали */
+}
+
+.twoDigit {
+  width: 1em;
+  text-align: center;
+}
+
+.oneDigit {
+  width: 0.6em;
+  text-align: center;
+}
+
+.answerDigit {
+  text-align: center;
+  display: inline-block;
+}
+
+.answerDigit:hover {
+  cursor: pointer;
+}
+
+.answerDigitSelected {
+  background-color: gray;
+}
+
+.nextQuestion {
+  cursor: pointer;
+}
+
+#keyboard {
+  text-align: center;
+  padding: 0.1em;
+}
+
+#keyboard tr td {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border-radius: 100%;
+  width: 1.5em;
+}
+
+#log {
+  display: flex;
+  flex-direction: column;
+}
+
+#log > div {
+  font-size: medium;
+}
+
+.decisionNotCorrect {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сложение и вычитание в пределах 100</title>
+
+    <link href="/css/materialIcons.css" rel="stylesheet" type="text/css" />
+    <link href="css/test1.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/test1.js" type="module"></script>
+</head>
+<body>
+    <div class="title">
+        <p>Сложение и вычитание в пределах 100</p>
+        <div id=summary>
+            <fieldset id="start" onclick="Start();" class="enabled"><div>&#9658;</div><div>старт</div></fieldset>
+            <div id="summaryText"></div>
+            <fieldset id="stop" onclick="Stop();" disabled class="disabled"><div>&#9632;</div><div>стоп</div></fieldset>
+        </div>
+    </div>
+    <hr>
+    <div class="testLine">
+        <div>
+            <div>
+                <div id="operand1" class="twoDigit"></div>
+                <div id="operation" class="oneDigit"></div>
+                <div id="operand2" class="twoDigit"></div>
+                <div id="equals" class="oneDigit">=</div>
+                <div>
+                    <span id="answerDigit2" onclick="SelectAnswerDigit(event)" class="answerDigit oneDigit"></span><!-- Eliminating spaces between span
+                    --><span id="answerDigit1" onclick="SelectAnswerDigit(event)" class="answerDigit oneDigit"></span>
+                </div>
+            </div>
+            <div id="log"></div>
+        </div>
+        <fieldset id="keyboard" disabled>
+            <table>
+                <tr>
+                    <td onclick="onKeyboardClick(event);">1</td><td onclick="onKeyboardClick(event);">2</td><td onclick="onKeyboardClick(event);">3</td>
+                </tr>
+                <tr>
+                    <td onclick="onKeyboardClick(event);">4</td><td onclick="onKeyboardClick(event);">5</td><td onclick="onKeyboardClick(event);">6</td>
+                </tr>
+                <tr>
+                    <td onclick="onKeyboardClick(event);">7</td><td onclick="onKeyboardClick(event);">8</td><td onclick="onKeyboardClick(event);">9</td>
+                </tr>
+                <tr>
+                    <td onclick="onKeyboardClick(event);">0</td><td colspan="2" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">=</td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</body>
+</html>

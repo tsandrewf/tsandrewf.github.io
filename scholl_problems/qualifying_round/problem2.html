@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 2</title>
+
+    <link href="./problem.css" rel="stylesheet" type="text/css" />
+
+    <!-- https://jsbin.com/?html,output -->
+    <!-- https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols -->
+    <!-- https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div><span class="problemTitle">Задача 2.</span> Настя выписала на доску все трехзначные числа, для которых средняя цифра равна сумме сумме двух остальных цифр, уменьшенной на один. Сколько чисел выписала Настя?</div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Для каждой цифры \(n\) от 0 до 8 Настя написала \((n + 1)\) чисел. Например, для цифры "<b>0</b>" написала 1 число (1<b>0</b>0), для цифры "<b>1</b>" написала 2 числа (2<b>1</b>0 и 1<b>1</b>1), для цифры "<b>2</b>" - 3 числа (3<b>2</b>0, 2<b>2</b>1 и 1<b>2</b>2), для цифры "<b>3</b>" - 4 числа (4<b>3</b>0, 3<b>3</b>1, 2<b>3</b>2 и 1<b>3</b>3) и т.д. Итого, количество написанных Настей чисел равно сумме арифметическо прогрессии: 1, 2, 3, ..., 10.
+        А вот для цифры "<b>9</b>" Настя смогла написать не 10, только 9 чисел (9<b>9</b>1, 8<b>9</b>2, 7<b>9</b>3, 6<b>9</b>4, 5<b>9</b>5, 4<b>9</b>6, 3<b>9</b>7, 2<b>9</b>8 и 1<b>9</b>9).
+        \[(\sum_{i=1}^{9}i)+9={{(1+9) \times 9} \over 2}+9=45\]
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">45</span></div>
+</body>
+</html>

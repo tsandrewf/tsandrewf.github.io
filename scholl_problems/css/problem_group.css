@@ -1,0 +1,22 @@
+body {
+  font-family: sans-serif;
+}
+
+header {
+  font-size: x-large;
+  text-align: center;
+}
+
+main {
+  font-size: large;
+}
+
+main > ul > li {
+  font-size: large;
+  color: blue;
+  text-decoration: underline;
+}
+
+main > ul > li:hover {
+  cursor: pointer;
+}
