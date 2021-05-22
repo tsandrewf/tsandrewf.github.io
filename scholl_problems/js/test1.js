@@ -1,11 +1,15 @@
 "use strict";
 
+import { getQueryVar } from "./getQueryVar.js";
+
 const classAnswerDigitSelected = "answerDigitSelected";
 let elemLogRecordRetry;
 let dateTestBeg;
 let dateLastDecision;
 
 window.onload = function () {
+  document.querySelector(".title > p").innerHTML = getQueryVar("title");
+
   RefreshSummary();
 
   RefreshLogHeight();
@@ -95,8 +99,9 @@ function RefreshSummary() {
   const elemLog = document.getElementById("log");
   const logChildCount = elemLog.childElementCount;
   const elemSummary = document.getElementById("summaryText");
-  const logCorrectCount = document.querySelectorAll("#log > .decisionCorrect")
-    .length;
+  const logCorrectCount = document.querySelectorAll(
+    "#log > .decisionCorrect"
+  ).length;
   if (0 == logChildCount) {
     elemSummary.innerHTML = "Тест пока не начат";
   } else if (1 == logChildCount) {

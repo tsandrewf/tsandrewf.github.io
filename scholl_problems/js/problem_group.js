@@ -1,6 +1,8 @@
 "use strict";
 
 window.ProblemSelect = function (url) {
+  console.log("this", this);
+  console.log("self", self);
   top.Navigate(url);
 };
 
@@ -18,4 +20,8 @@ window.onload = function () {
       navbarButton.className = "navbar-button-passive";
     }
   }
+};
+
+window.Test1 = function (elem) {
+  top.Navigate("../test1.html?title=" + elem.innerText);
 };
