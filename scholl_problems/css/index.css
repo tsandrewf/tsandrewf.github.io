@@ -65,6 +65,11 @@ body {
   color: grey;
   cursor: pointer;
 }
+
+.navbar > #back {
+  color: white;
+  border-top: none;
+}
 /* End navbar */
 
 /* Beg Landscape */

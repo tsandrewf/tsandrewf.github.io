@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202105231116";
+const CACHE_NAME = "scholl_problems_v_202105231339";
 
 let cacheUrls = [
   "./",
@@ -93,7 +93,7 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     (async () => {
       const r = await caches.match(e.request);
-      console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+      //console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
       if (r) {
         return r;
       }

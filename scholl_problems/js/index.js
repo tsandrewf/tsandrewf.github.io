@@ -28,6 +28,11 @@ window.onload = function () {
 };
 
 window.navbarOnClick = function (navbarButton) {
+  if ("back" == navbarButton.id) {
+    history.back();
+    return;
+  }
+
   if ("navbar-button-active" == navbarButton.className) return;
 
   if (historyDepth) {
