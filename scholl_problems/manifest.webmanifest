@@ -2,7 +2,7 @@
     "name": "Задачи, тесты и олимпиады",
     "short_name": "Задачи",
     "start_url": "index.html",
-    "display": "fullscreen",
+    "display": "standalone",
     "background_color": "#fff",
     "description": "Школьные задачи, тесты и олимпиады",
     "theme_color": "blue",
