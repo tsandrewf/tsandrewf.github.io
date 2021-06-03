@@ -23,10 +23,5 @@ window.onload = function () {
 };
 
 window.Test1 = function (elem) {
-  top.Navigate(
-    "../test1.html?title=" +
-      elem.innerText +
-      "&script=" +
-      elem.getAttribute("script")
-  );
+  top.Navigate("../test1.html?title=" + elem.innerText);
 };

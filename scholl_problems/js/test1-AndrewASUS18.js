@@ -2,20 +2,13 @@
 
 import { getQueryVar } from "./getQueryVar.js";
 
-export const classAnswerDigitSelected = "answerDigitSelected";
+const classAnswerDigitSelected = "answerDigitSelected";
 let elemLogRecordRetry;
 let dateTestBeg;
 let dateLastDecision;
 
 window.onload = function () {
-  const elemScript = document.createElement("script");
-  elemScript.type = "module";
-  elemScript.src = getQueryVar("script");
-  document.body.appendChild(elemScript);
-
-  const title = getQueryVar("title");
-  document.title = title;
-  document.querySelector(".title > p").innerHTML = title;
+  document.querySelector(".title > p").innerHTML = getQueryVar("title");
 
   RefreshSummary();
 
@@ -215,7 +208,7 @@ window.OperationCommit = function () {
   RefreshSummary();
 };
 
-/*window.CalcTest = function () {
+window.CalcTest = function () {
   const operand1 = 20 + Math.trunc(70 * Math.random());
   const operation = 0.5 < Math.random() ? "+" : "-";
 
@@ -250,7 +243,7 @@ window.OperationCommit = function () {
     if (answerDigit2.classList.contains(classAnswerDigitSelected))
       answerDigit2.classList.remove(classAnswerDigitSelected);
   }
-};*/
+};
 
 window.SelectAnswerDigit = function (event) {
   for (let digit of document.getElementsByClassName("answerDigit")) {
