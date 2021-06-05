@@ -4,6 +4,7 @@ let urlToNavigate;
 let historyDepth = 0;
 
 window.onload = function () {
+  console.log("history.length", history.length);
   /* Only register a service worker if it's supported */
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
   if ("serviceWorker" in navigator) {
@@ -29,7 +30,10 @@ window.onload = function () {
 
 window.navbarOnClick = function (navbarButton) {
   if ("back" == navbarButton.id) {
-    history.back();
+    console.log("history.length", history.length);
+
+    if (1 == history.length) window.close();
+    else history.back();
     return;
   }
 
@@ -61,6 +65,7 @@ window.onpopstate = function (event) {
 };
 
 window.Navigate = function (url) {
+  console.log("history.length", history.length);
   historyDepth++;
 
   const elemContentWindowLocation =

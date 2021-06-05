@@ -38,3 +38,7 @@ window.CalcTest = function () {
       answerDigit2.classList.remove(classAnswerDigitSelected);
   }
 };
+
+window.GetCorrectAnswer = function (operand1, operand2, operation) {
+  return operand1 + ("+" == operation ? operand2 : -operand2);
+};
