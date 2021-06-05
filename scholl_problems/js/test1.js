@@ -31,6 +31,18 @@ function RefreshLogHeight() {
   // End Подгоняем высоту елемента "log" под высоту окна
 }
 
+function InitDigitSelected() {
+  const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
+  for (let elemAnswerDigit of elemArrayAnswerDigit) {
+    elemAnswerDigit.innerHTML = "&nbsp;";
+    elemAnswerDigit.classList.remove(classAnswerDigitSelected);
+  }
+
+  elemArrayAnswerDigit[
+    TestConfig.digitRightToLeft ? elemArrayAnswerDigit.length - 1 : 0
+  ].classList.add(classAnswerDigitSelected);
+}
+
 window.onresize = function () {
   RefreshLogHeight();
 };
@@ -44,7 +56,9 @@ window.Start = function () {
     }
   }
 
-  CalcTest();
+  TestConfig.CalcTest();
+  InitDigitSelected();
+
   document.getElementById("summaryText").innerHTML = "Тест начат";
   dateTestBeg = Date.now();
 
@@ -61,8 +75,10 @@ window.Stop = function () {
   document.getElementById("operand1").innerHTML = null;
   document.getElementById("operation").innerHTML = null;
   document.getElementById("operand2").innerHTML = null;
-  document.getElementById("answerDigit2").innerHTML = null;
-  document.getElementById("answerDigit1").innerHTML = null;
+
+  for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
+    elemAnswerDigit.innerHTML = null;
+  }
 
   document.getElementById("start").disabled = false;
   document.getElementById("start").className = "enabled";
@@ -141,16 +157,7 @@ function Retry() {
   document.getElementById("operation").innerText = match[2];
   document.getElementById("operand2").innerText = match[3];
 
-  const elemAnswerDigit1 = document.getElementById("answerDigit1");
-  const elemAnswerDigit2 = document.getElementById("answerDigit2");
-
-  elemAnswerDigit1.innerHTML = "&nbsp;";
-  elemAnswerDigit2.innerHTML = "&nbsp;";
-
-  if (!elemAnswerDigit1.classList.contains(classAnswerDigitSelected)) {
-    elemAnswerDigit1.classList.add(classAnswerDigitSelected);
-    elemAnswerDigit2.classList.remove(classAnswerDigitSelected);
-  }
+  InitDigitSelected();
 }
 
 window.OperationCommit = function () {
@@ -158,23 +165,26 @@ window.OperationCommit = function () {
 
   dateLastDecision = Date.now();
 
-  const answerDigit1text = document.getElementById("answerDigit1").innerHTML;
-  const answerDigit2text = document.getElementById("answerDigit2").innerHTML;
-
-  if ("&nbsp;" == answerDigit1text || "&nbsp;" == answerDigit2text) {
-    return;
-  }
-
   const regexp = /^\d/;
-  let answer = regexp.test(answerDigit2text) ? Number(answerDigit2text) : 0;
-  if (regexp.test(answerDigit1text))
-    answer = 10 * answer + Number(answerDigit1text);
+  let answer = null;
+  for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
+    if (null == answer) {
+      if (regexp.test(elemAnswerDigit.innerHTML)) {
+        answer = Number(elemAnswerDigit.innerHTML);
+      }
+    } else {
+      if (regexp.test(elemAnswerDigit.innerHTML)) {
+        answer = 10 * answer + Number(elemAnswerDigit.innerHTML);
+      }
+    }
+  }
+  if (null == answer) return;
 
   const elemOperand1 = document.getElementById("operand1");
   const elemOperation = document.getElementById("operation");
   const elemOperand2 = document.getElementById("operand2");
 
-  const correctAnswer = GetCorrectAnswer(
+  const correctAnswer = TestConfig.GetCorrectAnswer(
     Number(elemOperand1.innerText),
     Number(elemOperand2.innerText),
     elemOperation.innerText
@@ -210,7 +220,8 @@ window.OperationCommit = function () {
     elemLogRecordRetry = null;
   }
 
-  CalcTest();
+  TestConfig.CalcTest();
+  InitDigitSelected();
   RefreshSummary();
 };
 
@@ -234,13 +245,27 @@ window.onKeyboardClick = function (event) {
   )[0];
   answerDigit.innerText = event.target.innerText;
   answerDigit.classList.remove(classAnswerDigitSelected);
-  if ("answerDigit1" == answerDigit.id) {
-    document
-      .getElementById("answerDigit2")
-      .classList.add(classAnswerDigitSelected);
-  } else {
-    document
-      .getElementById("answerDigit1")
-      .classList.add(classAnswerDigitSelected);
+
+  let elemAnswerDigitIndex = 0;
+  const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
+  for (let elemAnswerDigit of elemArrayAnswerDigit) {
+    if (answerDigit.isEqualNode(elemAnswerDigit)) break;
+    elemAnswerDigitIndex++;
   }
+
+  if (TestConfig.digitRightToLeft) {
+    elemAnswerDigitIndex =
+      elemArrayAnswerDigit.length - 1 == elemAnswerDigitIndex
+        ? 0
+        : elemAnswerDigitIndex + 1;
+  } else {
+    elemAnswerDigitIndex =
+      0 == elemAnswerDigitIndex
+        ? elemArrayAnswerDigit.length - 1
+        : elemAnswerDigitIndex - 1;
+  }
+
+  elemArrayAnswerDigit[elemAnswerDigitIndex].classList.add(
+    classAnswerDigitSelected
+  );
 };
