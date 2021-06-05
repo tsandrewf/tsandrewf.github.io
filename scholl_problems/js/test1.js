@@ -36,6 +36,15 @@ window.onload = function () {
   RefreshLogHeight();
 };
 
+function CalcTest() {
+  const test = TestConfig.GetTest();
+  document.getElementById("operand1").innerText = test.operand1;
+  document.getElementById("operand2").innerText = test.operand2;
+  document.getElementById("operation").innerHTML = test.operation;
+
+  InitDigitSelected();
+}
+
 function RefreshLogHeight() {
   // Beg Подгоняем высоту елемента "log" под высоту окна
   const elemLog = document.getElementById("log");
@@ -70,8 +79,7 @@ window.Start = function () {
     }
   }
 
-  TestConfig.CalcTest();
-  InitDigitSelected();
+  CalcTest();
 
   document.getElementById("summaryText").innerHTML = "Тест начат";
   dateTestBeg = Date.now();
@@ -234,8 +242,7 @@ window.OperationCommit = function () {
     elemLogRecordRetry = null;
   }
 
-  TestConfig.CalcTest();
-  InitDigitSelected();
+  CalcTest();
   RefreshSummary();
 };
 

@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106051516";
+const CACHE_NAME = "scholl_problems_v_202106052125";
 
 let cacheUrls = [
   "./",

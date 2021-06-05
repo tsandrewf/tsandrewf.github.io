@@ -10,7 +10,7 @@ window.TestConfig = {
   GetCorrectAnswer: function (operand1, operand2, operation) {
     return operand1 * operand2;
   },
-  CalcTest: function () {
+  GetTest: function () {
     if (0 == operandArray.length) {
       for (let op1 = 1; op1 <= 9; op1++) {
         for (let op2 = 1; op2 <= 9; op2++) {
@@ -20,9 +20,7 @@ window.TestConfig = {
     }
 
     let operands;
-    if (0 == operandArray.length) {
-      // ToDo! All digits finished
-    } else if (1 == operandArray.length) {
+    if (1 == operandArray.length) {
       operands = operandArray[0];
     } else {
       const index = Math.floor(Math.random() * operandArray.length);
@@ -30,8 +28,10 @@ window.TestConfig = {
       operandArray.splice(index, 1);
     }
 
-    document.getElementById("operand1").innerText = operands.op1;
-    document.getElementById("operation").innerHTML = "&times;";
-    document.getElementById("operand2").innerText = operands.op2;
+    return {
+      operand1: operands.op1,
+      operand2: operands.op2,
+      operation: "&times;",
+    };
   },
 };
