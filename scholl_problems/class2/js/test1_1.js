@@ -5,6 +5,7 @@ import { classAnswerDigitSelected } from "../../js/test1.js";
 let operandArray = new Array();
 
 window.TestConfig = {
+  digitCount: 2,
   digitRightToLeft: false,
   GetCorrectAnswer: function (operand1, operand2, operation) {
     return operand1 * operand2;

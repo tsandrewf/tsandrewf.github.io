@@ -9,8 +9,22 @@ let dateLastDecision;
 
 window.onload = function () {
   const elemScript = document.createElement("script");
-  elemScript.type = "module";
   elemScript.src = getQueryVar("script");
+  elemScript.type = "module";
+  elemScript.async = true;
+  elemScript.addEventListener(
+    "load",
+    function (e) {
+      const elemAnswerDigits = document.getElementById("answerDigits");
+      for (let i = 0; i < TestConfig.digitCount; i++) {
+        const elemDigit = document.createElement("span");
+        elemDigit.onclick = "SelectAnswerDigit(event);";
+        elemDigit.classList = "answerDigit oneDigit";
+        elemAnswerDigits.appendChild(elemDigit);
+      }
+    },
+    false
+  );
   document.body.appendChild(elemScript);
 
   const title = getQueryVar("title");

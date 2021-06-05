@@ -3,6 +3,7 @@
 import { classAnswerDigitSelected } from "../../js/test1.js";
 
 window.TestConfig = {
+  digitCount: 2,
   digitRightToLeft: true,
   GetCorrectAnswer: function (operand1, operand2, operation) {
     return operand1 + ("+" == operation ? operand2 : -operand2);
