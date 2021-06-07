@@ -94,3 +94,12 @@ body {
   }
 }
 /* End Landscape */
+
+#appUpdate {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: xx-large;
+  visibility: hidden;
+  cursor: pointer;
+}

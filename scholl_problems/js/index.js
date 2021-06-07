@@ -3,6 +3,26 @@
 let urlToNavigate;
 let historyDepth = 0;
 
+/*navigator.serviceWorker.addEventListener("controllerchange", () =>
+  window.location.reload()
+);*/
+
+// https://github.com/jbmoelker/serviceworker-introduction/issues/1
+// https://github.com/w3c/ServiceWorker/issues/1222
+window.AppUpdate = function () {
+  console.log("window.AppUpdate", navigator.serviceWorker);
+  navigator.serviceWorker.ready.then((reg) => {
+    console.log("reg", reg);
+    console.log("reg.waiting", reg.waiting);
+    navigator.serviceWorker.addEventListener("controllerchange", () =>
+      window.location.reload()
+    );
+    reg.waiting.postMessage({
+      serviceWorker: "skipWaiting",
+    });
+  });
+};
+
 window.onload = function () {
   console.log("history.length", history.length);
   /* Only register a service worker if it's supported */
@@ -10,20 +30,13 @@ window.onload = function () {
   if ("serviceWorker" in navigator) {
     const serviceWorker = "./sw.js";
     console.log('Registering of Service Worker "' + serviceWorker + '"');
-    /*navigator.serviceWorker
-      .register(serviceWorker)
-      .then(navigator.serviceWorker.ready)
-      .then(function () {
-        console.log(
-          "navigator.serviceWorker.controller",
-          navigator.serviceWorker.controller
-        );
-        // ToDo!
-        // Почему-то в EDGE при первом запуске после регистрации worker-а
-        // navigator.serviceWorker.controller = null
-      });*/
-    navigator.serviceWorker.register(serviceWorker).then(function (reg) {
+    navigator.serviceWorker.register(serviceWorker).then((reg) => {
       console.log("Registration succeeded. Scope is " + reg.scope);
+
+      reg.addEventListener("updatefound", () => {
+        console.log("[Service Worker] updatefound");
+        document.getElementById("appUpdate").style.visibility = "visible";
+      });
     });
   }
 };

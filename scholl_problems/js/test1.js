@@ -41,6 +41,7 @@ function CalcTest() {
   document.getElementById("operand1").innerText = test.operand1;
   document.getElementById("operand2").innerText = test.operand2;
   document.getElementById("operation").innerHTML = test.operation;
+  document.getElementById("equals").innerHTML = "=";
 
   InitDigitSelected();
 }
@@ -97,6 +98,7 @@ window.Stop = function () {
   document.getElementById("operand1").innerHTML = null;
   document.getElementById("operation").innerHTML = null;
   document.getElementById("operand2").innerHTML = null;
+  document.getElementById("equals").innerHTML = null;
 
   for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
     elemAnswerDigit.innerHTML = null;
