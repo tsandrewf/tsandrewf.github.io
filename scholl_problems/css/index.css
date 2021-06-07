@@ -100,6 +100,7 @@ body {
   right: 0;
   top: 0;
   font-size: xx-large;
-  visibility: hidden;
+  /*visibility: hidden;*/
+  display: none;
   cursor: pointer;
 }

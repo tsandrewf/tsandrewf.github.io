@@ -52,7 +52,8 @@ window.onload = function () {
 
       reg.addEventListener("updatefound", () => {
         console.log("[Service Worker] updatefound");
-        document.getElementById("appUpdate").style.visibility = "visible";
+        //document.getElementById("appUpdate").style.visibility = "visible";
+        document.getElementById("appUpdate").style.display = "inline";
       });
     });
   }
