@@ -9,32 +9,27 @@ let historyDepth = 0;
 
 // https://github.com/jbmoelker/serviceworker-introduction/issues/1
 // https://github.com/w3c/ServiceWorker/issues/1222
-/*window.AppUpdate = function () {
-  console.log("window.AppUpdate", navigator.serviceWorker);
-  navigator.serviceWorker.ready.then((reg) => {
-    console.log("reg", reg);
-    console.log("reg.waiting", reg.waiting);
-    navigator.serviceWorker.addEventListener("controllerchange", () =>
-      window.location.reload()
-    );
-    reg.waiting.postMessage({
-      serviceWorker: "skipWaiting",
-    });
-  });
-};*/
 window.AppUpdate = function () {
   try {
     console.log("window.AppUpdate", navigator.serviceWorker);
-    navigator.serviceWorker.ready.then((reg) => {
-      console.log("reg", reg);
-      console.log("reg.waiting", reg.waiting);
-      navigator.serviceWorker.addEventListener("controllerchange", () =>
-        window.location.reload()
-      );
-      reg.waiting.postMessage({
-        serviceWorker: "skipWaiting",
+    if (
+      confirm("Найдено обновление программы. Установить обновление сейчас?")
+    ) {
+      navigator.serviceWorker.ready.then((reg) => {
+        console.log("reg", reg);
+        console.log("reg.waiting", reg.waiting);
+        if (reg && reg.waiting) {
+          navigator.serviceWorker.addEventListener("controllerchange", () =>
+            window.location.reload()
+          );
+          reg.waiting.postMessage({
+            serviceWorker: "skipWaiting",
+          });
+        } else {
+          window.location.reload();
+        }
       });
-    });
+    }
   } catch (e) {
     alert(e.message);
   }
@@ -71,13 +66,13 @@ window.navbarOnClick = function (navbarButton) {
   if ("navbar-button-active" == navbarButton.className) return;
 
   if (historyDepth) {
-    urlToNavigate = navbarButton.id + "/";
+    urlToNavigate = navbarButton.id + "/index.html";
     history.go(-historyDepth);
   } else {
     urlToNavigate = null;
     document
       .getElementById("content")
-      .contentWindow.location.replace(navbarButton.id + "/");
+      .contentWindow.location.replace(navbarButton.id + "/index.html");
   }
 };
 
