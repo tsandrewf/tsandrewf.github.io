@@ -9,7 +9,7 @@ let historyDepth = 0;
 
 // https://github.com/jbmoelker/serviceworker-introduction/issues/1
 // https://github.com/w3c/ServiceWorker/issues/1222
-window.AppUpdate = function () {
+/*window.AppUpdate = function () {
   console.log("window.AppUpdate", navigator.serviceWorker);
   navigator.serviceWorker.ready.then((reg) => {
     console.log("reg", reg);
@@ -21,6 +21,23 @@ window.AppUpdate = function () {
       serviceWorker: "skipWaiting",
     });
   });
+};*/
+window.AppUpdate = function () {
+  try {
+    console.log("window.AppUpdate", navigator.serviceWorker);
+    navigator.serviceWorker.ready.then((reg) => {
+      console.log("reg", reg);
+      console.log("reg.waiting", reg.waiting);
+      navigator.serviceWorker.addEventListener("controllerchange", () =>
+        window.location.reload()
+      );
+      reg.waiting.postMessage({
+        serviceWorker: "skipWaiting",
+      });
+    });
+  } catch (e) {
+    alert(e.message);
+  }
 };
 
 window.onload = function () {
