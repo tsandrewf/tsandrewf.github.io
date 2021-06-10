@@ -3,9 +3,7 @@
 window.TestConfig = {
   digitCount: 2,
   digitRightToLeft: true,
-  GetCorrectAnswer: function (operand1, operand2, operation) {
-    return operand1 + ("+" == operation ? operand2 : -operand2);
-  },
+  testSrcWidth: 5,
   GetTest: function () {
     const operand1 = 20 + Math.trunc(70 * Math.random());
     const operation = 0.5 < Math.random() ? "+" : "-";
@@ -23,10 +21,6 @@ window.TestConfig = {
       digit22 = Math.trunc((digit12 - 1) * Math.random()) + 1;
     }
 
-    return {
-      operand1: operand1,
-      operand2: digit21 + digit22 * 10,
-      operation: operation,
-    };
+    return operand1 + operation + (digit21 + digit22 * 10);
   },
 };

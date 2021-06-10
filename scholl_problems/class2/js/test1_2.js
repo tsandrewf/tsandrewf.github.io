@@ -3,9 +3,9 @@
 let operandArray = new Array();
 
 window.TestConfig = {
-  digitCount: 2,
+  digitCount: 1,
   digitRightToLeft: false,
-  testSrcWidth: 3,
+  testSrcWidth: 4,
   GetTest: function () {
     if (0 == operandArray.length) {
       for (let op1 = 1; op1 <= 9; op1++) {
@@ -24,6 +24,6 @@ window.TestConfig = {
       operandArray.splice(index, 1);
     }
 
-    return operands.op1 + "&times;" + operands.op2;
+    return operands.op1 * operands.op2 + ":" + operands.op2;
   },
 };

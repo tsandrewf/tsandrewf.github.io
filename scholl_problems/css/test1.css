@@ -15,9 +15,6 @@ body {
   margin-left: 0.1em;
 }
 
-#operand1,
-#operation,
-#operand2,
 #equals,
 #answerDigit1 {
   margin-right: 0.1em;
@@ -80,11 +77,6 @@ body {
 .testLine > div:nth-child(1) > div:nth-child(2) {
   overflow-x: hidden; /* прокрутка по горизонтали */
   overflow-y: auto; /* прокрутка по вертикали */
-}
-
-.twoDigit {
-  width: 1em;
-  text-align: center;
 }
 
 .oneDigit {

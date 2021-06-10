@@ -2,7 +2,7 @@
 
 import { getQueryVar } from "./getQueryVar.js";
 
-export const classAnswerDigitSelected = "answerDigitSelected";
+const classAnswerDigitSelected = "answerDigitSelected";
 let elemLogRecordRetry;
 let dateTestBeg;
 let dateLastDecision;
@@ -22,6 +22,10 @@ window.onload = function () {
         elemDigit.classList = "answerDigit oneDigit";
         elemAnswerDigits.appendChild(elemDigit);
       }
+
+      // https://learn.javascript.ru/css-units
+      document.getElementById("testSrc").style.width =
+        TestConfig.testSrcWidth + "ch";
     },
     false
   );
@@ -37,10 +41,8 @@ window.onload = function () {
 };
 
 function CalcTest() {
-  const test = TestConfig.GetTest();
-  document.getElementById("operand1").innerText = test.operand1;
-  document.getElementById("operand2").innerText = test.operand2;
-  document.getElementById("operation").innerHTML = test.operation;
+  const testSrc = TestConfig.GetTest();
+  document.getElementById("testSrc").innerHTML = testSrc;
   document.getElementById("equals").innerHTML = "=";
 
   InitDigitSelected();
@@ -95,9 +97,7 @@ window.Start = function () {
 };
 
 window.Stop = function () {
-  document.getElementById("operand1").innerHTML = null;
-  document.getElementById("operation").innerHTML = null;
-  document.getElementById("operand2").innerHTML = null;
+  document.getElementById("testSrc").innerHTML = null;
   document.getElementById("equals").innerHTML = null;
 
   for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
@@ -174,12 +174,10 @@ function RefreshSummary() {
 function Retry() {
   elemLogRecordRetry = this;
 
-  const regex = /(\d+)(\D+)(\d+)/i;
+  const regex = /(\d+\D+\d+)/i;
   const match = regex.exec(this.innerText);
 
-  document.getElementById("operand1").innerText = match[1];
-  document.getElementById("operation").innerText = match[2];
-  document.getElementById("operand2").innerText = match[3];
+  document.getElementById("testSrc").innerText = match[1];
 
   InitDigitSelected();
 }
@@ -208,19 +206,14 @@ window.OperationCommit = function () {
   const elemOperation = document.getElementById("operation");
   const elemOperand2 = document.getElementById("operand2");
 
-  const correctAnswer = TestConfig.GetCorrectAnswer(
-    Number(elemOperand1.innerText),
-    Number(elemOperand2.innerText),
-    elemOperation.innerText
+  const testSrc = document.getElementById("testSrc").innerText;
+  const correctAnswer = eval(
+    testSrc.replace(/\u00D7/g, "*").replace(/:/g, "/")
   );
 
   const elemLog = document.getElementById("log");
   const logRecordHTML =
-    elemOperand1.innerHTML +
-    elemOperation.innerHTML +
-    elemOperand2.innerHTML +
-    (answer == correctAnswer ? "=" : "&ne;") +
-    answer;
+    testSrc + (answer == correctAnswer ? "=" : "&ne;") + answer;
   const logRecordClass =
     answer == correctAnswer ? "decisionCorrect" : "decisionNotCorrect";
 
