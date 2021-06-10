@@ -7,9 +7,9 @@
     <title></title>
 
     <link href="/css/materialIcons.css" rel="stylesheet" type="text/css" />
-    <link href="css/test1.css" rel="stylesheet" type="text/css" />
+    <link href="css/test2.css" rel="stylesheet" type="text/css" />
 
-    <script src="js/test1.js" type="module"></script>
+    <script src="js/test2.js" type="module"></script>
 </head>
 <body>
     <div class="title">
@@ -24,25 +24,19 @@
     <div class="testLine">
         <div>
             <div>
-                <div id="testSrc"></div>
-                <div id="comparisonOperator" class="oneDigit"></div>
-                <div id="answerDigits"></div>
+                <div id="expr1"></div>
+                <div id="comparisonOperator" class="oneDigit">?</div>
+                <div id="expr2"></div>
             </div>
             <div id="log"></div>
         </div>
         <fieldset id="keyboard" disabled>
             <table>
                 <tr>
-                    <td onclick="onKeyboardClick(event);">1</td><td onclick="onKeyboardClick(event);">2</td><td onclick="onKeyboardClick(event);">3</td>
+                    <td onclick="onKeyboardClick(event);">&gt;</td><td onclick="onKeyboardClick(event);">&equals;</td><td onclick="onKeyboardClick(event);">&lt;</td>
                 </tr>
                 <tr>
-                    <td onclick="onKeyboardClick(event);">4</td><td onclick="onKeyboardClick(event);">5</td><td onclick="onKeyboardClick(event);">6</td>
-                </tr>
-                <tr>
-                    <td onclick="onKeyboardClick(event);">7</td><td onclick="onKeyboardClick(event);">8</td><td onclick="onKeyboardClick(event);">9</td>
-                </tr>
-                <tr>
-                    <td onclick="onKeyboardClick(event);">0</td><td colspan="2" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">=</td>
+                    <td colspan="3" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">Ввод</td>
                 </tr>
             </table>
         </fieldset>

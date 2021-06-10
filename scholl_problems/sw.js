@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106100807";
+const CACHE_NAME = "scholl_problems_v_202106100906";
 
 let cacheUrls = [
   "./",
@@ -28,14 +28,22 @@ let cacheUrls = [
   "./css/problem.css",
   "./css/problem_group.css",
   "./css/problem_with_decision.css",
+  "./css/test1.css",
+  "./css/test2.css",
   // JS
   "./js/getQueryVar.js",
   "./js/index.js",
   "./js/problem_group.js",
   "./js/problem_list.js",
   "./js/problem_with_decision.js",
+  "./js/test.js",
   "./js/test1.js",
+  "./js/test2.js",
   "./class1/js/test1_1.js",
+  "./class2/js/test1_1-20_AddAndSub.js",
+  "./class2/js/test2_1-20_Comparison.js",
+  "./class2/js/test1_1-100_AddAndSub.js",
+  "./class2/js/test2_1-100_Comparison.js",
   "./class2/js/test1_1.js",
   "./class2/js/test1_2.js",
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",

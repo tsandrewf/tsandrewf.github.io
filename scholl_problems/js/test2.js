@@ -16,17 +16,11 @@ window.onload = function () {
   elemScript.addEventListener(
     "load",
     function (e) {
-      const elemAnswerDigits = document.getElementById("answerDigits");
-      for (let i = 0; i < TestConfig.digitCount; i++) {
-        const elemDigit = document.createElement("span");
-        elemDigit.onclick = "SelectAnswerDigit(event);";
-        elemDigit.classList = "answerDigit oneDigit";
-        elemAnswerDigits.appendChild(elemDigit);
-      }
-
       // https://learn.javascript.ru/css-units
-      document.getElementById("testSrc").style.width =
-        TestConfig.testSrcWidth + "ch";
+      document.getElementById("expr1").style.width =
+        TestConfig.exprWidth + "ch";
+      document.getElementById("expr2").style.width =
+        TestConfig.exprWidth + "ch";
 
       RefreshLogHeight();
     },
@@ -42,11 +36,10 @@ window.onload = function () {
 };
 
 function CalcTest() {
-  const testSrc = TestConfig.GetTest();
-  document.getElementById("testSrc").innerHTML = testSrc;
-  document.getElementById("comparisonOperator").innerHTML = "=";
-
-  InitDigitSelected();
+  const test = TestConfig.GetTest();
+  document.getElementById("expr1").innerHTML = test.expr1;
+  document.getElementById("comparisonOperator").innerHTML = "?";
+  document.getElementById("expr2").innerHTML = test.expr2;
 }
 
 function InitDigitSelected() {
@@ -89,12 +82,9 @@ window.Start = function () {
 };
 
 window.Stop = function () {
-  document.getElementById("testSrc").innerHTML = null;
+  document.getElementById("expr1").innerHTML = null;
   document.getElementById("comparisonOperator").innerHTML = null;
-
-  for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
-    elemAnswerDigit.innerHTML = null;
-  }
+  document.getElementById("expr2").innerHTML = null;
 
   document.getElementById("start").disabled = false;
   document.getElementById("start").className = "enabled";
@@ -166,44 +156,35 @@ function RefreshSummary() {
 function Retry() {
   elemLogRecordRetry = this;
 
-  const regex = /(\d+\D+\d+)/i;
+  //const regex = /(\d+\D+\d+)/i;
+  const regex = /(\d+[-,\+]\d+)[>,=,<](\d+[-,\+]\d+)/i;
   const match = regex.exec(this.innerText);
 
-  document.getElementById("testSrc").innerText = match[1];
-
-  InitDigitSelected();
+  document.getElementById("expr1").innerText = match[1];
+  document.getElementById("comparisonOperator").innerText = "?";
+  document.getElementById("expr2").innerText = match[2];
 }
 
 window.OperationCommit = function () {
-  if (document.getElementById("keyboard").disabled) return;
+  const comparisonOperator =
+    document.getElementById("comparisonOperator").innerText;
+  if ("?" == comparisonOperator) return;
 
   dateLastDecision = Date.now();
 
-  const regexp = /^\d/;
-  let answer = null;
-  for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
-    if (null == answer) {
-      if (regexp.test(elemAnswerDigit.innerHTML)) {
-        answer = Number(elemAnswerDigit.innerHTML);
-      }
-    } else {
-      if (regexp.test(elemAnswerDigit.innerHTML)) {
-        answer = 10 * answer + Number(elemAnswerDigit.innerHTML);
-      }
-    }
-  }
-  if (null == answer) return;
+  const logRecordHTML =
+    document.getElementById("expr1").innerHTML +
+    comparisonOperator +
+    document.getElementById("expr2").innerHTML;
 
-  const testSrc = document.getElementById("testSrc").innerText;
   const isCorrectAnswer = eval(
-    (testSrc + document.getElementById("comparisonOperator").innerText + answer)
+    logRecordHTML
       .replace(/\u00D7/g, "*") // &times;
       .replace(/:/g, "/")
       .replace(/=/g, "==")
   );
 
   const elemLog = document.getElementById("log");
-  const logRecordHTML = testSrc + (isCorrectAnswer ? "=" : "&ne;") + answer;
   const logRecordClass = isCorrectAnswer
     ? "decisionCorrect"
     : "decisionNotCorrect";
@@ -245,34 +226,6 @@ window.SelectAnswerDigit = function (event) {
 };
 
 window.onKeyboardClick = function (event) {
-  if (document.getElementById("keyboard").disabled) return;
-
-  const answerDigit = document.getElementsByClassName(
-    classAnswerDigitSelected
-  )[0];
-  answerDigit.innerText = event.target.innerText;
-  answerDigit.classList.remove(classAnswerDigitSelected);
-
-  let elemAnswerDigitIndex = 0;
-  const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
-  for (let elemAnswerDigit of elemArrayAnswerDigit) {
-    if (answerDigit.isEqualNode(elemAnswerDigit)) break;
-    elemAnswerDigitIndex++;
-  }
-
-  if (TestConfig.digitRightToLeft) {
-    elemAnswerDigitIndex =
-      elemArrayAnswerDigit.length - 1 == elemAnswerDigitIndex
-        ? 0
-        : elemAnswerDigitIndex + 1;
-  } else {
-    elemAnswerDigitIndex =
-      0 == elemAnswerDigitIndex
-        ? elemArrayAnswerDigit.length - 1
-        : elemAnswerDigitIndex - 1;
-  }
-
-  elemArrayAnswerDigit[elemAnswerDigitIndex].classList.add(
-    classAnswerDigitSelected
-  );
+  document.getElementById("comparisonOperator").innerText =
+    event.target.innerText;
 };

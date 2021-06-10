@@ -11,12 +11,8 @@ main {
   font-size: large;
 }
 
-main > ul > li {
-  font-size: large;
+main .refTest {
   color: blue;
   text-decoration: underline;
-}
-
-main > ul > li:hover {
   cursor: pointer;
 }

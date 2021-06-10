@@ -22,9 +22,11 @@ window.onload = function () {
   }
 };
 
-window.Test1 = function (elem) {
+window.Test = function (elem, testNum) {
   top.Navigate(
-    "../test1.html?title=" +
+    "../test" +
+      testNum +
+      ".html?title=" +
       elem.innerText +
       "&script=" +
       elem.getAttribute("script")
