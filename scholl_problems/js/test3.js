@@ -17,10 +17,8 @@ window.onload = function () {
     "load",
     function (e) {
       // https://learn.javascript.ru/css-units
-      document.getElementById("expr1").style.width =
-        TestConfig.exprWidth + "ch";
-      document.getElementById("expr2").style.width =
-        TestConfig.exprWidth + "ch";
+      document.getElementById("testSrc").style.width =
+        TestConfig.testSrcWidth + "ch";
 
       RefreshLogHeight();
     },
@@ -35,11 +33,37 @@ window.onload = function () {
   RefreshSummary();
 };
 
+window.AnswerDigitSelect = function (elemAnswerDigit) {
+  document
+    .getElementsByClassName(classAnswerDigitSelected)[0]
+    .classList.remove(classAnswerDigitSelected);
+  elemAnswerDigit.classList.add(classAnswerDigitSelected);
+};
+
+function SetTest(testSrc) {
+  const elemTestSrc = document.getElementById("testSrc");
+  elemTestSrc.setAttribute("src", testSrc);
+  const answerDigitHTML =
+    '<span class="answerDigit oneDigit" onclick="AnswerDigitSelect(this)"></span>';
+  elemTestSrc.innerHTML = testSrc.replace(/\?/g, answerDigitHTML);
+
+  InitDigitSelected();
+}
+
 function CalcTest() {
-  const test = TestConfig.GetTest();
-  document.getElementById("expr1").innerHTML = test.expr1;
-  document.getElementById("comparisonOperator").innerHTML = "?";
-  document.getElementById("expr2").innerHTML = test.expr2;
+  SetTest(TestConfig.GetTest());
+}
+
+function InitDigitSelected() {
+  const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
+  for (let elemAnswerDigit of elemArrayAnswerDigit) {
+    elemAnswerDigit.innerHTML = "&nbsp;";
+    elemAnswerDigit.classList.remove(classAnswerDigitSelected);
+  }
+
+  elemArrayAnswerDigit[
+    TestConfig.digitRightToLeft ? elemArrayAnswerDigit.length - 1 : 0
+  ].classList.add(classAnswerDigitSelected);
 }
 
 window.onresize = function () {
@@ -48,8 +72,6 @@ window.onresize = function () {
 
 window.Start = function () {
   {
-    document.getElementById("comparisonOperator").style.backgroundColor =
-      "gray";
     // Erase Log
     const elemLog = document.getElementById("log");
     while (elemLog.firstChild) {
@@ -72,10 +94,7 @@ window.Start = function () {
 };
 
 window.Stop = function () {
-  document.getElementById("expr1").innerHTML = null;
-  document.getElementById("comparisonOperator").innerHTML = "&nbsp;";
-  document.getElementById("comparisonOperator").style.backgroundColor = null;
-  document.getElementById("expr2").innerHTML = null;
+  document.getElementById("testSrc").innerHTML = "&nbsp;";
 
   document.getElementById("start").disabled = false;
   document.getElementById("start").className = "enabled";
@@ -147,45 +166,55 @@ function RefreshSummary() {
 function Retry() {
   elemLogRecordRetry = this;
 
-  //const regex = /(\d+\D+\d+)/i;
-  const regex = /(\d+[-,\+]\d+)[>,=,<](\d+[-,\+]\d+)/i;
-  const match = regex.exec(this.innerText);
+  SetTest(this.getAttribute("src"));
 
-  document.getElementById("expr1").innerText = match[1];
-  document.getElementById("comparisonOperator").innerText = "?";
-  document.getElementById("expr2").innerText = match[2];
+  InitDigitSelected();
 }
 
 window.OperationCommit = function () {
-  const comparisonOperator =
-    document.getElementById("comparisonOperator").innerText;
-  if ("?" == comparisonOperator) return;
+  if (document.getElementById("keyboard").disabled) return;
 
   dateLastDecision = Date.now();
 
-  const logRecordHTML =
-    document.getElementById("expr1").innerHTML +
-    comparisonOperator +
-    document.getElementById("expr2").innerHTML;
+  const regexp = /^\d/;
+  let answer = null;
+  for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
+    if (null == answer) {
+      if (regexp.test(elemAnswerDigit.innerHTML)) {
+        answer = Number(elemAnswerDigit.innerHTML);
+      }
+    } else {
+      if (regexp.test(elemAnswerDigit.innerHTML)) {
+        answer = 10 * answer + Number(elemAnswerDigit.innerHTML);
+      }
+    }
+  }
+  if (null == answer) return;
 
-  const isCorrectAnswer = eval(
-    logRecordHTML
-      .replace(/\u00D7/g, "*") // &times;
-      .replace(/:/g, "/")
-      .replace(/=/g, "==")
-  );
+  const elemTestSrc = document.getElementById("testSrc");
+  const testSrc = elemTestSrc.innerText;
+  const isCorrectAnswer = TestConfig.IsCorrectAnswer(testSrc);
 
   const elemLog = document.getElementById("log");
-  const logRecordClass = isCorrectAnswer
-    ? "decisionCorrect"
-    : "decisionNotCorrect";
+  let logRecordHTML;
+  let logRecordClass;
+  if (isCorrectAnswer) {
+    logRecordHTML = testSrc.replace(/\s/g, "");
+    logRecordClass = "decisionCorrect";
+  } else {
+    logRecordHTML = testSrc.replace(/\s/g, "").replace("=", "&ne;");
+    logRecordClass = "decisionNotCorrect";
+  }
 
   if (!elemLogRecordRetry) {
     const elemLogRecord = document.createElement("div");
     elemLogRecord.innerHTML = logRecordHTML;
     elemLogRecord.className = logRecordClass;
 
-    if (!isCorrectAnswer) elemLogRecord.onclick = Retry;
+    if (!isCorrectAnswer) {
+      elemLogRecord.onclick = Retry;
+      elemLogRecord.setAttribute("src", elemTestSrc.getAttribute("src"));
+    }
 
     if (elemLog.firstChild)
       elemLog.insertBefore(elemLogRecord, elemLog.firstChild);
@@ -217,6 +246,33 @@ window.SelectAnswerDigit = function (event) {
 };
 
 window.onKeyboardClick = function (event) {
-  document.getElementById("comparisonOperator").innerText =
-    event.target.innerText;
+  if (document.getElementById("keyboard").disabled) return;
+
+  const elemAnswerDigitSelected = document.getElementsByClassName(
+    classAnswerDigitSelected
+  )[0];
+  elemAnswerDigitSelected.innerText = event.target.innerText;
+  elemAnswerDigitSelected.classList.remove(classAnswerDigitSelected);
+
+  const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
+
+  let elemAnswerDigitIndex = Array.from(elemArrayAnswerDigit).indexOf(
+    elemAnswerDigitSelected
+  );
+
+  if (TestConfig.digitRightToLeft) {
+    elemAnswerDigitIndex =
+      0 == elemAnswerDigitIndex
+        ? elemArrayAnswerDigit.length - 1
+        : elemAnswerDigitIndex - 1;
+  } else {
+    elemAnswerDigitIndex =
+      elemArrayAnswerDigit.length - 1 == elemAnswerDigitIndex
+        ? 0
+        : elemAnswerDigitIndex + 1;
+  }
+
+  elemArrayAnswerDigit[elemAnswerDigitIndex].classList.add(
+    classAnswerDigitSelected
+  );
 };

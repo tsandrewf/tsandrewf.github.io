@@ -32,9 +32,6 @@ body {
   text-align: center;
   border-radius: 10%;
   color: white;
-  /*padding: 0.1em 0.5em 0.1em 0.5em;*/
-  /*width: 2em;*/
-  /*height: 3em;*/
 }
 
 #start > div:nth-child(1),
@@ -88,15 +85,17 @@ body {
 .answerDigit {
   text-align: center;
   display: inline-block;
+  border-bottom: white;
+  text-decoration: underline;
 }
 
 .answerDigit:hover {
   cursor: pointer;
 }
 
-/*#comparisonOperator {
+.answerDigitSelected {
   background-color: gray;
-}*/
+}
 
 .nextQuestion {
   cursor: pointer;

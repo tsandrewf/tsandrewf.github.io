@@ -1,10 +1,11 @@
 "use strict";
 
-import { AddAndSubGetTest } from "../../js/test.js";
+import { GetTestAddOrSub, IsCorrectAnswerPredicate } from "../../js/test.js";
 
 window.TestConfig = {
   exprWidth: 5,
+  IsCorrectAnswer: IsCorrectAnswerPredicate,
   GetTest: function () {
-    return { expr1: AddAndSubGetTest(100), expr2: AddAndSubGetTest(100) };
+    return { expr1: GetTestAddOrSub(100), expr2: GetTestAddOrSub(100) };
   },
 };

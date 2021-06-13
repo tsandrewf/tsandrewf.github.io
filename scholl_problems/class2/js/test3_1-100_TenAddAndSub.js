@@ -3,9 +3,12 @@
 import { GetTestAddOrSub, IsCorrectAnswerPredicate } from "../../js/test.js";
 
 window.TestConfig = {
-  exprWidth: 5,
+  digitRightToLeft: false,
+  testSrcWidth: 9,
   IsCorrectAnswer: IsCorrectAnswerPredicate,
   GetTest: function () {
-    return { expr1: GetTestAddOrSub(20), expr2: GetTestAddOrSub(20) };
+    const match = new RegExp(/(\d)([+,-])(\d)/i).exec(GetTestAddOrSub(9));
+
+    return match[1] + "0" + match[2] + match[3] + "0" + "=??";
   },
 };

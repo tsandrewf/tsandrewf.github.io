@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106100906";
+const CACHE_NAME = "scholl_problems_v_202106131134";
 
 let cacheUrls = [
   "./",
@@ -11,6 +11,8 @@ let cacheUrls = [
   "./index.html",
   "./problem_with_decision.html",
   "./test1.html",
+  "./test2.html",
+  "./test3.html",
   "./class1/index.html",
   "./class2/index.html",
   "./class7/index.html",
@@ -30,6 +32,7 @@ let cacheUrls = [
   "./css/problem_with_decision.css",
   "./css/test1.css",
   "./css/test2.css",
+  "./css/test3.css",
   // JS
   "./js/getQueryVar.js",
   "./js/index.js",
@@ -39,13 +42,19 @@ let cacheUrls = [
   "./js/test.js",
   "./js/test1.js",
   "./js/test2.js",
+  "./js/test3.js",
   "./class1/js/test1_1.js",
-  "./class2/js/test1_1-20_AddAndSub.js",
+  "./class2/js/test3_1-20_AdjacentNumbers.js",
   "./class2/js/test2_1-20_Comparison.js",
-  "./class2/js/test1_1-100_AddAndSub.js",
+  "./class2/js/test3_1-20_AddAndSub.js",
+  "./class2/js/test3_1-20_InsertNumber.js",
+  "./class2/js/test3_1-100_AdjacentNumbers.js",
+  "./class2/js/test3_1-100_AddAndSub.js",
   "./class2/js/test2_1-100_Comparison.js",
-  "./class2/js/test1_1.js",
-  "./class2/js/test1_2.js",
+  "./class2/js/test3_1-100_InsertNumber.js",
+  "./class2/js/test3_1-100_TenAddAndSub.js",
+  "./class2/js/test3_MultiplicationTable.js",
+  "./class2/js/test3_DivisionTable.js",
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
   "https://polyfill.io/v3/polyfill.min.js?features=es6",
   // PNG
