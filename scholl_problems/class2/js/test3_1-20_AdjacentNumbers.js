@@ -6,10 +6,12 @@ import {
 } from "../../js/test.js";
 
 window.TestConfig = {
+  keyboard: ["digits"],
   digitRightToLeft: false,
   IsCorrectAnswer: IsCorrectAgjacentNumbers,
   testSrcWidth: 8,
   GetTest: function () {
-    return GetTestAdjacentNumbers(20);
+    //return [GetTestAdjacentNumbers(20)];
+    return "['" + GetTestAdjacentNumbers(20) + "']";
   },
 };

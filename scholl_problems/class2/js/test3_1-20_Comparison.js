@@ -3,8 +3,9 @@
 import { GetTestAddOrSub } from "../../js/test.js";
 
 window.TestConfig = {
-  testSrcWidth: 9,
+  keyboard: ["comparison"],
+  testSrcWidth: 11,
   GetTest: function () {
-    return "['" + GetTestAddOrSub(19) + "=??" + "']";
+    return "['" + GetTestAddOrSub(20) + "?" + GetTestAddOrSub(20) + "']";
   },
 };

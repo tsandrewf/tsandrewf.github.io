@@ -1,7 +1,17 @@
 "use strict";
 
 import { getQueryVar } from "./getQueryVar.js";
-import { RefreshLogHeight } from "./test.js";
+import {
+  RefreshLogHeight,
+  GetTestAddOrSub,
+  GetTestAdjacentNumbers,
+  GetTestInsertNumber,
+  IsCorrectAnswerPredicate,
+} from "./test.js";
+import { Clockface } from "./Clockface.js";
+
+export const answerDigitHTML =
+  '<span class="answerDigit oneDigit" onclick="AnswerDigitSelect(this)"></span>';
 
 const classAnswerDigitSelected = "answerDigitSelected";
 let elemLogRecordRetry;
@@ -19,6 +29,16 @@ window.onload = function () {
       // https://learn.javascript.ru/css-units
       document.getElementById("testSrc").style.width =
         TestConfig.testSrcWidth + "ch";
+
+      for (let displayKeyboardClass of TestConfig.keyboard
+        ? TestConfig.keyboard
+        : ["digits"]) {
+        for (let elemKeyboard of document.getElementsByClassName(
+          displayKeyboardClass
+        )) {
+          elemKeyboard.style.display = "table-row";
+        }
+      }
 
       RefreshLogHeight();
     },
@@ -40,14 +60,30 @@ window.AnswerDigitSelect = function (elemAnswerDigit) {
   elemAnswerDigit.classList.add(classAnswerDigitSelected);
 };
 
-function SetTest(testSrc) {
+function SetTest(testSrcExpr) {
+  const testSrc = eval(testSrcExpr);
+  if (!Array.isArray(testSrc)) {
+    throw "Parameter of function SetTest must be array";
+  }
   const elemTestSrc = document.getElementById("testSrc");
-  elemTestSrc.setAttribute("src", testSrc);
-  const answerDigitHTML =
-    '<span class="answerDigit oneDigit" onclick="AnswerDigitSelect(this)"></span>';
-  elemTestSrc.innerHTML = testSrc.replace(/\?/g, answerDigitHTML);
+
+  while (elemTestSrc.firstChild) {
+    elemTestSrc.removeChild(elemTestSrc.firstChild);
+  }
+
+  elemTestSrc.setAttribute("src", testSrcExpr);
+  for (let elem of testSrc) {
+    if ("string" == typeof elem) {
+      elemTestSrc.innerHTML += elem.replace(/\?/g, answerDigitHTML);
+    } else {
+      elemTestSrc.appendChild(elem);
+    }
+  }
 
   InitDigitSelected();
+
+  // ToDo!
+  RefreshLogHeight();
 }
 
 function CalcTest() {
@@ -122,6 +158,9 @@ window.Stop = function () {
   dateLastDecision = null;
 
   dateTestBeg = null;
+
+  // ToDo!
+  RefreshLogHeight();
 };
 
 function sklonenie(amount) {
@@ -154,7 +193,8 @@ function RefreshSummary() {
       "Решены все " + logChildCount + " " + sklonenie(logChildCount);
   } else {
     elemSummary.innerHTML =
-      "Решено " +
+      (1 == logCorrectCount ? "Решен" : "Решено") +
+      " " +
       logCorrectCount +
       " " +
       sklonenie(logCorrectCount) +
@@ -165,18 +205,20 @@ function RefreshSummary() {
 
 function Retry() {
   elemLogRecordRetry = this;
-
   SetTest(this.getAttribute("src"));
-
-  InitDigitSelected();
 }
+
+window.OperationDelete = function () {
+  document.getElementsByClassName(classAnswerDigitSelected)[0].innerHTML =
+    "&nbsp;";
+};
 
 window.OperationCommit = function () {
   if (document.getElementById("keyboard").disabled) return;
 
   dateLastDecision = Date.now();
 
-  const regexp = /^\d/;
+  /*const regexp = /^\d/;
   let answer = null;
   for (let elemAnswerDigit of document.getElementsByClassName("answerDigit")) {
     if (null == answer) {
@@ -189,22 +231,25 @@ window.OperationCommit = function () {
       }
     }
   }
-  if (null == answer) return;
+  if (null == answer) return;*/
 
   const elemTestSrc = document.getElementById("testSrc");
-  const testSrc = elemTestSrc.innerText;
-  const isCorrectAnswer = TestConfig.IsCorrectAnswer(testSrc);
+
+  const isCorrectAnswer = TestConfig.IsCorrectAnswer
+    ? TestConfig.IsCorrectAnswer(elemTestSrc)
+    : IsCorrectAnswerPredicate(elemTestSrc);
 
   const elemLog = document.getElementById("log");
-  let logRecordHTML;
-  let logRecordClass;
-  if (isCorrectAnswer) {
-    logRecordHTML = testSrc.replace(/\s/g, "");
-    logRecordClass = "decisionCorrect";
-  } else {
-    logRecordHTML = testSrc.replace(/\s/g, "").replace("=", "&ne;");
-    logRecordClass = "decisionNotCorrect";
-  }
+
+  const logRecordHTML = TestConfig.GetLogRecordHTML
+    ? TestConfig.GetLogRecordHTML(elemTestSrc)
+    : isCorrectAnswer
+    ? elemTestSrc.innerText.replace(/\s/g, "")
+    : elemTestSrc.innerText.replace(/\s/g, "").replace("=", "&ne;");
+
+  const logRecordClass = isCorrectAnswer
+    ? "decisionCorrect"
+    : "decisionNotCorrect";
 
   if (!elemLogRecordRetry) {
     const elemLogRecord = document.createElement("div");

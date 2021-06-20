@@ -10,9 +10,8 @@ export function RefreshLogHeight() {
 }
 
 export function IsCorrectAgjacentNumbers(testSrc) {
-  console.log("testSrc", testSrc);
   const match = /(\d{1,2}),(\d{1,2}),(\d{1,2})/i.exec(
-    testSrc.replace(/\s/g, "")
+    testSrc.innerText.replace(/\s/g, "")
   );
   return (
     match &&
@@ -23,7 +22,7 @@ export function IsCorrectAgjacentNumbers(testSrc) {
 
 export function IsCorrectAnswerPredicate(testSrc) {
   return eval(
-    testSrc
+    testSrc.innerText
       .replace(/\u00D7/g, "*") // &times;
       .replace(/:/g, "/")
       .replace(/=/g, "==")
@@ -49,6 +48,27 @@ function GetDigitArray(rowCount, colCount) {
 
 // Beg TestAddOrSub
 let testArrays = {};
+
+export function GetTestClockfaceNumber() {
+  const arrayTitle = "Clockface";
+
+  if (!testArrays[arrayTitle]) {
+    testArrays[arrayTitle] = new Array();
+  }
+
+  let testArray = testArrays[arrayTitle];
+
+  if (0 == testArray.length) {
+    testArray = testArray.concat(GetDigitArray(144));
+  }
+
+  const index =
+    1 == testArray.length ? 0 : Math.floor(Math.random() * testArray.length);
+  const test = testArray[index] - 1;
+  testArray.splice(index, 1);
+
+  return test;
+}
 
 export function GetTestAdjacentNumbers(maxNumber) {
   const arrayTitle = "AdjacentNumbers" + maxNumber;
