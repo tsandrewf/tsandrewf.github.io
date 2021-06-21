@@ -1,11 +1,10 @@
 "use strict";
 
 import { GetTestClockfaceNumber } from "../../js/test.js";
-
 import { Clockface } from "../../js/Clockface.js";
 
 window.TestConfig = {
-  testSrcWidth: 13,
+  testSrcWidth: 11,
   IsCorrectAnswer: function (elemTestSrc) {
     const answerDigits = elemTestSrc.getElementsByClassName("answerDigit");
     const answer = {
@@ -31,7 +30,7 @@ window.TestConfig = {
       Math.trunc(test / 12) +
       ", minutes: " +
       (test % 12) * 5 +
-      ' }).elemClockface, "??час. ??мин.", ]'
+      ' }).elemClockface, "??час??мин" ]'
     );
   },
   GetLogRecordHTML: function (elemTestSrc) {
