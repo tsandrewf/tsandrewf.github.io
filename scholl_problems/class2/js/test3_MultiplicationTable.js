@@ -6,6 +6,6 @@ window.TestConfig = {
   testSrcWidth: 7,
   GetTest: function () {
     const operands = GetOperands9x9();
-    return "'" + operands.op1 + "&times;" + operands.op2 + "=??" + "'";
+    return "['" + operands.op1 + "&times;" + operands.op2 + "=??" + "']";
   },
 };
