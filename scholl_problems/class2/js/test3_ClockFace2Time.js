@@ -1,7 +1,6 @@
 "use strict";
 
 import { GetTestClockfaceNumber } from "../../js/test.js";
-import { answerDigitHTML } from "../../js/test3.js";
 import { Clockface } from "../../js/Clockface.js";
 
 window.TestConfig = {

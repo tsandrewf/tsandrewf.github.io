@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106210834";
+const CACHE_NAME = "scholl_problems_v_202106210837";
 
 let cacheUrls = [
   "./",
@@ -53,7 +53,7 @@ let cacheUrls = [
   "./class2/js/test3_1-100_Comparison.js",
   "./class2/js/test3_1-100_InsertNumber.js",
   "./class2/js/test3_1-100_TenAddAndSub.js",
-  "./class2/js/test3_ClockFace2Time.js",
+  "./class2/js/test3_Clockface2Time.js",
   "./class2/js/test3_DivisionTable.js",
   "./class2/js/test3_MultiplicationTable.js",
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
