@@ -1,5 +1,7 @@
 "use strict";
 
+import { Clockface } from "./Clockface.js";
+
 export function RefreshLogHeight() {
   // Beg Подгоняем высоту елемента "log" под высоту окна
   const elemLog = document.getElementById("log");
@@ -27,6 +29,25 @@ export function IsCorrectAnswerPredicate(testSrc) {
       .replace(/:/g, "/")
       .replace(/=/g, "==")
       .replace(/0(\d)/g, "$1") // ToDo! Only for numbers under 100
+  );
+}
+
+export function IsCorrectAnswerClockface(elemTestSrc) {
+  const match = new RegExp(/(\d{0,2})час(\d{0,2})мин/i).exec(
+    elemTestSrc.innerText.replace(/\s/g, "")
+  );
+  const timeDigit = {
+    clocks: Number(match[1]),
+    minutes: Number(match[2]),
+  };
+
+  const timeClockface = new Clockface(
+    elemTestSrc.getElementsByTagName("svg")[0]
+  ).time;
+
+  return (
+    timeDigit.clocks == timeClockface.clocks &&
+    timeDigit.minutes == timeClockface.minutes
   );
 }
 

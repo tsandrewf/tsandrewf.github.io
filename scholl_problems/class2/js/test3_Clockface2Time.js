@@ -1,28 +1,15 @@
 "use strict";
 
-import { GetTestClockfaceNumber } from "../../js/test.js";
+import {
+  GetTestClockfaceNumber,
+  IsCorrectAnswerClockface,
+} from "../../js/test.js";
 import { Clockface } from "../../js/Clockface.js";
 
 window.TestConfig = {
   keyboard: ["digits", "enterAndDel"],
   testSrcWidth: 11,
-  IsCorrectAnswer: function (elemTestSrc) {
-    const answerDigits = elemTestSrc.getElementsByClassName("answerDigit");
-    const answer = {
-      clocks: Number(answerDigits[0].innerText + answerDigits[1].innerText),
-      minutes: Number(answerDigits[2].innerText + answerDigits[3].innerText),
-    };
-
-    const svgClockface = elemTestSrc.firstChild;
-    const question = {
-      clocks: Number(svgClockface.getAttribute("clocks")),
-      minutes: Number(svgClockface.getAttribute("minutes")),
-    };
-
-    return (
-      answer.clocks == question.clocks && answer.minutes == question.minutes
-    );
-  },
+  IsCorrectAnswer: IsCorrectAnswerClockface,
   GetTest: function () {
     const test = GetTestClockfaceNumber();
 

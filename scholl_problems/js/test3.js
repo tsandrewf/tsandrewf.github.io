@@ -304,40 +304,7 @@ window.ClockfaceRotation = function (minutesRotate) {
   clocks = Math.trunc(minutesNew / 60) % 12;
   minutes = minutesNew % 60;
 
-  elemSvg.setAttribute("clocks", clocks);
-  elemSvg.setAttribute("minutes", minutes);
-
-  {
-    const elemClockArrow = elemSvg.getElementsByTagName("line")["clock"];
-    const angle = (30 * clocks + 0.5 * minutes) * (Math.PI / 180);
-    const clockArrowLengthPercent = 25;
-    elemClockArrow.setAttributeNS(
-      null,
-      "x2",
-      50 + clockArrowLengthPercent * Math.sin(angle) + "%"
-    );
-    elemClockArrow.setAttributeNS(
-      null,
-      "y2",
-      50 - clockArrowLengthPercent * Math.cos(angle) + "%"
-    );
-  }
-
-  {
-    const elemMinuteArrow = elemSvg.getElementsByTagName("line")["minute"];
-    const angle = 6 * minutes * (Math.PI / 180);
-    const minuteArrowLengthPercent = 35;
-    elemMinuteArrow.setAttributeNS(
-      null,
-      "x2",
-      50 + minuteArrowLengthPercent * Math.sin(angle) + "%"
-    );
-    elemMinuteArrow.setAttributeNS(
-      null,
-      "y2",
-      50 - minuteArrowLengthPercent * Math.cos(angle) + "%"
-    );
-  }
+  new Clockface(elemSvg).time = { clocks: clocks, minutes };
 
   let elemTestSrc = document.getElementById("testSrc");
   elemTestSrc.setAttribute(
