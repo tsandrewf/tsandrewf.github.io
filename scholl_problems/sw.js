@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106210847";
+const CACHE_NAME = "scholl_problems_v_202106220832";
 
 let cacheUrls = [
   "./",
@@ -56,6 +56,7 @@ let cacheUrls = [
   "./class2/js/test3_Clockface2Time.js",
   "./class2/js/test3_DivisionTable.js",
   "./class2/js/test3_MultiplicationTable.js",
+  "./class2/js/test3_Time2Clockface.js",
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
   "https://polyfill.io/v3/polyfill.min.js?features=es6",
   // PNG

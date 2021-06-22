@@ -82,10 +82,7 @@ export class Clockface {
       svgLine.setAttributeNS(
         null,
         "y2",
-        50 -
-          clockArrowLengthPercent +
-          clockArrowLengthPercent * (1 - Math.cos(angle)) +
-          "%"
+        50 - clockArrowLengthPercent * Math.cos(angle) + "%"
       );
       //svgLine.setAttributeNS(null, "stroke", params.color);
       svgLine.setAttributeNS(null, "fill", "transparent");
@@ -100,22 +97,20 @@ export class Clockface {
     // Beg Minute Arrow
     if (null != params.minutes) {
       const angle = 6 * params.minutes * (Math.PI / 180);
-      const clockArrowLengthPercent = 35;
+      const minuteArrowLengthPercent = 35;
       const svgLine = document.createElementNS(xmlns, "line");
+      //svgLine.id = "minuteArrow";
       svgLine.setAttributeNS(null, "x1", "50%");
       svgLine.setAttributeNS(null, "y1", "50%");
       svgLine.setAttributeNS(
         null,
         "x2",
-        50 + clockArrowLengthPercent * Math.sin(angle) + "%"
+        50 + minuteArrowLengthPercent * Math.sin(angle) + "%"
       );
       svgLine.setAttributeNS(
         null,
         "y2",
-        50 -
-          clockArrowLengthPercent +
-          clockArrowLengthPercent * (1 - Math.cos(angle)) +
-          "%"
+        50 - minuteArrowLengthPercent * Math.cos(angle) + "%"
       );
       //svgLine.setAttributeNS(null, "stroke", params.color);
       svgLine.setAttributeNS(null, "fill", "transparent");

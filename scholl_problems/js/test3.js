@@ -92,6 +92,9 @@ function CalcTest() {
 
 function InitDigitSelected() {
   const elemArrayAnswerDigit = document.getElementsByClassName("answerDigit");
+
+  if (0 == elemArrayAnswerDigit.length) return;
+
   for (let elemAnswerDigit of elemArrayAnswerDigit) {
     elemAnswerDigit.innerHTML = "&nbsp;";
     elemAnswerDigit.classList.remove(classAnswerDigitSelected);
@@ -288,6 +291,62 @@ window.SelectAnswerDigit = function (event) {
         digit.classList.remove(classAnswerDigitSelected);
     }
   }
+};
+
+window.ClockfaceRotation = function (minutesRotate) {
+  const elemSvg = document.querySelector("#testSrc > svg");
+  let clocks = Number(elemSvg.getAttribute("clocks"));
+  let minutes = Number(elemSvg.getAttribute("minutes"));
+
+  let minutesNew = minutes + clocks * 60 + minutesRotate;
+  if (0 > minutesNew) minutesNew = 12 * 60 + minutesNew;
+
+  clocks = Math.trunc(minutesNew / 60) % 12;
+  minutes = minutesNew % 60;
+
+  elemSvg.setAttribute("clocks", clocks);
+  elemSvg.setAttribute("minutes", minutes);
+
+  {
+    const elemClockArrow = elemSvg.getElementsByTagName("line")["clock"];
+    const angle = (30 * clocks + 0.5 * minutes) * (Math.PI / 180);
+    const clockArrowLengthPercent = 25;
+    elemClockArrow.setAttributeNS(
+      null,
+      "x2",
+      50 + clockArrowLengthPercent * Math.sin(angle) + "%"
+    );
+    elemClockArrow.setAttributeNS(
+      null,
+      "y2",
+      50 - clockArrowLengthPercent * Math.cos(angle) + "%"
+    );
+  }
+
+  {
+    const elemMinuteArrow = elemSvg.getElementsByTagName("line")["minute"];
+    const angle = 6 * minutes * (Math.PI / 180);
+    const minuteArrowLengthPercent = 35;
+    elemMinuteArrow.setAttributeNS(
+      null,
+      "x2",
+      50 + minuteArrowLengthPercent * Math.sin(angle) + "%"
+    );
+    elemMinuteArrow.setAttributeNS(
+      null,
+      "y2",
+      50 - minuteArrowLengthPercent * Math.cos(angle) + "%"
+    );
+  }
+
+  let elemTestSrc = document.getElementById("testSrc");
+  elemTestSrc.setAttribute(
+    "src",
+    elemTestSrc
+      .getAttribute("src")
+      .replace(/clocks: \d{1,2}/, "clocks: " + clocks)
+      .replace(/minutes: \d{1,2}/, "minutes: " + minutes)
+  );
 };
 
 window.onKeyboardClick = function (event) {
