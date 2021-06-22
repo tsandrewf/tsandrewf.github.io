@@ -4,6 +4,7 @@ import { GetTestClockfaceNumber } from "../../js/test.js";
 import { Clockface } from "../../js/Clockface.js";
 
 window.TestConfig = {
+  keyboard: ["digits", "enterAndDel"],
   testSrcWidth: 11,
   IsCorrectAnswer: function (elemTestSrc) {
     const answerDigits = elemTestSrc.getElementsByClassName("answerDigit");

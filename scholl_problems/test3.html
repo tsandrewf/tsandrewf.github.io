@@ -51,7 +51,10 @@
                 <tr class="rotation">
                     <td onclick="ClockfaceRotation(-5);">&#11119;</td><td>м</td><td onclick="ClockfaceRotation(5);">&#11118;</td>
                 </tr>
-                <tr>
+                <tr class="enter">
+                    <td colspan="3" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">Ввод</td>
+                </tr>
+                <tr class="enterAndDel">
                     <td colspan="2" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">Ввод</td><td onclick="OperationDelete();">C</td>
                 </tr>
             </table>

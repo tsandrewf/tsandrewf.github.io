@@ -3,6 +3,7 @@
 import { GetTestAddOrSub } from "../../js/test.js";
 
 window.TestConfig = {
+  keyboard: ["digits", "enterAndDel"],
   testSrcWidth: 9,
   GetTest: function () {
     const match = new RegExp(/(\d)([+,-])(\d)/i).exec(GetTestAddOrSub(9));

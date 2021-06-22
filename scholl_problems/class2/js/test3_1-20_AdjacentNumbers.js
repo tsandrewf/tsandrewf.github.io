@@ -6,7 +6,7 @@ import {
 } from "../../js/test.js";
 
 window.TestConfig = {
-  keyboard: ["digits"],
+  keyboard: ["digits", "enterAndDel"],
   digitRightToLeft: false,
   IsCorrectAnswer: IsCorrectAgjacentNumbers,
   testSrcWidth: 8,

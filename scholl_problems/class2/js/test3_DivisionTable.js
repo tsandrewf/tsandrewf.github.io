@@ -3,6 +3,7 @@
 import { GetOperands9x9 } from "../../js/test.js";
 
 window.TestConfig = {
+  keyboard: ["digits", "enterAndDel"],
   testSrcWidth: 6,
   GetTest: function () {
     const operands = GetOperands9x9();

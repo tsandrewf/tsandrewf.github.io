@@ -4,7 +4,7 @@ import { GetTestClockfaceNumber } from "../../js/test.js";
 import { Clockface } from "../../js/Clockface.js";
 
 window.TestConfig = {
-  keyboard: ["rotation"],
+  keyboard: ["rotation", "enter"],
   testSrcWidth: 11,
   IsCorrectAnswer: function (elemTestSrc) {
     const match = new RegExp(/(\d{1,2})час(\d{1,2})мин/i).exec(

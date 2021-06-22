@@ -5,6 +5,8 @@ body {
 
 .comparison,
 .digits,
+.enter,
+.enterAndDel,
 .rotation {
   display: none;
 }
