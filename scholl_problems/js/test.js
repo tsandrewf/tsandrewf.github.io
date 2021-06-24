@@ -80,7 +80,7 @@ export function GetTestClockfaceNumber() {
   let testArray = testArrays[arrayTitle];
 
   if (0 == testArray.length) {
-    testArray = testArray.concat(GetDigitArray(144));
+    Array.prototype.push.apply(testArray, GetDigitArray(144));
   }
 
   const index =
@@ -101,7 +101,8 @@ export function GetTestAdjacentNumbers(maxNumber) {
   let testArray = testArrays[arrayTitle];
 
   if (0 == testArray.length) {
-    testArray = testArray.concat(
+    Array.prototype.push.apply(
+      testArray,
       GetDigitArray(maxNumber).filter(
         (element) => element > 1 && element < maxNumber
       )
@@ -123,28 +124,50 @@ export function GetTestAddOrSub(maxNumber) {
     testArrays[arrayTitle] = new Array();
   }
 
-  let testAddOrSubArray = testArrays[arrayTitle];
+  let testArray = testArrays[arrayTitle];
 
-  if (0 == testAddOrSubArray.length) {
-    testAddOrSubArray = testAddOrSubArray
-      .concat(
-        GetDigitArray(maxNumber, maxNumber)
-          .filter((element) => element.op1 + element.op2 < maxNumber + 1)
-          .map((element) => element.op1 + "+" + element.op2)
-      )
-      .concat(
-        GetDigitArray(maxNumber, maxNumber)
-          .filter((element) => element.op1 - element.op2 > 0)
-          .map((element) => element.op1 + "-" + element.op2)
-      );
+  if (0 == testArray.length) {
+    Array.prototype.push.apply(
+      testArray,
+      GetDigitArray(maxNumber, maxNumber)
+        .filter((element) => element.op1 + element.op2 < maxNumber + 1)
+        .map((element) => element.op1 + "+" + element.op2)
+    );
+    Array.prototype.push.apply(
+      testArray,
+      GetDigitArray(maxNumber, maxNumber)
+        .filter((element) => element.op1 - element.op2 > 0)
+        .map((element) => element.op1 + "-" + element.op2)
+    );
   }
 
   const index =
-    1 == testAddOrSubArray.length
+    1 == testArray.length ? 0 : Math.floor(Math.random() * testArray.length);
+  const test = testArray[index];
+  testArray.splice(index, 1);
+
+  return test;
+}
+
+export function GetTestNumber(maxNumber) {
+  const arrayTitle = "Number" + maxNumber;
+
+  if (!testArrays[arrayTitle]) {
+    testArrays[arrayTitle] = new Array();
+  }
+
+  let testNumberArray = testArrays[arrayTitle];
+
+  if (0 == testNumberArray.length) {
+    Array.prototype.push.apply(testNumberArray, GetDigitArray(maxNumber));
+  }
+
+  const index =
+    1 == testNumberArray.length
       ? 0
-      : Math.floor(Math.random() * testAddOrSubArray.length);
-  const test = testAddOrSubArray[index];
-  testAddOrSubArray.splice(index, 1);
+      : Math.floor(Math.random() * testNumberArray.length);
+  const test = testNumberArray[index];
+  testNumberArray.splice(index, 1);
 
   return test;
 }
@@ -168,23 +191,6 @@ export function GetOperands9x9() {
 
   return operands;
 }
-
-/*export function GetExprAddOrSub(maxNum) {
-  const operand1 = 1 + Math.trunc((maxNum - 1) * Math.random());
-  //const operation = 0.5 < Math.random() ? "+" : "-";
-  const operation =
-    maxNum - 1 == operand1 ? "-" : 0.5 < Math.random() ? "+" : "-";
-  const operand2 =
-    "+" == operation
-      ? Math.trunc(1 + (maxNum - operand1 - 1) * Math.random())
-      : Math.trunc(1 + operand1 * Math.random());
-
-  return operand1 + operation + operand2;
-}*/
-
-/*export function GetTestAddAndSub(maxNum) {
-  return GetExprAddOrSub(maxNum) + "=??";
-}*/
 
 export function GetTestInsertNumber(maxNum) {
   const operation = 0.5 < Math.random() ? "+" : "-";
