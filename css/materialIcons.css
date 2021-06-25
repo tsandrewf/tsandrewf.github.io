@@ -1,11 +1,14 @@
+/* https://material.io/resources/icons/?style=baseline */
+/* https://google.github.io/material-design-icons/ */
+
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
   src: local("Material Icons"), local("MaterialIcons-Regular"),
-    /*url(./fonts/MaterialIcons-Regular.woff2) format("woff2"),*/
-      url(./fonts/MaterialIcons-Regular.woff) format("woff");
-  /*url(./fonts/MaterialIcons-Regular.ttf) format("truetype");*/
+    /*url(./../fonts/MaterialIcons-Regular.woff2) format("woff2"),
+    url(./../fonts/MaterialIcons-Regular.woff) format("woff"),*/
+      url(./../fonts/MaterialIcons-Regular.ttf) format("truetype");
 }
 
 .material-icons {
