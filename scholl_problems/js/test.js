@@ -2,6 +2,13 @@
 
 import { Clockface } from "./Clockface.js";
 
+// https://learn.javascript.ru/task/ucfirst
+String.prototype._capitalize = function () {
+  if (!this) return this;
+
+  return this[0].toUpperCase() + this.slice(1);
+};
+
 export function RefreshLogHeight() {
   // Beg Подгоняем высоту елемента "log" под высоту окна
   const elemLog = document.getElementById("log");
@@ -9,6 +16,91 @@ export function RefreshLogHeight() {
     (window.innerHeight - elemLog.getBoundingClientRect().top).toString() +
     "px";
   // End Подгоняем высоту елемента "log" под высоту окна
+}
+
+export function GetTimeRandom() {
+  const test = GetTestClockfaceNumber();
+  return { clocks: Math.trunc(test / 12), minutes: (test % 12) * 5 };
+}
+
+const clocksText = new Map([
+  [0, "первого"],
+  [1, "второго"],
+  [2, "третьего"],
+  [3, "четвертого"],
+  [4, "пятого"],
+  [5, "шестого"],
+  [6, "седьмого"],
+  [7, "восьмого"],
+  [8, "девятого"],
+  [9, "десятого"],
+  [10, "одиннадцатого"],
+  [11, "двенадцатого"],
+]);
+
+const clocksText30 = new Map([
+  [0, "час"],
+  [1, "два"],
+  [2, "три"],
+  [3, "четыре"],
+  [4, "пять"],
+  [5, "шесть"],
+  [6, "семь"],
+  [7, "восемь"],
+  [8, "девять"],
+  [9, "десять"],
+  [10, "одиннадцать"],
+  [11, "двенадцать"],
+]);
+
+const minutesText = new Map([
+  [0, ""],
+  [5, "пять"],
+  [10, "десять"],
+  [15, "пятнадцать"],
+  [20, "двадцать"],
+  [25, "двадцать пять"],
+  [30, "пол"],
+  [35, "двадцати пяти"],
+  [40, "двадцати"],
+  [45, "пятнадцати"],
+  [50, "десяти"],
+  [55, "пяти"],
+]);
+
+export function GetTimeText(time) {
+  let timeText;
+  if (0 == time.minutes) {
+    switch (time.clocks) {
+      case 0:
+        timeText = "Полдень";
+        break;
+      case 1:
+        timeText = clocksText30.get(time.clocks - 1);
+        break;
+      case 2:
+      case 3:
+      case 4:
+        timeText = clocksText30.get(time.clocks - 1) + " часа";
+        break;
+      default:
+        timeText = clocksText30.get(time.clocks - 1) + " часов";
+        break;
+    }
+  } else if (30 > time.minutes) {
+    timeText =
+      minutesText.get(time.minutes) + " минут " + clocksText.get(time.clocks);
+  } else if (30 == time.minutes) {
+    timeText = "Пол " + clocksText.get(time.clocks);
+  } else {
+    timeText =
+      "Без " +
+      minutesText.get(time.minutes) +
+      " " +
+      clocksText30.get(time.clocks);
+  }
+
+  return timeText._capitalize();
 }
 
 export function IsCorrectAgjacentNumbers(testSrc) {
