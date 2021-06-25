@@ -40,8 +40,10 @@ window.TestConfig = {
 
   GetLogRecordHTML: function (elemTestSrc) {
     const elemReturn = document.createElement("div");
-    elemReturn.appendChild(elemTestSrc.firstChild);
-    elemReturn.innerHTML += elemTestSrc.innerText;
+    /*elemReturn.appendChild(elemTestSrc.firstChild);
+    elemReturn.innerHTML += elemTestSrc.innerText;*/
+    elemReturn.innerHTML = elemTestSrc.innerText;
+    elemReturn.appendChild(eval(elemTestSrc.getAttribute("src"))[1]);
 
     return elemReturn.innerHTML;
   },

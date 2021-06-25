@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106251344";
+const CACHE_NAME = "scholl_problems_v_202106251753";
 
 let cacheUrls = [
   "./",
@@ -26,6 +26,7 @@ let cacheUrls = [
   "./class7/20210424_qualifying_round/problem7.html",
   "./class7/20210424_qualifying_round/problem8.html",
   // CSS
+  "/css/materialIcons.css",
   "./css/index.css",
   "./css/problem.css",
   "./css/problem_group.css",
@@ -74,7 +75,8 @@ let cacheUrls = [
   "./icons/scholl_problems256.png",
   "./icons/scholl_problems512.png",
   // Fonts
-  "/fonts/MaterialIcons-Regular.woff",
+  //"/fonts/MaterialIcons-Regular.woff",
+  "/fonts/MaterialIcons-Regular.ttf",
 ];
 
 self.addEventListener("install", (e) => {
