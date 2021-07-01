@@ -47,7 +47,7 @@ body {
 
 .navbar > div {
   text-align: center;
-  margin: 10px;
+  /*margin: 10px;*/
 
   padding-top: 5px;
   margin-top: 5px;
@@ -60,6 +60,9 @@ body {
   justify-content: center;
 
   font-size: xx-large;
+  /*border: solid white;*/
+
+  min-width: 1.8em;
 }
 
 .navbar > .navbar-button-active {
@@ -77,8 +80,14 @@ body {
   color: white;
   border-top: none;
 }
-/*.navbar > #1-100,
-#back,
+
+/*.navbar > div[id="1-100"],
+div[id="1-20"],
+#back {
+  min-width: 1.8em;
+}*/
+
+/*.navbar > #back,
 #clockface,
 #division,
 #mutiplication {
