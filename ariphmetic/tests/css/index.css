@@ -1,0 +1,120 @@
+/* https://ru.stackoverflow.com/questions/546490/%D0%9A%D0%B0%D0%BA-%D0%B2%D1%81%D0%B5%D0%B3%D0%B4%D0%B0-%D0%BF%D1%80%D0%B8%D0%B6%D0%B8%D0%BC%D0%B0%D1%82%D1%8C-footer-%D0%BA-%D0%BD%D0%B8%D0%B7%D1%83-%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0 */
+
+html {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: none;
+
+  margin: 0;
+
+  min-height: 100%;
+  /*max-height: 100%;
+  height: 100%;*/
+
+  font-family: sans-serif;
+}
+
+#content {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: 0;
+}
+
+/* Beg navbar */
+.navbar {
+  font-weight: bolder;
+  background-color: blue;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+
+  float: left;
+  overflow-y: auto;
+
+  width: auto;
+  height: auto;
+
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.navbar > div {
+  text-align: center;
+  margin: 10px;
+
+  padding-top: 5px;
+  margin-top: 5px;
+
+  padding-right: 5px;
+  margin-right: 5px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  font-size: xx-large;
+}
+
+.navbar > .navbar-button-active {
+  color: white;
+  border-top: none;
+  border-right: solid white;
+}
+
+.navbar > .navbar-button-passive {
+  color: grey;
+  cursor: pointer;
+}
+
+.navbar > #back {
+  color: white;
+  border-top: none;
+}
+/*.navbar > #1-100,
+#back,
+#clockface,
+#division,
+#mutiplication {
+  font-size: xx-large;
+}*/
+/* End navbar */
+
+/* Beg Landscape */
+@media screen and (max-aspect-ratio: 8/7) {
+  .navbar {
+    flex-direction: row;
+
+    overflow-x: auto;
+
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .navbar > .navbar-button-active {
+    border-right: none;
+    border-top: solid white;
+  }
+
+  body {
+    grid-template-columns: none;
+    grid-template-rows: 1fr auto;
+  }
+}
+/* End Landscape */
+
+#appUpdate {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: xx-large;
+  /*visibility: hidden;*/
+  display: none;
+  cursor: pointer;
+}

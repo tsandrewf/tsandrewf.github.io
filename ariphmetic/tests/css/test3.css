@@ -1,0 +1,152 @@
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+.comparison,
+.digits,
+.enter,
+.enterAndDel,
+.rotation {
+  display: none;
+}
+
+.disabled {
+  background-color: gray;
+}
+
+.enabled {
+  background-color: green;
+}
+
+#operand1 {
+  margin-left: 0.1em;
+}
+
+#equals,
+#answerDigit1 {
+  margin-right: 0.1em;
+}
+
+#summary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#start,
+#stop {
+  text-align: center;
+  border-radius: 10%;
+  color: white;
+  font-size: small;
+}
+
+#start > div:nth-child(1),
+#stop > div:nth-child(1) {
+  font-size: xx-large;
+}
+
+#start:hover,
+#stop:hover {
+  cursor: pointer;
+}
+
+.title > p {
+  margin: 0;
+  font-size: large;
+}
+
+.testLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin: 0;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+.testLine > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+}
+
+.testLine > div:nth-child(1) > div:nth-child(1) {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  background-color: black;
+  color: white;
+  fill: white;
+  stroke: white;
+}
+
+.testLine > div:nth-child(1) > div:nth-child(2) {
+  overflow-x: hidden; /* прокрутка по горизонтали */
+  overflow-y: auto; /* прокрутка по вертикали */
+}
+
+.oneDigit {
+  width: 0.6em;
+  text-align: center;
+}
+
+.answerDigit {
+  text-align: center;
+  display: inline-block;
+  border-bottom: white;
+  text-decoration: underline;
+}
+
+.answerDigit:hover {
+  cursor: pointer;
+}
+
+.answerDigitSelected {
+  background-color: gray;
+}
+
+.nextQuestion {
+  cursor: pointer;
+}
+
+#keyboard {
+  text-align: center;
+  padding: 0.1em;
+}
+
+#keyboard tr td {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border-radius: 100%;
+  width: 1.5em;
+}
+
+#log {
+  display: flex;
+  flex-direction: column;
+}
+
+#log > div {
+  font-size: medium;
+}
+
+#log > div:nth-child(odd) {
+  background-color: #ccffff;
+}
+
+.decisionCorrect svg {
+  fill: black;
+  stroke: black;
+}
+
+.decisionNotCorrect {
+  cursor: pointer;
+  background-color: red !important; /* http://seodon.ru/css/prioritety-stilej.php */
+  color: white;
+  fill: white;
+  stroke: white;
+}

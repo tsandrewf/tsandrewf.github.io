@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link href="/css/materialIcons.css" rel="stylesheet" type="text/css" />
+    <link href="css/test3.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/test3.js" type="module"></script>
+</head>
+<body>
+    <div class="title">
+        <p></p>
+        <div id=summary>
+            <!--fieldset id="start" onclick="Start();" class="enabled"><div><span class="material-icons">play_arrow</span></div></!--fieldset-->
+            <fieldset id="start" onclick="Start();" class="enabled"><span class="material-icons">play_arrow</span></fieldset>
+            <div id="summaryText"></div>
+            <!--fieldset id="stop" onclick="Stop();" disabled class="disabled"><div><span class="material-icons">stop</span></div></fieldset-->
+            <fieldset id="stop" onclick="Stop();" disabled class="disabled"><span class="material-icons">stop</span></fieldset>
+        </div>
+    </div>
+    <hr>
+    <div class="testLine">
+        <div>
+            <div>
+                <div id="testSrc">&nbsp;</div>
+            </div>
+            <div id="log"></div>
+        </div>
+        <fieldset id="keyboard" disabled>
+            <table>
+                <tr class="comparison">
+                    <td onclick="onKeyboardClick(event);">&gt;</td><td onclick="onKeyboardClick(event);">&equals;</td><td onclick="onKeyboardClick(event);">&lt;</td>
+                </tr>
+                <tr class="digits">
+                    <td onclick="onKeyboardClick(event);">1</td><td onclick="onKeyboardClick(event);">2</td><td onclick="onKeyboardClick(event);">3</td>
+                </tr>
+                <tr class="digits">
+                    <td onclick="onKeyboardClick(event);">4</td><td onclick="onKeyboardClick(event);">5</td><td onclick="onKeyboardClick(event);">6</td>
+                </tr>
+                <tr class="digits">
+                    <td onclick="onKeyboardClick(event);">7</td><td onclick="onKeyboardClick(event);">8</td><td onclick="onKeyboardClick(event);">9</td>
+                </tr>
+                <tr class="digits">
+                    <td colspan="3" onclick="onKeyboardClick(event);" style="border-radius:10%;">0</td>
+                </tr>
+                <tr class="rotation">
+                    <td onclick="ClockfaceRotation(-60);"><i class="material-icons">rotate_left</i></td><td>ч</td><td onclick="ClockfaceRotation(60);"><i class="material-icons">rotate_right</i></td>
+                </tr>
+                <tr class="rotation">
+                    <td onclick="ClockfaceRotation(-5);"><i class="material-icons">rotate_left</i></td><td>м</td><td onclick="ClockfaceRotation(5);"><i class="material-icons">rotate_right</i></td>
+                </tr>
+                <tr class="enter">
+                    <td colspan="3" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">Ввод</td>
+                </tr>
+                <tr class="enterAndDel">
+                    <td colspan="2" onclick="OperationCommit();" style="border-radius:10%;background-color:red;">Ввод</td><td onclick="OperationDelete();">C</td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</body>
+</html>

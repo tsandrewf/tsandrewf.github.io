@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Тесты по арифметике</title>
+
+    <meta name="theme-color" content="#f00">
+    <link href="./manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./icons/ariphmetic_tests_192.png" />
+
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/index.js"></script>
+</head>
+<body>
+    <main role="main">
+        <iframe id="content" src="1-20/index.html" title="This is content"></iframe>
+        <!-- https://unicode-table.com/ru/1F514/
+             https://ru.stackoverflow.com/questions/177242/%D0%9A%D0%B0%D0%BA-%D1%81%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-%D0%B1%D0%BB%D0%BE%D0%BA-%D0%B2-%D0%BF%D1%80%D0%B0%D0%B2%D0%BE%D0%BC-%D0%BD%D0%B8%D0%B6%D0%BD%D0%B5%D0%BC-%D1%83%D0%B3%D0%BB%D1%83
+        -->
+        <div id="appUpdate" onclick="AppUpdate();">&#128276;</div>
+    </main>
+    <footer role="contentinfo" class="navbar">
+        <div id="back" onclick="navbarOnClick(this)">
+            <div>&lt;</div>
+        </div>
+        <div id="1-20" onclick="navbarOnClick(this)">
+            <div>1..20</div>
+        </div>
+        <div id="1-100" onclick="navbarOnClick(this)">
+            <div>1..100</div>
+        </div>
+        <div id="mutiplication" onclick="navbarOnClick(this)">
+            <div>2&times;2</div>
+        </div>
+        <div id="division" onclick="navbarOnClick(this)">
+            <div>4&div;2</div>
+        </div>
+        <div id="clockface" onclick="navbarOnClick(this)">
+            <!-- https://unicode-table.com/ru/1F565/ -->
+            <div>&#128357;</div>
+        </div>
+    </footer>
+</body>
+</html>

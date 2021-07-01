@@ -1,0 +1,18 @@
+body {
+  font-family: sans-serif;
+}
+
+header {
+  font-size: x-large;
+  text-align: center;
+}
+
+main {
+  font-size: large;
+}
+
+main .refTest {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
