@@ -6,7 +6,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "MeasuredInvestor.dll": "sha256-Ah8V2JfR9hMSQHXBzmVGHCviKISOpJHbVJ7\/0z8Et0Y=",
+      "MeasuredInvestor.dll": "sha256-/7XkOhgoUepr+/asVd/je6RZ8VLPcQSZBvfQ7jP1ALY=",
       "Microsoft.AspNetCore.Components.dll": "sha256-DANGUoCe6o06GDWppF\/DHifs+Xn9vZMLpFejMfxRw4I=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-ugV0qCoSGQbK0S8ynjQjrUzXOycvLgRj5QiHw66yQe0=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-vzhTN1fWsFmxOY0vIrxU7sS\/r7murFZExPPwCBG4rro=",
