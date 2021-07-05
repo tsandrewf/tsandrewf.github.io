@@ -36,8 +36,8 @@
     "pdb": null,
     "runtime": {
       "dotnet.3.2.0.js": "sha256-mPoqx7XczFHBWk3gRNn0hc9ekG1OvkKY4XiKRY5Mj5U=",
-      "dotnet.timezones.dat": "sha256-3S0qzYaBEKOBXarzVLNzNAFXlwJr6nI3lFlYUpQTPH8=",
-      "dotnet.wasm": "sha256-UC\/3Rm1NkdNdlIrzYARo+dO\/HDlS5mhPxo0IQv7kma8="
+      "dotnet.timezones.dat": "sha256-8E+JrZ1NGk6EUxmG1F7P+dKkY5X4cy4p8gPZFeslMQs=",
+      "dotnet.wasm": "sha256-8E+JrZ1NGk6EUxmG1F7P+dKkY5X4cy4p8gPZFeslMQs="
     },
     "satelliteResources": null
   }
