@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "ariphmetic_tests_v_202108111421";
+const CACHE_NAME = "ariphmetic_tests_v_202108111428";
 
 let cacheUrls = [
   "./",

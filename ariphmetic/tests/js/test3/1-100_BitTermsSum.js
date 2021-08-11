@@ -1,6 +1,6 @@
 "use strict";
 
-import { GetTestNumber } from "../../js/test.js";
+import { GetTestNumber, IsCorrectAnswerBitTermsSum } from "../../js/test.js";
 
 window.TestConfig = {
   keyboard: ["digits", "enterAndDel"],
@@ -8,4 +8,5 @@ window.TestConfig = {
   GetTest: function () {
     return "['" + GetTestNumber(99) + "=??+?" + "']";
   },
+  IsCorrectAnswer: IsCorrectAnswerBitTermsSum,
 };

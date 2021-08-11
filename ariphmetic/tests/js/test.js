@@ -115,14 +115,18 @@ export function IsCorrectAgjacentNumbers(testSrc) {
 }
 
 export function IsCorrectAnswerPredicate(testSrc) {
-  return eval(
-    testSrc.innerText
-      .replace(/\u00D7/g, "*") // &times;
-      .replace(/:/g, "/")
-      .replace(/=/g, "==")
-      .replace(/0(\d)/g, "$1") // ToDo! Only for numbers under 100
-      .replace(/\s\s/g, "0") // ToDo! Only for numbers under 100
-  );
+  try {
+    return eval(
+      testSrc.innerText
+        .replace(/\u00D7/g, "*") // &times;
+        .replace(/:/g, "/")
+        .replace(/=/g, "==")
+        .replace(/0(\d)/g, "$1") // ToDo! Only for numbers under 100
+        .replace(/\s\s/g, "0") // ToDo! Only for numbers under 100
+    );
+  } catch (ex) {
+    return false;
+  }
 }
 
 export function IsCorrectAnswerClockface(elemTestSrc) {
@@ -142,6 +146,17 @@ export function IsCorrectAnswerClockface(elemTestSrc) {
     timeDigit.clocks == timeClockface.clocks &&
     timeDigit.minutes == timeClockface.minutes
   );
+}
+
+export function IsCorrectAnswerBitTermsSum(elemTestSrc) {
+  const match = new RegExp(/\d\d=(\d{0,2})\+\d{0,1}/i).exec(
+    elemTestSrc.innerText.replace(/\s/g, "")
+  );
+
+  if (match[1] && Number(match[1]) % 10 != 0) {
+    return false;
+  }
+  return IsCorrectAnswerPredicate(elemTestSrc);
 }
 
 function GetDigitArray(rowCount, colCount) {
