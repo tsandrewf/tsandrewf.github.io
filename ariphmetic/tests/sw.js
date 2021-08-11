@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "ariphmetic_tests_v_202107011322";
+const CACHE_NAME = "ariphmetic_tests_v_202108111421";
 
 let cacheUrls = [
   "./",
@@ -30,6 +30,7 @@ let cacheUrls = [
   "./js/test3/1-20_InsertNumber.js",
   "./js/test3/1-100_AdjacentNumbers.js",
   "./js/test3/1-100_AddAndSub.js",
+  "./js/test3/1-100_BitTermsSum.js",
   "./js/test3/1-100_Comparison.js",
   "./js/test3/1-100_InsertNumber.js",
   "./js/test3/1-100_TenAddAndSub.js",

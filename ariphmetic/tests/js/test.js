@@ -121,6 +121,7 @@ export function IsCorrectAnswerPredicate(testSrc) {
       .replace(/:/g, "/")
       .replace(/=/g, "==")
       .replace(/0(\d)/g, "$1") // ToDo! Only for numbers under 100
+      .replace(/\s\s/g, "0") // ToDo! Only for numbers under 100
   );
 }
 
