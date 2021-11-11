@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 5</title>
+
+    <link href="../../css/problem.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div>
+        <span class="problemTitle">Задача 5.</span>
+        У Васи имется 200 фишек 20 различных цветов, по 10 фишек каждого цвета.
+        При каком наименьшем \(n\) при любой расстоновке фишек по кругу Вася сможет выбрать \(n\) последовательных фишек,
+        которые покрашены по крайней мере 10 различных цветов?
+    </div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Наихудшая расстановка фишек это когда фишки одного цвета стоят рядом. Тогда выбираем 8 десятков с одинаковыми цветами
+        плюс еще по одной фишке с начала и с конца. Эти 2 фишки имеют 2 недостающих разных цвета.
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">82</span></div>
+</body>
+</html>

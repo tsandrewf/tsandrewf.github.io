@@ -3,7 +3,7 @@
 // https://www.pwabuilder.com/publish
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const CACHE_NAME = "scholl_problems_v_202106251814";
+const CACHE_NAME = "scholl_problems_v_202111111206";
 
 let cacheUrls = [
   "./",
@@ -25,6 +25,18 @@ let cacheUrls = [
   "./class7/20210424_qualifying_round/problem6.html",
   "./class7/20210424_qualifying_round/problem7.html",
   "./class7/20210424_qualifying_round/problem8.html",
+  "./class8/index.html",
+  "./class8/20210911_hse/index.html",
+  "./class8/20210911_hse/problem1.html",
+  "./class8/20210911_hse/problem2.html",
+  "./class8/20210911_hse/problem3.html",
+  "./class8/20210911_hse/problem4.html",
+  "./class8/20210911_hse/problem5.html",
+  "./class8/20210911_hse/problem6.html",
+  "./class8/20210911_hse/problem7.html",
+  "./class8/20210911_hse/problem8.html",
+  "./class8/20210911_hse/problem9.html",
+  "./class8/20210911_hse/problem10.html",
   // CSS
   "/css/materialIcons.css",
   "./css/index.css",

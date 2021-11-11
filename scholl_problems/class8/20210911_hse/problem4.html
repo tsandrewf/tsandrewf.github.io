@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 4</title>
+
+    <link href="../../css/problem.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div>
+        <span class="problemTitle">Задача 4.</span>
+        Правильная дробь называется <i>аликвотной</i>, если ее числитель равен 1.
+        Сколько существует пар различных <i>аликвотных</i> дробей (порядок в паре не важен),
+        в каждой из которых сумма будет <i>аликвотной</i> дробью, большей \(1 \over 6\)?
+    </div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Сумма двух <i>аликвотных</i> дробей является <i>аликвотной</i> только в том случае,
+        если обе дроби <i>аликвотные</i> и их знаменатель кратен 2.
+        Поэтому нужно просто перечислить все варианты, начиная с \(1 \over 2\), до тех пор,
+        пока сумма превышает \(1 \over 6\).
+        \[{1 \over 2} + {1 \over 2} = 1 \gt {1 \over 6}\]
+        \[{1 \over 4} + {1 \over 4} = {1 \over 2} \gt {1 \over 6}\]
+        \[{1 \over 6} + {1 \over 6} = {1 \over 3} \gt {1 \over 6}\]
+        \[{1 \over 8} + {1 \over 8} = {1 \over 4} \gt {1 \over 6}\]
+        \[{1 \over 10} + {1 \over 10} = {1 \over 5} \gt {1 \over 6}\]
+        \[\xcancel{{1 \over 12} + {1 \over 12} = {1 \over 6} = {1 \over 6}}\]
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">5</span></div>
+</body>
+</html>

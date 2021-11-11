@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 10</title>
+
+    <link href="../../css/problem.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div>
+        <span class="problemTitle">Задача 10.</span>
+        Транспортная сеть страны состоит из 777 дорог, которые соединяют между собой города. Министерство транспорта решило отремонтировать все дороги,
+        Распределив между строительными компаниями города так, что каждая компания обязана отремонтировать половины всех дорог,
+        ведущих из закрепленного за компанией города, но при этом никакая компания не должна ремонтировать всю дорогу целиком,
+        чтобы потом сверить качество работ на стыке отремонтированных разными компаниями половин дороги.
+        Какое наименьшее количество строительных компаний можно привлечь к ремонту, чтобы гарантированно выполнить требуемые условия?
+    </div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Каждому городу соответствует одна компания. Нужно посчитать, какому количеству минимальному городов
+        нужно 777 дорог, соединяющих напрямую 2 города. Для того, чтобы соединить <i>x</i> городов дорогами каждый с каждым
+        нужно \({x \times (x - 1)} \over 2\) дорог. Таким образом, нужно найти минимальное натуральное число \(x\) такое, что:
+        \({{x \times (x - 1)} \over 2} \gt 777\)
+        Решим уравнение:
+        \[{{x \times (x - 1)} \over 2} = 777 \Rightarrow\]
+        \[ x^2 - x - 1554 = 0 \Rightarrow\]
+        \[ {x = { 1 \pm \sqrt {1 + 4 \times 1554}} \over 2} \Rightarrow\]
+        \[x = 39,92...\]
+        Отсюда находим минимальное натуральное число, удовлетворяющее неравентству.
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">40</span></div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача 2</title>
+
+    <link href="../../css/problem.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div>
+        <span class="problemTitle">Задача 2.</span>
+        Начав с натурального числа \(N\), несколько раз проводят следующую операцию. За одну операцию имеющееся число удваивают,
+        а затем уменьшают на 6400. После нескольких таких операций получили 0. При каком наибольшем \(N\) такое могло быть?
+    </div>
+    <div>
+        <span class="decisionTitle">Решение.</span>
+        Проведем операцию в обратном направлении, начиная с конечного числа 0, до тех пор, пока не наткнемся на ненатуральное число.
+        Последнее натуральное число и будет искомым решением.
+        \[{(0 + 6400) \over 2} = 3200\]
+        \[{(3200 + 6400) \over 2} = 4800\]
+        \[{(4800 + 6400) \over 2} = 5600\]
+        \[{(5600 + 6400) \over 2} = 6000\]
+        \[{(6000 + 6400) \over 2} = 6200\]
+        \[{(6200 + 6400) \over 2} = 6300\]
+        \[{(6300 + 6400) \over 2} = 6350\]
+        \[{(6350 + 6400) \over 2} = \color{red}{6375}\]
+        \[{(6375 + 6400) \over 2} = \xcancel{6387,5}\] <!-- https://docs.mathjax.org/en/latest/input/tex/extensions/cancel.html -->
+    </div>
+    <div><span class="answerTitle">Ответ:</span> <span class="answerTitle">6375</span></div>
+</body>
+</html>
