@@ -1,0 +1,22 @@
+/*
+    scroll-snap-type: https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type
+    Практика использования спецификации CSS Scroll Snap: https://habr.com/ru/company/ruvds/blog/534106/
+    Scroll Snap Strictness: https://codepen.io/shadeed/pen/RwGaXKB
+*/
+
+.screenshot {
+    width: 100%;
+}
+
+.screenshot_slider {
+    width: 100%;
+    overflow: hidden;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.child {
+    display: inline-block;
+    vertical-align: top;
+    width: 20%;
+}
